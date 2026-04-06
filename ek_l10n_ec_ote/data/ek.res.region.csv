@@ -1,0 +1,5 @@
+id,country_id:id,code,name
+region_0101,base.ec,0101,COSTA
+region_0102,base.ec,0102,SIERRA
+region_0103,base.ec,0103,ORIENTE
+region_0104,base.ec,0104,INSULAR (GALAPAGOS)

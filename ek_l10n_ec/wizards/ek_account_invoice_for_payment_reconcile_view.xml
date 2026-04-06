@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ek_account_invoice_for_payment_reconcile_view_form" model="ir.ui.view">
+        <field name="name">ek.account.invoice.payment.reconcile.view.form</field>
+        <field name="model">ek.account.invoice.payment.reconcile</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <h5>
+                        <b>Se conciliarán los documentos en el orden en que sean indicados</b>
+                    </h5>
+                </header>
+                <sheet>
+                    <group col="2">
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="concilie_date" help="Esta fecha será usada para el cruce de los valores contables"/>
+                            <field name="partner_type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="advance_payment_id" readonly="1"/>
+                            <field name="advance_amount_residual" readonly="1"/>
+                            <field name="distribute_amount" invisible="partner_type != 'customer'"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" nolabel="1" col="2" create="0" options="{'no_create':True,'no_open':True}">
+                        <tree create="0" options="{'no_create':True,'no_open':True}" editable="bottom">
+                            <field name="sequence" widget="handle" readonly="1"/>
+                            <field name="move_id" column_invisible="1" />
+                            <field name="invoice_number" readonly="1"/>
+                            <field name="date_due" readonly="1"/>
+                            <field column_invisible="1" name="company_currency_id" readonly="1"/>
+                            <field name="amount_residual" sum="Total" widget="monetary" readonly="1" options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="amount_payment" column_invisible="not parent.distribute_amount" sum="A Pagar" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="payment_state" readonly="1"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="sequence" readonly="1"/>
+                                <field name="move_id" options="{'no_create':True,'no_open':True}"  readonly="1"/>
+                                <field name="date_due"  readonly="1"/>
+                                <field name="amount_residual" sum="Total" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            </group>
+                        </form>
+                    </field>
+                </sheet>
+                <footer>
+                    <field name="exist_invoices" invisible="1"/>
+                    <button name="action_reconcile" string="Conciliar" type="object" class="btn-primary"
+                            icon="fa-download" data-hotkey="s" invisible="not exist_invoices or not line_ids or distribute_amount"
+                    />
+                    <button name="action_reconcile_distributed" string="Conciliar" type="object" class="btn-primary"
+                            icon="fa-download" data-hotkey="s" invisible="not exist_invoices or not line_ids or not distribute_amount"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ek_account_invoice_for_payment_reconcile_action" model="ir.actions.act_window">
+        <field name="name">Conciliación de Anticipos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.account.invoice.payment.reconcile</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ek_account_invoice_for_payment_reconcile_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

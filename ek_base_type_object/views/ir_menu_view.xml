@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+        <menuitem id="main_base_type_object_management" name="Object Studio"
+            groups="group_type_object_manager"
+            web_icon="simplify_access_management,static/description/icon.png"/>
+
+    
+        <menuitem
+            parent="main_base_type_object_management"
+            id="menu_ek_l10n_type_model_mixin"
+            groups="group_type_object_manager"
+            action="action_ek_l10n_type_model_mixin"/>
+            
+        <menuitem
+            parent="main_base_type_object_management"
+            id="menu_ek_l10n_stages_mixin_action"
+            groups="group_type_object_manager"
+            action="ek_l10n_stages_mixin_action"/>
+
+        <menuitem
+            parent="main_base_type_object_management"
+            id="menu_action_ek_l10n_group_type_model_mixin"
+            groups="group_type_object_manager"
+            action="action_ek_l10n_group_type_model_mixin"/>
+
+        <menuitem
+            parent="main_base_type_object_management"
+            id="menu_action_ek_l10n_model_mixin"
+            groups="group_type_object_manager"
+            action="action_ek_l10n_model_mixin"/>
+            
+        
+</odoo>

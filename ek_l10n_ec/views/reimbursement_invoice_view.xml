@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- FORMULARIO DE REEMBOLSO DE GASTOS -->
+  <record id="view_reimbursement_invoice" model="ir.ui.view">
+    <field name="name">account.reimbursement.document.form</field>
+    <field name="model">account.reimbursement.document</field>
+    <field name="arch" type="xml">
+      <form string="Reembolso de Gastos">
+        <sheet>
+          <group>
+            <group>
+              <field name="document_type_id"/>
+              <field name="partner_id" required="1" options="{'no_quick_create': True,'no_create': True}"/>
+              <!--  <field name="identification_id"/>-->
+              <field name="fechaEmisionReemb"/>
+            </group>
+            <group>
+              <field name="serie_entidad"/>
+              <field name="serie_emision"/>
+              <field name="num_secuencial"/>
+              <field name="autorizacionReemb"/>
+            </group>
+          </group>
+          <group>
+            <group>
+              <field name="tax_id" options="{'no_quick_create': True,'no_create': True}" required="baseImponibleReemb!=0 or baseImpGravReemb!=0" domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"/>
+              <field name="baseImponibleReemb"/>
+              <field name="baseImpGravReemb"/>
+              <field name="baseNoGraIvaReemb"/>
+            </group>
+            <group>
+              <field name="baseImpExeReemb"/>
+              <field name="montoIceRemb"/>
+              <field name="montoIvaRemb"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Inherit Form View to Modify it -->
+  <record id="account_move_reimbursement_form" model="ir.ui.view">
+    <field name="name">account.move.reimbursement</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@id='invoice_tab']" position="after">
+        <page name="reimbursement_tab" string="Documentos a Reembolsar" invisible="not is_reimbursement_invoice">
+          <field name="is_reimbursement_invoice" invisible="1"/>
+          <field name="reimbursement_ids" colspan="4">
+            <tree editable="bottom">
+              <field name="document_type_id"/>
+              <field name="partner_id" required="1"/>
+              <field name="identification_id" string="Identificación" required="1"/>
+              <field name="serie_entidad" string="Establecimiento"/>
+              <field name="serie_emision" string="Emisión"/>
+              <field name="num_secuencial"/>
+              <field name="autorizacionReemb" string="Autorización" required="1"/>
+              <field name="fechaEmisionReemb" string="Fecha"/>
+              <field name="tax_id" string="Impuesto" optional="show" required="baseImponibleReemb!=0 or baseImpGravReemb!=0" domain="[('type_tax_use', 'in', ('purchase', 'sale')), ('company_id', '=', parent.company_id)]"/>
+              <field name="baseImponibleReemb" sum="Total" string="Tarifa IVA 0%" optional="hide"/>
+              <field name="baseImpGravReemb" sum="Total" string="IVA Diferente 0%" optional="hide"/>
+              <field name="baseNoGraIvaReemb" sum="Total" string="No grava IVA 0%" optional="hide"/>
+              <field name="baseImpExeReemb" sum="Total" string="Tarifa Exento" optional="hide"/>
+              <field name="montoIceRemb" sum="Total ICE" optional="hide"/>
+              <field name="montoIvaRemb" sum="Total IVA" optional="hide"/>
+            </tree>
+          </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

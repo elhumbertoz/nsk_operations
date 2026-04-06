@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.l10n.type.field.mixin View Tree -->
+    <record id="view_ek_l10n_type_field_mixin_tree" model="ir.ui.view">
+        <field name="name">view.ek.l10n.type.field.mixin.tree</field>
+        <field name="model">ek.l10n.type.field.mixin</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="field_id"/>
+                <field name="has_required"/>
+                <field name="group_name" />
+                <field name="model" column_invisible="True"/>
+                <field name="object_model_id" column_invisible="True"/>
+                <field name="relation" column_invisible="True"/>
+                <field name="ttype" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View ek.l10n.type.field.mixin form -->
+    <record id="view_ek_l10n_type_field_mixin_form" model="ir.ui.view">
+        <field name="name">view.ek.l10n.type.field.mixin.form</field>
+        <field name="model">ek.l10n.type.field.mixin</field>
+        <field name="arch" type="xml">
+            <form string="Ek L10n Type Field Mixin">
+                <sheet>
+                    <group>
+                        <!-- Add your fields here -->
+                        <group>
+                            <field name="field_id" required="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                            <field name="apply_default"/>
+                            <field name="init_float" 
+                                invisible="ttype != 'float' or not apply_default" 
+                                required="apply_default and ttype =='float'"/>
+                            <field name="init_integer" 
+                                invisible="ttype != 'integer' or not apply_default" required="apply_default and ttype =='integer'"/>
+                            <field name="init_selection" 
+                                invisible="ttype != 'selection' or not apply_default" required="apply_default and ttype =='selection'"
+                                domain="[('field_id','=',field_id)]"
+                            />
+                            <field name="init_text"  
+                                invisible="ttype not in ('char','text') or not apply_default" required="apply_default and ttype in ('char','text')"/>
+                            <field name="init_date" 
+                                invisible="ttype != 'date' or not apply_default" required="apply_default and ttype == 'date'"/>
+                            <field name="init_datetime"  
+                                invisible="ttype != 'datetime' or not apply_default" required="apply_default and ttype == 'datetime'"/>
+                            <field name="init_many2one"
+                                invisible="ttype != 'many2one' or not apply_default" required="apply_default and ttype =='many2one'"
+                                
+                                />
+                            <field name="widget_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                            <field name="has_required"/>                                                
+                            <field name="required_stage_ids" invisible="not has_required" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags"/>
+                            <field name="invisible_stage_ids" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags"/>
+                            <field name="stage_ids" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            
+                            <field name="label" />
+                            <field name="help" />
+                            <field name="placeholder" />                                                
+                            <field name="group_name" />
+                            <field name="model" invisible="True"/>
+                            <field name="object_model_id" invisible="True"/>
+                            <field name="type_model_id" invisible="True"/>
+                            <field name="relation" invisible="True"/>
+                            <field name="ttype" invisible="True"/>
+                        </group>
+                    </group>
+                    <group string="Domain" col="2">
+                        <field name="definition_domain" col="2" widget="domain" optional="hide" 
+                                invisible="ttype not in ('many2many','many2one','one2many')"
+                                options="{'model': 'relation' }" readonly="not relation"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

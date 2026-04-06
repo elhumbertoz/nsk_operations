@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ek_wizard_charging_data_form" model="ir.ui.view">
+        <field name="name">ek.wizard.charging.data.tree</field>
+        <field name="model">ek.wizard.charging.data</field>
+        <field name="arch" type="xml">
+            <tree   >
+                <field name="date_request"/>
+                <field name="movement_date"/>
+                <field name="regimen"/>
+                <field name="ship_registration_id"/>
+                <field name="boats_information_id"/>
+                <field name="related_document"/>
+                <field name="tariff_item"/>
+                <field name="product_description"/>
+                <field name="max_regime_date"/>
+                <field name="unds"/>
+                <field name="unit_cost"/>
+                <field name="total_cost"  />
+                <field name="customs_document"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

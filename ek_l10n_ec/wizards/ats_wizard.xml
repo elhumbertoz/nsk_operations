@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_export_ats_form" model="ir.ui.view">
+        <field name="name">Exportar ATS XML</field>
+        <field name="model">wizard.ats</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Exportar Archivo ATS">
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    <group colspan="2" invisible="state not in ['warning', 'choose', 'errors']">
+                        <separator string="Se exportará la información de la empresa a la que pertenece el usuario actual" colspan="4"/>
+                    </group>
+                    <group colspan="2" invisible="state not in ['warning', 'choose', 'errors']">
+                        <group>
+                            <field name="date_start" required="1" options="{'no_open': True}" readonly="state != 'choose'"/>
+                            <field name="date_end" required="1" options="{'no_open': True}" readonly="state != 'choose'"/>
+                            <field name="num_estab_ruc" required="1" options="{'no_open': True}" readonly="state != 'choose'"/>
+                        </group>
+                        <group>
+                            <field name="company_id" required="1" readonly="1" options="{'no_open': True}"/>
+                            <field name="include_electronic_document" widget="boolean_toggle"
+                                   help="No incluir en el ATS los documentos electrónicos esta opción puede usarse desde que se activó la facturación electrónica obligatoria"/>
+                            <field name="no_validate" widget="boolean_toggle"
+                                   help="No validar errores en los documentos, esta opción permite exportar la información aunque tenga errores"/>
+                        </group>
+                    </group>
+                    <group colspan="2" invisible="state not in ['warning', 'errors']">
+                        <group colspan="2" invisible="state != 'errors'">
+                            <div class="alert alert-danger" role="alert" colspan="2">
+                                Existen errores de configuración en sus comprobantes que no permiten la generación del ATS. Por favor, corrija eos
+                                errores antes de intentar generar nuevamente el ATS. Para más detalles, haga clic en la pestaña Errores y Advertencias.
+                            </div>
+                        </group>
+                        <group colspan="2" invisible="state != 'warning'">
+                            <div class="alert alert-warning" role="alert" colspan="2">
+                                Existen novedades en la generación del ATS, sin embargo, estas no impiden obtenerlo. Para esto, marque el
+                                campo "No Validar", o para más detalles de los errores y advertencias, haga clic en la pestaña Errores y Advertencias.
+                            </div>
+                        </group>
+                    </group>
+                    <notebook invisible="state not in ['warning', 'choose', 'errors']">
+                        <page string="Descripción">
+                            <group>
+                                <div style="text-align: justify;" colspan="2">
+                                    Asistente que genera automáticamente la información del anexo denominado ANEXO TRANSACCIONAL SIMPLIFICADO - ATS.
+                                </div>
+                                <div style="text-align: justify;" colspan="2">
+                                    De acuerdo a la Resolución NAC-DGERCGC12-00001 los contribuyentes deben presentar un reporte detallado de las
+                                    transacciones correspondientes a compras, ventas, exportaciones y retenciones de IVA y de Impuesto a la Renta.
+                                </div>
+                                <div style="text-align: justify;" colspan="2">
+                                    Esta información podrá enviarse a través de internet hasta el último día del mes subsiguiente al que corresponde la
+                                    misma (28, 29, 30 o 31).
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Ayuda">
+                            <group>
+                                <div style="text-align: justify;" colspan="2">
+                                    Los contribuyentes que deben presentar esta información son los siguientes:
+                                </div>
+                                <div style="text-align: justify;" colspan="2">
+                                    Contribuyentes Especiales, Instituciones del Sector Público, Autoimpresores, Quienes soliciten devoluciones de IVA
+                                    (excepto tercera edad y discapacitados), Instituciones Financieras, Emisoras de tarjetas de crédito, Administradoras
+                                    de Fondos y Fideicomisos, Quienes posean autorización de emisión electrónica de comprobantes de venta, documentos
+                                    complementarios y comprobantes de retención, Sociedades y personas naturales obligadas a llevar contabilidad,
+                                    Personas naturales no obligadas a llevar contabilidad cuyos ingresos brutos anuales o costos y gastos anuales del
+                                    ejercicio fiscal inmediato anterior hayan sido superiores al doble de los montos establecidos para que se genere la
+                                    obligación de llevar contabilidad.
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Errores y Advertencias" invisible="state not in ['errors', 'warning']">
+                            <group colspan="2">
+                                <div style="text-align: justify;" colspan="2">
+                                    A continuación se detallan los siguientes errores y/o advertencia:
+                                </div>
+                                <field name="error_warning" readonly="1" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group invisible="state != 'export'">
+                        <separator string="Archivo generado correctamente, guárdelo en su ubicación de preferencia." colspan="4"/>
+                        <field name="fcname" invisible="1"/>
+                        <field name="data" filename="fcname" readonly="1"/>
+                    </group>
+                    <footer class="oe_right" colspan="2">
+                        <button name="act_export_ats" type="object"
+                                string="ATS en XML" class="oe_right oe_highlight"
+                                default_focus="1" invisible="state != 'choose'"
+                        />
+                        <button name="export_xls" type="object"
+                                string="Informe Tributario (XLS)" class="oe_highlight"
+                                context="{'xls_export': 1}" invisible="state != 'choose'"
+                        />
+                        <button string="Cancelar" class="oe_link" special="cancel" invisible="state not in ['choose', 'warning', 'errors']"/>
+                        <button string="Cerrar" class="oe_link" special="cancel" invisible="state != 'export'"/>
+                    </footer>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="action_export_ats" model="ir.actions.act_window">
+        <field name="name">Anexo Transaccional Simplificado (ATS)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wizard.ats</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_export_ats" id="menu_export_ats" parent="menu_sri_reporting_annexes"/>
+
+    <record id="ats_sheet_xlsx" model="ir.actions.report">
+        <field name="name">Informe Tributario</field>
+        <field name="model">account.move</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ek_l10n_ec.sheet_report_xls</field>
+        <field name="report_file">Informe Tributario</field>
+    </record>
+</odoo>

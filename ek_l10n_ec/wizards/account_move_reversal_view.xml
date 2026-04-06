@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_document_auth_required" invisible="1"/>
+                <field name="l10n_latam_document_sustento_required" invisible="1"/>
+            </form>
+            <field name="l10n_latam_document_number" position="after">
+                <field name="l10n_latam_document_sustento"
+                       domain="['|', ('account_ats_doc_ids', 'in', l10n_latam_document_type_id), ('account_ats_doc_ids', '=', False)]"
+                       required="l10n_latam_document_sustento_required"
+                       invisible="not l10n_latam_use_documents and not l10n_latam_document_sustento_required"
+                />
+                <field name="l10n_ec_authorization_number"
+                       required="l10n_latam_document_auth_required"
+                       invisible="not l10n_latam_use_documents or not l10n_latam_manual_document_number"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">view.account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reason']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reason']" position="before">
+                <field name="reason_id" required="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

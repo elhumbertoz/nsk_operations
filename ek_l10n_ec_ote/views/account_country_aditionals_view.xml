@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_city_inherit" model="ir.ui.view">
+        <field name="name">res.partner.city</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="placeholder">Estado/Provincia</attribute>
+            </xpath>
+            <xpath expr="//field[@name='industry_id']" position="attributes">
+                <attribute name="string">Actividad Económica</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="city_id" placeholder="Ciudad" class="o_address_city"
+                       readonly="type == 'contact' and parent_id" domain="[('state_id', '=', state_id)]"
+                />
+                <field name="l10n_ec_city_id" placeholder="Ciudad" class="o_address_city"
+                       invisible="1"
+                />
+            </xpath>
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                <page name="location_data" string="Datos de Ubicación">
+                    <group>
+                        <group>
+                            <field name="l10n_ec_canton_id" class="o_address_city"
+                                   readonly="type == 'contact' and parent_id"
+                                   domain="['|', ('city_id', '=', city_id), ('city_id', '=', False)]"
+                            />
+                            <field name="l10n_ec_zone_id" class="o_address_city"
+                                   readonly="type == 'contact' and parent_id"
+                                   domain="['|', ('city_id', '=', city_id), ('city_id', '=', False)]"
+                            />
+                            <field name="l10n_ec_route_dst_id" class="o_address_city"
+                                   readonly="type == 'contact' and parent_id"
+                            />
+                        </group>
+                        <group>
+                            <field name="l10n_ec_region_id" class="o_address_city"
+                                   readonly="type == 'contact' and parent_id"
+                                   domain="['|', ('country_id', '=', country_id), ('country_id', '=', False)]"
+                            />
+                            <field name="l10n_ec_sector_id" class="o_address_city"
+                                   readonly="type == 'contact' and parent_id"
+                                   domain="['|', ('zone_id', '=', l10n_ec_zone_id), ('zone_id', '=', False)]"
+                            />
+                        </group>
+                    </group>
+                </page>
+                <page string="Rutas Avanzadas" name="advance_route" groups="ek_l10n_ec_ote.group_ec_delivery_frequency">
+                        <field name="advance_route_ids" invisible="parent_id">
+                            <tree editable="bottom">
+                                <field name="partner_id" column_invisible="1"/>
+                                <field name="contact_id" options="{'no_create': True, 'no_open': True}" domain="[('parent_id','=',parent.id),('parent_id','!=', False),('type','=', 'delivery')]"/>
+                                <field name="zone_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="channel_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="sector_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="user_id" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+                                <field name="supervisor_id" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+                                <field name="visit_frequency" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                            </tree>
+                        </field>
+                    </page>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="l10n_ec_classification_id"/>
+                <field name="l10n_ec_rank_id"/>
+                <field name="l10n_ec_channel_id"/>
+            </xpath>
+            <field name="parent_id" position="before">
+                <field name="l10n_ec_business_name" placeholder="Nombre comercial"/>
+            </field>
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/div/div[@name='div_address']/field[@name='state_id']"
+                   position="after">
+                <field name="city_id" placeholder="Ciudad" class="o_address_city" domain="[('state_id', '=', state_id)]"/>
+                <field name="l10n_ec_city_id" placeholder="Ciudad" class="o_address_city" domain="[('state_id', '=', state_id)]" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/div/div[@name='div_address']/field[@name='country_id']"
+                   position="before">
+                <field name="l10n_ec_canton_id" placeholder="Parroquia" class="o_address_city"
+                       readonly="type == 'contact' and parent_id"
+                       domain="['|', ('city_id', '=', city_id), ('city_id', '=', False)]"
+                />
+                
+                <field name="l10n_ec_region_id" placeholder="Región" class="o_address_city"
+                       readonly="type == 'contact' and parent_id"
+                       domain="['|', ('country_id', '=', country_id), ('country_id', '=', False)]"
+                />
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/div/div[@name='div_address']/field[@name='country_id']"
+                   position="after">
+                   <field name="l10n_ec_zone_id" placeholder="Zona" class="o_address_city"
+                       readonly="type == 'contact' and parent_id"
+                       domain="['|', ('state_id', '=', state_id), ('state_id', '=', False)]"
+                    />
+                    <field name="l10n_ec_route_dst_id" placeholder="Ruta" class="o_address_city"
+                        readonly="type == 'contact' and parent_id"
+                    />
+                    
+                    <field name="l10n_ec_sector_id" placeholder="Sector de ciudad" class="o_address_city"
+                            readonly="type == 'contact' and parent_id"
+                    />
+                </xpath>
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/div/div[@name='div_address']/field[@name='city']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group[2]/field[@name='mobile']"
+                   position="after">
+                <t groups="ek_l10n_ec_ote.group_ec_delivery_frequency">
+                    <field name="l10n_ec_visit_frequency" widget="many2many_tags"
+                           invisible="type != 'delivery'"
+                           options="{'no_create':True}" />
+                    <field name="l10n_ec_delivery_frequency" widget="many2many_tags"
+                           invisible="type != 'delivery'"
+                           options="{'no_create':True}" />
+                    <label for="l10n_ec_delivery_frequency_start_hour" string="Horarios de Entrega" invisible="type != 'delivery'"/>
+                    <div name="frequency_hour_div" class="d-flex o-row" invisible="type != 'delivery'">
+                        Desde<i class="fa fa-clock-o mx-2" style="margin-top: 5px;"/><field name="l10n_ec_delivery_frequency_start_hour" widget="float_time"/>
+                        Hasta<i class="fa fa-clock-o mx-2" style="margin-top: 5px;"/><field name="l10n_ec_delivery_frequency_end_hour" nolabel="1" widget="float_time"/>
+                    </div>
+                </t>
+                <field name="l10n_ec_classification_id"/>
+                <field name="l10n_ec_rank_id"/>
+                <field name="l10n_ec_channel_id" domain="[('parent_id','=',False)]"/>
+
+            </xpath>
+            <group name="sale" position="inside">
+                <t groups="ek_l10n_ec_ote.group_ec_delivery_frequency">
+                    <field name="l10n_ec_visit_frequency" widget="many2many_tags"
+                           options="{'no_create':True}" />
+                    <field name="l10n_ec_delivery_frequency" widget="many2many_tags"
+                           options="{'no_create':True}" />
+                    <label for="l10n_ec_delivery_frequency_start_hour" string="Horarios de Entrega"/>
+                    <div name="frequency_hour_div" class="d-flex o-row">
+                        Desde<i class="fa fa-clock-o mx-2" style="margin-top: 5px;"/><field name="l10n_ec_delivery_frequency_start_hour" widget="float_time"/>
+                        Hasta<i class="fa fa-clock-o mx-2" style="margin-top: 5px;"/><field name="l10n_ec_delivery_frequency_end_hour" nolabel="1" widget="float_time"/>
+                    </div>
+                </t>
+            </group>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="l10n_ec_is_artisan" invisible="is_company"/>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="before">
+                <field name="l10n_ec_birthdate" invisible="is_company"/>
+                <field name="l10n_ec_sex" invisible="is_company"/>
+                <field name="l10n_ec_gender" invisible="is_company"/>
+                <field name="l10n_ec_civil_status" invisible="is_company"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_partner_fiscal_information_form" model="ir.ui.view">
+        <field name="name">res.partner.fiscal.information.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='banks']" position="after">
+                <group string="Información Fiscal" name="ec_fiscal_information"
+                       invisible="(country_id != False and country_code != 'EC')"
+                    >
+                    <button colspan="2"
+                    name="action_update_fiscal_info"
+                    string="Actualizar Información Fiscal"
+                    type="object"
+                />
+                    <field name="l10n_ec_legal_representative_name" readonly="1"/>
+                    <field name="l10n_ec_legal_representative_vat" readonly="1"/>
+                    <field name="l10n_ec_vat_active" widget="boolean_toggle" readonly="1"/>
+                    <field name="l10n_ec_required_to_keep_accounting" widget="boolean_toggle" readonly="1"/>
+                    <field name="l10n_ec_retention_agent" widget="boolean_toggle" readonly="1"/>
+                    <field name="l10n_ec_special_taxpayer" widget="boolean_toggle" readonly="1"/>
+                    <field name="l10n_ec_main_economic_activity" readonly="1"/>
+                    <field name="l10n_ec_date_last_update_accounting_info" readonly="1"/>
+
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

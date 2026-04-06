@@ -1,0 +1,82 @@
+<odoo>
+
+  <data>
+
+    <record
+        id="administrador_views_fall"
+        model="ir.module.category">
+      <field name="name">Administración Operaciones </field>
+      <field name="description">Administración Operaciones</field>
+      <field name="sequence">2</field>
+    </record>
+    <record
+        id="ek_manager_sale_order"
+        model="res.groups">
+      <field name="name">Pedidos de Venta</field>
+      <field
+          name="category_id"
+          ref="administrador_views_fall" />
+    </record>
+    <record
+        id="ek_manager_sale_purchase"
+        model="res.groups">
+      <field name="name">Pedidos de Compra</field>
+      <field
+          name="category_id"
+          ref="administrador_views_fall" />
+    </record>
+    <record
+        id="ek_manager_account_invoice"
+        model="res.groups">
+      <field name="name">Facturas</field>
+      <field
+          name="category_id"
+          ref="administrador_views_fall" />
+    </record>
+
+    <record
+        id="not_editable_views_fall"
+        model="ir.module.category">
+      <field name="name">Visualización Operaciones </field>
+      <field name="description">Administración Operaciones</field>
+      <field name="sequence">2</field>
+    </record>
+    <record
+        id="ek_user_sale_order"
+        model="res.groups">
+      <field name="name">Pedidos de Venta</field>
+      <field
+          name="category_id"
+          ref="not_editable_views_fall" />
+    </record>
+    <record
+        id="ek_user_sale_purchase"
+        model="res.groups">
+      <field name="name">Pedidos de Compra</field>
+      <field
+          name="category_id"
+          ref="not_editable_views_fall" />
+    </record>
+    <record
+        id="ek_user_account_invoice"
+        model="res.groups">
+      <field name="name">Facturas</field>
+      <field
+          name="category_id"
+          ref="not_editable_views_fall" />
+    </record>
+
+    <!-- Grupo para administrar operaciones -->
+    <record
+        id="group_shipping_agent_manager"
+        model="res.groups">
+      <field name="name">Crear viajes (Admin)</field>
+      <field
+          name="category_id"
+          ref="administrador_views_fall" />
+      <field name="comment">Usuarios que pueden asignar/desasignar permisos de agente naviero y crear viajes aunque exista uno no finalizado</field>
+    </record>
+
+
+  </data>
+</odoo>

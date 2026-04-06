@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_account_form" model="ir.ui.view">
+        <field name="name">account_analytic_required.account_account_form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="account_type" position="after">
+                <field name="analytic_policy" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_account_tree" model="ir.ui.view">
+        <field name="name">account_analytic_required.account_account_tree</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <field name="account_type" position="after">
+                <field name="analytic_policy" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_form_additional_information_extend" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab']" position="before">
+                <page string="Información Adicional" name="l10n_ec_additional_information"
+                      invisible="move_type not in ('out_invoice', 'out_refund')">
+                    <field name="l10n_ec_additional_information_move_ids" readonly="state != 'draft'">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="description"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="name"/>
+                                <field name="description"/>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ek_service_request_group_1" model="ek.service.request.group">
+        <field name="name">1.Servicios de Gente de Mar y Pesca:</field>
+        <field name="position">left</field>
+    </record>
+    <record id="ek_service_request_group_2" model="ek.service.request.group">
+        <field name="name">Consulta y Requerimientos:</field>
+        <field name="position">left</field>
+    </record>
+    <record id="ek_service_request_group_3" model="ek.service.request.group">
+        <field name="name">2.Servicios de Medio Ambiente y Cuerpos de Agua:</field>
+        <field name="position">left</field>
+    </record>
+    <record id="ek_service_request_group_4" model="ek.service.request.group">
+        <field name="name">3.Servicios Jurídicos:</field>
+        <field name="position">left</field>
+    </record>
+    <record id="ek_service_request_group_5" model="ek.service.request.group">
+        <field name="name">5.Otros Servicios:</field>
+        <field name="position">left</field>
+    </record>
+    <record id="ek_service_request_group_6" model="ek.service.request.group">
+        <field name="name">4.Servicios de Naves</field>
+        <field name="position">right</field>
+
+    </record>
+
+
+    <record id="ek_service_request_line_1" model="ek.service.request.line">
+        <field name="name">Autorización para Evaluación de Competencia</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_2" model="ek.service.request.line">
+        <field name="name">Cambio de limitación para embarque en diferentes tipo de buque</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_3" model="ek.service.request.line">
+        <field name="name">Certificado de Tiempo de Embarque Efectivo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_4" model="ek.service.request.line">
+        <field name="name">Refrendo de Certificado Médica</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_5" model="ek.service.request.line">
+        <field name="name">Certificado de suficiencia de Curso Modelo OMI (Refrendo)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_6" model="ek.service.request.line">
+        <field name="name">Dispensas</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_7" model="ek.service.request.line">
+        <field name="name">Matrícula Provisional de Tráfico Nacional/Internacional</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_8" model="ek.service.request.line">
+        <field name="name">Matrícula Tráfico Nacional (Carnet Marítimo)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_9" model="ek.service.request.line">
+        <field name="name">Matrícula Tráfico Internacional (Seaman's Book/Carnet)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_10" model="ek.service.request.line">
+        <field name="name">Perdida del Seaman's Book/Carnet Marítimo)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+    </record>
+    <record id="ek_service_request_line_11" model="ek.service.request.line">
+        <field name="name">Permiso Provisional de Embarque por Trabajo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_12" model="ek.service.request.line">
+        <field name="name">Permiso Provisional de Embarque por Entrenamiento</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_13" model="ek.service.request.line">
+        <field name="name">Refrendo Título Formación otorgado por otra Autoridad Marítima</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_14" model="ek.service.request.line">
+        <field name="name">Refrendo Títulos de Formación (Nacional)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_1"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+
+    <record id="ek_service_request_line_15" model="ek.service.request.line">
+        <field name="name">Actualización del Libretín (Stikers/Cursos)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_16" model="ek.service.request.line">
+        <field name="name">Activación/ Inactivación de jerarquía</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_17" model="ek.service.request.line">
+        <field name="name">Cambio de Jerarquía</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_18" model="ek.service.request.line">
+        <field name="name">Creación Jerarquía</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_19" model="ek.service.request.line">
+        <field name="name">Dispensas</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_20" model="ek.service.request.line">
+        <field name="name">Permiso provisional de Embarque por trabajo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_2"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+
+    <record id="ek_service_request_line_21" model="ek.service.request.line">
+        <field name="name">Aprobación del SIPE de buque</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_22" model="ek.service.request.line">
+        <field name="name">Aprobación del SOPEP de buque</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_23" model="ek.service.request.line">
+        <field name="name">Aprobación evaluación I. Portuaria ante derrame de hidrocarburos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_24" model="ek.service.request.line">
+        <field name="name">Aprobación plan local de contingencia ante derrame hidrocarburos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_25" model="ek.service.request.line">
+        <field name="name">Aprobación de Manual del Plan Manejo Aguas Lastre</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_26" model="ek.service.request.line">
+        <field name="name">Aprobación de Manual del Plan de Manejo de Basura</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_27" model="ek.service.request.line">
+        <field name="name">Carta aprobación por exploración y/o explotación hidrocarburos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_28" model="ek.service.request.line">
+        <field name="name">Carta aprobación por realizar actividades en espacios acuáticos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_29" model="ek.service.request.line">
+        <field name="name">Carta de aprobación por uso y comercialización dispersantes</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_30" model="ek.service.request.line">
+        <field name="name">Certificado de Declaración de Cumplimiento-CAP</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_31" model="ek.service.request.line">
+        <field name="name">Derecho de ocupación de cuerpos de agua</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_32" model="ek.service.request.line">
+        <field name="name">Inspección de Sistemas Anticrustantes</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_33" model="ek.service.request.line">
+        <field name="name">Inspección prevención contaminación aguas sucias</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+
+    <record id="ek_service_request_line_34" model="ek.service.request.line">
+        <field name="name">Inspección prevención contaminación hidrocarburos IOPP</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_3"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+
+    <record id="ek_service_request_line_35" model="ek.service.request.line">
+        <field name="name">Aprehensión de embarcaciones</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+    <record id="ek_service_request_line_36" model="ek.service.request.line">
+        <field name="name">Autorización cambio de nombre de nave</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_37" model="ek.service.request.line">
+        <field name="name">Autorización registro de nave en otra Capitanía</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_38" model="ek.service.request.line">
+        <field name="name">Cambio Propietario de Nave/ Cambio de nombre nave</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_39" model="ek.service.request.line">
+        <field name="name">Cambio puerto registro/ Cambio características técnicas</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_40" model="ek.service.request.line">
+        <field name="name">Cancelación de Gravamen e Hipotecas</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_41" model="ek.service.request.line">
+        <field name="name">Cancelación de Matrícula (Baja de Nave)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_42" model="ek.service.request.line">
+        <field name="name">Cancelación de Registro de Interdicción</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_43" model="ek.service.request.line">
+        <field name="name">Certificado de registro de propiedad</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_44" model="ek.service.request.line">
+        <field name="name">Certificado de Historia Dominio, Gravamen, etc.</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_45" model="ek.service.request.line">
+        <field name="name">Certificado de escritura inscrita</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_46" model="ek.service.request.line">
+        <field name="name">Certificado de no tener propiedades</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_47" model="ek.service.request.line">
+        <field name="name">Custodia de naves y bienes</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_48" model="ek.service.request.line">
+        <field name="name">Multas y citaciones</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_49" model="ek.service.request.line">
+        <field name="name">Registro de Gravamen e hipoteca</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_50" model="ek.service.request.line">
+        <field name="name">Registro de Interdicción</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_4"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+
+    <record id="ek_service_request_line_51" model="ek.service.request.line">
+        <field name="name">Copias Certificadas de Documentos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_5"/>
+        <field name="show_by_default">True</field>
+    </record>
+    <record id="ek_service_request_line_52" model="ek.service.request.line">
+        <field name="name">Registro de Inscripción de embarcación por primera vez</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_5"/>
+        <field name="show_by_default">True</field>
+    </record>
+    <record id="ek_service_request_line_53" model="ek.service.request.line">
+        <field name="name">Registro/Resciliación de contrato</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_5"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_54" model="ek.service.request.line">
+        <field name="name">Consultas</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_5"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+
+    <record id="ek_service_request_line_55" model="ek.service.request.line">
+        <field name="name">Aprobación de Cuadro de Zafarrancho</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+    <record id="ek_service_request_line_56" model="ek.service.request.line">
+        <field name="name">Aprobación de Evaluación PBIP (Instalación Portuaria)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_57" model="ek.service.request.line">
+        <field name="name">Aprobación de Manual de Gestión de Seguridad</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_58" model="ek.service.request.line">
+        <field name="name">Aprobación ejercicio anual de emergencia a bordo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_59" model="ek.service.request.line">
+        <field name="name">Aprobación ejercicio de protección buque/instalación portuaria</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_60" model="ek.service.request.line">
+        <field name="name">Aprobación de Plan PBIP (Buque/Instalación Portuaria)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_61" model="ek.service.request.line">
+        <field name="name">Aprobación Planos capacidad combustible/bodega/otros</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_62" model="ek.service.request.line">
+        <field name="name">Aprobación de Planos de Seguridad y Contraincendio</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_63" model="ek.service.request.line">
+        <field name="name">Aprobación de planos preliminares</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_64" model="ek.service.request.line">
+        <field name="name">Aprobación de planos Definitivos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_65" model="ek.service.request.line">
+        <field name="name">Aprobación de planos por nacionalización</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_66" model="ek.service.request.line">
+        <field name="name">Aprobación de planos por modificación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_67" model="ek.service.request.line">
+        <field name="name">Aprobación del Libreto de Estabilidad de Naves</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_68" model="ek.service.request.line">
+        <field name="name">Asignación de Código MMSI</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_69" model="ek.service.request.line">
+        <field name="name">Auditoría ISM (Oficina/Buque)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_70" model="ek.service.request.line">
+        <field name="name">Auditoría PBIP (Buque/Instalación Portuaria)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_71" model="ek.service.request.line">
+        <field name="name">Emisión o endoso de documentos SMC</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_72" model="ek.service.request.line">
+        <field name="name">Autorización de Libre Operación (ALO)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_73" model="ek.service.request.line">
+        <field name="name">Autorización Desguace Nave Bandera Nacional/Extranjera</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_74" model="ek.service.request.line">
+        <field name="name">Cancelación de Patente de Navegación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_75" model="ek.service.request.line">
+        <field name="name">Canje de Documentos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_76" model="ek.service.request.line">
+        <field name="name">Certificado de Arqueo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_77" model="ek.service.request.line">
+        <field name="name">Certificado de Dotación Mínima de Seguridad</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_78" model="ek.service.request.line">
+        <field name="name">Certificado de Excención</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_79" model="ek.service.request.line">
+        <field name="name">Certificado de Permiso de Vare/Desvare</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_80" model="ek.service.request.line">
+        <field name="name">Certif. Seguro Garantía contaminación agua por Hidrocarburos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_81" model="ek.service.request.line">
+        <field name="name">Informe Técnico Favorable Importación/Nacionalización Nave</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_82" model="ek.service.request.line">
+        <field name="name">Ingreso y baja de motores fuera de borda</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_83" model="ek.service.request.line">
+        <field name="name">Inspección de Conformidad Pruebas LRIT</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_84" model="ek.service.request.line">
+        <field name="name">Inspección de seguridad naves menores o iguales a 10TRB</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_85" model="ek.service.request.line">
+        <field name="name">Inspección de Seguridad de buque tanque y Carga (>500TRB)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_86" model="ek.service.request.line">
+        <field name="name">Inspección de Seguridad de Buque de Pasaje</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_87" model="ek.service.request.line">
+        <field name="name">Inspección en dique/submarina</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_88" model="ek.service.request.line">
+        <field name="name">Inspección Estado Rector de Puerto</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_89" model="ek.service.request.line">
+        <field name="name">Inspección adicional travesía entre continente y Galápagos</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_90" model="ek.service.request.line">
+        <field name="name">Inspección por siniestro o accidente</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_91" model="ek.service.request.line">
+        <field name="name">Inspección especial a pedido del usuario</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_92" model="ek.service.request.line">
+        <field name="name">Inspección seguridad radioeléctrica de buques</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_93" model="ek.service.request.line">
+        <field name="name">Inspección seguridad por cambio equipo radioeléctrico</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_94" model="ek.service.request.line">
+        <field name="name">Inspección seguridad y prevención de la contaminación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_95" model="ek.service.request.line">
+        <field name="name">Inspección/Endoso de Línea de Carga y francobordo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_96" model="ek.service.request.line">
+        <field name="name">Licencia Construcción / Modificación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_97" model="ek.service.request.line">
+        <field name="name">Matrícula de Nave Menor o Mayor</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_98" model="ek.service.request.line">
+        <field name="name">Pasavante de Navegación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_99" model="ek.service.request.line">
+        <field name="name">Patente de navegación</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_100" model="ek.service.request.line">
+        <field name="name">Permiso de tráfico internacional</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_101" model="ek.service.request.line">
+        <field name="name">Permiso de tráfico nacional</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_102" model="ek.service.request.line">
+        <field name="name">Registro Sinóptico Continuo (RSC)</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_103" model="ek.service.request.line">
+        <field name="name">Remolque de embarcaciones dentro o fuera del país</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_104" model="ek.service.request.line">
+        <field name="name">Troquelado de motor</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+    <record id="ek_service_request_line_105" model="ek.service.request.line">
+        <field name="name">Zarpe</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+        
+    </record>
+    <record id="ek_service_request_line_106" model="ek.service.request.line">
+        <field name="name">Arribo</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+
+    </record>
+    <record id="ek_service_request_line_107" model="ek.service.request.line">
+        <field name="name">Certificaciones que no están establecidas en el tarifario</field>
+        <field name="ek_service_request_group_id" ref="ek_service_request_group_6"/>
+        <field name="show_by_default">True</field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ek_measures_mtrs" model="ek.boats.measures">
+        <field name="name">Mtrs</field>
+        <field name="measures">Metros</field>
+    </record>
+    <record id="ek_measures_tm" model="ek.boats.measures">
+        <field name="name">Tm</field>
+        <field name="measures">TM</field>
+    </record>
+</odoo>

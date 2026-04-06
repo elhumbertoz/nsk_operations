@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <record id="ek_paperformat_processing_request1" model="report.paperformat">
+    <field name="name">paperformat_processing_request1</field>
+    <field name="default" eval="False"/>
+    <field name="format">custom</field>
+    <field name="page_height">297</field>
+    <field name="page_width">210</field>
+    <field name="orientation">Portrait</field>
+    <field name="margin_top">25</field>
+    <field name="margin_bottom">15</field>
+    <field name="margin_left">10</field>
+    <field name="margin_right">10</field>
+    <field name="header_line" eval="False"/>
+    <field name="header_spacing">20</field>
+    <field name="dpi">90</field>
+  </record>
+
+  <record id="report_processing_request" model="ir.actions.report">
+    <field name="name">Solicitud</field>
+    <field name="model">ek.operation.request</field>
+    <field name="report_name">ek_l10n_shipping_operations.processing_request_id1</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_file">ek_l10n_shipping_operations.processing_request_id1</field>
+    <field name="print_report_name">'Solicitud- %s' % (object.name).replace('/', '')</field>
+    <field name="paperformat_id" ref="ek_paperformat_processing_request1"/>
+    <!-- <field name="binding_model_id" ref="model_ek_operation_request"/>
+        <field name="binding_type">report</field> -->
+  </record>
+
+  <template id="processing_request_id1">
+    <t t-foreach="docs" t-as="o">
+      <t t-call="ek_l10n_shipping_operations.report_capman_header1"/>
+      <t t-call="web.html_container">
+        <t t-call="ek_l10n_shipping_operations.action_report_pdf_paramet1"/>
+      </t>
+    </t>
+  </template>
+
+  <template id="action_report_pdf_paramet1">
+    <t t-call="web.basic_layout">
+      <t t-foreach="docs" t-as="o">
+        <t t-set="params" t-value="docs.action_report_pdf_paramet()"/>
+        <t t-set="selected_names" t-value="set(o.ek_service_request_report_line_ids.mapped('name'))"/>
+        <style>
+          .table-sm td,
+          .table-sm th {
+          padding: 0;
+          }
+          .inter {
+          padding: 0;
+          }
+          .letras {
+              font-size: 12px;
+              font-family: Tahoma, sans-serif;
+          }
+          .space_res1 {
+              text-indent: 39px;
+          }
+          .space_res1_1 {
+              text-indent: 10px;
+          }
+          .space_res2 {
+              text-indent: 40px;
+          }
+          .space_res2_1 {
+              text-indent: 20px;
+          }
+        </style>
+        <div class="row" style="height: 42px;"></div>
+        <div class="container inter letras">
+          <div class="row">
+            <br/>
+            <div class="col-6">
+            </div>
+            <div class="col-6" style="text-align: right">
+              <strong style="color: #050587; text-align: right">
+                <span t-field="o.city_id.name"/>
+                <span></span>
+                <t t-if="o.manual_day">
+                  <t t-out="o.format_dates_to_string(apply_manual_day=True)"/>
+                </t>
+                <t t-else="">
+                  <t t-out="o.format_dates_to_string()"/>
+                </t>
+              </strong>
+            </div>
+          </div>
+          <div class="row" style="height: 10px;"></div>
+          <div class="row">
+            <br/>
+            <div class="col-6">
+              <span>Señor</span>
+            </div>
+            <div class="col-6" style="text-align: right">
+              <strong># de Solicitud:
+                <strong style="color: #050587" t-field="o.name"/>
+              </strong>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <strong > CAPITAN DE PUERTO DE</strong>
+              <span></span>
+              <strong style="color: #050587">
+                <span t-field="o.city_id.name"/>
+              </strong>
+            </div>
+            <div class="col-4">
+              <span></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              Ciudad.-
+            </div>
+            <div class="col-6">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span>Yo,
+                <strong style="color: #050587" t-field="o.company_id.name"/>
+                <strong style="color: #050587" t-field="o.company_id.partner_id.l10n_latam_identification_type_id.name"/>
+                <strong style="color: #050587; align:right" t-field="o.company_id.partner_id.vat"/>
+, solicito a usted se digne disponer se me conceda el (los) siguiente(s) documento(s) para lo cual adjunto los requisitos detallados en el ítem 6.
+              </span>
+            </div>
+          </div>
+          <div class="row" style="height: 10px;"></div>
+          <div class="row">
+            <br/>
+            <div class="col-1">
+            </div>
+            <div class="col-11" style="text-align: right">
+              <strong>
+                <span>Jerarquía y Especialidad/Nave y No. Matricula:</span>
+                <span style="color: #050587; font-size: 14px;" t-field="o.ek_ship_registration_id"/>
+              </strong>
+            </div>
+          </div>
+          <div class="row" style="height: 10px;"></div>
+          <div class="row">
+            <div class="col-6">
+              <table class="table table-borderless table-sm">
+                <t t-foreach="params.filtered(lambda x: x.position =='left' )" t-as="line">
+                  <tr>
+                    <td>
+                      <t t-if="line.line_strong">
+                        <strong>
+                          <span style="color: #FFFFFF;">_.</span>
+                          <span class="letras" t-field="line.name" style="text-align: left;"/>
+                        </strong>
+                      </t>
+                      <t t-else="">
+                        <strong>
+                          <span class="letras" t-field="line.name" style="text-align: left;"/>
+                        </strong>
+                      </t>
+                    </td>
+                  </tr>
+                  <t t-foreach="line.ek_service_request_line_ids" t-as="product">
+                    <tr>
+                      <td>
+                        <t t-if="product.space > 0">
+                          <div class="space_res1 letras" style="height: 15px;">
+                            <span t-field="product.name"/>
+                          </div>
+                        </t>
+                        <t t-else="">
+                          <div class="letras space_res1_1" style="height: 15px;">
+                            <span t-field="product.name"/>
+                          </div>
+                        </t>
+                      </td>
+                      <td style="padding:0; border: 1px solid #000;width: 20px; text-align: center">
+                        <div style="padding:0;text-align: center; height: 15px;">
+                          <t t-if="product.name in selected_names">
+                            <span style="padding:0; text-align: center;color: #050587;">X</span>
+                          </t>
+                          <t t-else="">
+                            <span style="padding:0; text-align: center;color: #FFFFFF;">X</span>
+                          </t>
+                        </div>
+                      </td>
+                    </tr>
+                  </t>
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                </t>
+              </table>
+            </div>
+            <div class="col-6">
+              <table class="table table-borderless table-sm">
+                <t t-foreach="params.filtered(lambda x: x.position =='right' )" t-as="line">
+                  <tr>
+                    <td style=" text-indent: 20px;">
+                      <strong>
+                        <span class="letras" t-field="line.name" style="text-align: left;"/>
+                      </strong>
+                    </td>
+                  </tr>
+                  <t t-foreach="line.ek_service_request_line_ids" t-as="product">
+                    <tr>
+                      <td>
+                        <t t-if="product.space > 0">
+                          <div class="space_res2 letras" style="height: 15px;">
+                            <span t-field="product.name"/>
+                          </div>
+                        </t>
+                        <t t-else="">
+                          <div class="letras space_res2_1" style="height: 15px;">
+                            <span t-field="product.name"/>
+                          </div>
+                        </t>
+                      </td>
+                      <td style="padding:0; border: 1px solid #000;width: 20px;  text-align: center">
+                        <div style="padding:0;text-align: center; height: 15px;">
+                          <t t-if="product.name in selected_names">
+                            <span style=" padding:0;text-align: center;color: #050587;">X</span>
+                          </t>
+                          <t t-else="">
+                            <span style=" padding:0;text-align: center;color: #FFFFFF;">X</span>
+                          </t>
+                        </div>
+                      </td>
+                    </tr>
+                  </t>
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                </t>
+              </table>
+            </div>
+          </div>
+          <div class="row" style="height: 63px;"></div>
+          <div class="row">
+            <div class="col-12">
+              <strong>6. Documentos entregados:</strong>
+            </div>
+          </div>
+          <div class="col-12">
+            <table width="100%">
+              <tr valign="top">
+                <td width="79%" style="border:2px solid #FFFFFF;">
+                </td>
+                <td width="5%" style="border:2px solid #FFFFFF;text-align:right;">
+                  <strong>ORIGINAL</strong>
+                </td>
+                <td width="5%" style="border:2px solid #FFFFFF;">
+                </td>
+                <td width="5%" style="border:2px solid #FFFFFF;">
+                  <strong>COPIA</strong>
+                </td>
+                <td width="6%" style="border:2px solid #FFFFFF;">
+                </td>
+              </tr>
+            </table>
+            <table width="100%">
+              <tr style="padding:0;">
+                <td width="2%" style="padding:0;border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td width="22%" style="padding:0;border: 2px solid #FFFFFF; height: 20px;">
+                  Titulo:
+                </td>
+                <td width="9%" style="padding:0;border: 2px solid #FFFFFF;"></td>
+                <td width="42%" style="padding:0;border-top: 2px solid #FFFFFF; border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div>
+                    <strong style="color: #050587" t-field="o.title"/>
+                  </div>
+                </td>
+                <td width="5%" style="padding:0;border: 1px solid #000000; height: 20px; text-align: center; ">
+                  <span style="color: #050587" t-if="o.title_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td width="5%" style="padding:0;border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td width="5%" style="padding:0;border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.title_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td width="6%" style="padding:0;border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF;  border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: no2px solid #FFFFFFe; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                  Cursos:
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF; text-align:right;">
+                  01
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div>
+                    <strong style="color: #050587" t-field="o.curse_01"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_01_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_01_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  02
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 20px;">
+                    <strong style="color: #050587" t-field="o.curse_02"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_02_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_02_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  03
+                </td>
+                <td style="border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 20px;">
+                    <strong style="color: #050587" t-field="o.curse_03"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_03_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_03_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  04
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 20px;">
+                    <strong style="color: #050587" t-field="o.curse_04"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_04_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_04_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  05 o más
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 20px;">
+                    <strong style="color: #050587" t-field="o.curse_05"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_05_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;text-align: center;">
+                  <span style="color: #050587" t-if="o.curse_05_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid transparent; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td colspan="2" style="border: 2px solid #FFFFFF; height: 20px;">
+                  Certificado Médico emitido por DIRNEA
+                </td>
+                <td style="border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587" t-field="o.certificate_medical"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.certificate_medical_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.certificate_medical_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td colspan="2" style="border: 2px solid #FFFFFF; height: 20px;">
+                  Ficha Médica
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587" t-field="o.file_medical"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.file_medical_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.file_medical_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; ; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td colspan="2" style="border: 2px solid #FFFFFF; height: 20px;">
+                  Seaman’s Book (Libretín) Anterior
+                </td>
+                <td style="border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587" t-field="o.seamn_book"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.seamn_book_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.seamn_book_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF;  border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td colspan="2" style="border: 2px solid #FFFFFF; height: 20px;">
+                  Entrega de Credencial Anterior
+                </td>
+                <td style="border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587" t-field="o.credential_delivery"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.credential_delivery_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.credential_delivery_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr >
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td colspan="2" style="border: 2px solid #FFFFFF; height: 20px;">
+                  Entrega de Denuncia por pérdida
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587" t-field="o.complaint_delivery"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.complaint_delivery_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.complaint_delivery_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                  Otros Documentos
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  01
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div>
+                    <strong style="color: #050587" t-field="o.other_document_01"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_01_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_01_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr >
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  02
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div>
+                    <strong style="color: #050587" t-field="o.other_document_02"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_02_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_02_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+              <tr >
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="border: 2px solid #FFFFFF; height: 20px;">
+                </td>
+                <td style="padding:0;border: 2px solid #FFFFFF;text-align:right;">
+                  03
+                </td>
+                <td style=" border-bottom:  1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 1px solid #000000; height: 20px; ">
+                  <div>
+                    <strong style="color: #050587" t-field="o.other_document_03"/>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000000; height: 20px;  text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_03_original">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-left: 1px solid #000000; border-right: 1px solid #000000;  height: 20px;">
+                </td>
+                <td style="border: 1px solid #000000; height: 20px; text-align: center;">
+                  <span style="color: #050587" t-if="o.other_document_03_copy">
+                    <strong>X</strong>
+                  </span>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; ">
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <strong>7. Datos Personales:
+              </strong>
+            </div>
+          </div>
+          <div class="col-12">
+            <table width="100%">
+              <tr style="border: 2px solid #FFFFFF">
+                <td width="2%"></td>
+                <td width="40%"></td>
+                <td width="20%"></td>
+                <td width="40%"></td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="2" style="border-top: 2px solid #FFFFFF; border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Nombres:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.name"></strong>
+                  </div>
+                </td>
+                <td style="border-top: 2px solid #FFFFFF; border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Género:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.l10n_ec_gender"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="3" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Lugar y Fecha de Nacimiento:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-out="o.format_dates_to_string(user.partner_id.l10n_ec_birthdate)"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="3" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Dirección Domiciliaria:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.street"></strong>
+                    <strong style="color: #050587;" t-field="user.partner_id.street2"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="1" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Nacionalidad:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.nationality_id.name"></strong>
+                  </div>
+                </td>
+                <td colspan="2" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Email:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.email"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="1" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Teléfono:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.phone"></strong>
+                  </div>
+                </td>
+                <td colspan="2" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Celular:</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="user.partner_id.mobile"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="2" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Número de Libretín (de ser requerido):</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="o.number_booklet"></strong>
+                  </div>
+                </td>
+                <td colspan="1" style="border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px;">
+                  <strong>Matrícula (Nave/Persona):</strong>
+                  <br/>
+                  <div style="text-indent: 40px;">
+                    <strong style="color: #050587;" t-field="o.boat_registration"></strong>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #FFFFFF"></td>
+                <td colspan="3" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 2px solid #FFFFFF; border-right: 2px solid #FFFFFF; min-height: 30px; word-break: break-word; white-space: normal;">
+                  <strong>Explicación Adicional:</strong>
+                  <br/>
+                  <div>
+                    <!-- Texto con fechas formateadas (sin hora) y destacadas con background amarillo -->
+                    <p style="font-size: 14px; color: #050587; text-align: justify; margin-bottom: 0px;" t-raw="o.truncate_string(o.description_name_html or '', 99999)"></p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <t t-if="o.signature">
+                <center>
+                  <img t-att-src="image_data_uri(o.signature)" style="max-height: 7cm; max-width: 7cm; border-bottom: 1px solid #000;"/>
+                </center>
+                <center>
+                  <span>
+                    <strong>Firma del Solicitante</strong>
+                  </span>
+                </center>
+                <center>
+                  <strong>CC. No. <span></span>
+                    <span style="color: #050587" t-field="o.vat"/>
+                  </strong>
+                </center>
+              </t>
+              <t t-else="">
+                <t t-set="current_user_signature" t-value="o.get_current_user_signature()"/>
+                <t t-if="current_user_signature">
+                  <center>
+                    <img t-att-src="image_data_uri(current_user_signature)" style="max-height: 7cm; max-width: 7cm; border-bottom: 1px solid #000;"/>
+                  </center>
+                  <center>
+                    <span>
+                      <strong>Firma del Solicitante</strong>
+                    </span>
+                  </center>
+                  <center>
+                    <strong>CC. No. <span></span>
+                      <span style="color: #050587" t-field="user.partner_id.vat"/>
+                    </strong>
+                  </center>
+                </t>
+                <t t-else="">
+                  <center>
+                    <div style="height: 3cm; width: 7cm; border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                      <span style="color: #888; font-style: italic;"></span>
+                    </div>
+                  </center>
+                  <center>
+                    <span>
+                      <strong>Firma del Solicitante</strong>
+                    </span>
+                  </center>
+                  <center>
+                    <strong>CC. No. <span></span>
+                      <span style="color: #050587" t-field="user.partner_id.vat"/>
+                    </strong>
+                  </center>
+                </t>
+              </t>
+              <br/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4" style="padding-top: 128px;">
+              <div style="color: #050587;font-size: 10px" t-out="o.truncate_string(o.text_descripton_capman, 99999)"></div>
+              <!-- <strong style="color: #050587 ; font-size: 10px"><span t-field="o.text_descripton_capman"/></strong> -->
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-7">
+              <table class="table table-bordered" style="width: 100%; border: 1px solid black; margin-left: auto;">
+                <tr>
+                  <td style="width: 65%;padding: 0; text-align: center;">
+                    <strong>Validado por:</strong>
+                  </td>
+                  <td style="width: 35%; padding: 0; text-align: center;">
+                    <strong>Aprobado</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <center>
+                      <strong style="color: #FFFFFF">Firma</strong>
+                    </center>
+                    <br/>
+
+                    <strong style="color: #FFFFFF">Nombre:</strong>
+                  </td>
+                  <td style="text-align: center;" rowspan="2">
+                    <table class="table table-bordered" width="100%">
+                      <tr>
+                        <td width="20%" style="border:2px solid #FFFFFF;"/>
+                        <td width="20%" height="100%" class="card" style="border: 2px solid black; padding: 15px"></td>
+                        <td width="20%" style="border:2px solid #FFFFFF;"></td>
+                        <td width="20%" height="100%" class="card" style="border: 2px solid black;padding: 15px"></td>
+                        <td width="20%" style="border:2px solid #FFFFFF;"/>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding: 0;text-align: center;border:2px solid #FFFFFF;vertical-align: top">
+                          <span style="color: #FFFFFF">------</span>
+                          <strong>SI</strong>
+                        </td>
+                        <td colspan="2" style="padding: 0;text-align: center; border:2px solid #FFFFFF;vertical-align: top">
+                          <span style="color: #FFFFFF">------</span>
+                          <strong>NO</strong>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td >
+                    <center>
+                      <strong>Firma</strong>
+                    </center>
+                    <br/>
+
+                    <strong>Nombre:</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <strong>Motivo de Rechazo:</strong>
+                    <br/>
+                    <br/>
+                    <br/>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <strong>#Factura (s):</strong>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </t>
+    </t>
+  </template>
+
+  <template id="report_capman_header1">
+    <t t-set="company" t-value="user.company_id"/>
+    <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+      <div class="o_boxed_header" style="color: #000; font-size: 0.9em; border: 0;">
+        <t t-set="company_logo" t-value="image_data_uri(docs.company_id.image_1_header_report)"/>
+        <t t-set="company_logo_2" t-value="image_data_uri(docs.company_id.image_2_header_report)"/>
+        <div class="row">
+          <div class="col-2">
+            <div style="text-align: right;">
+              <img t-att-src="company_logo" style="height: 100px; width:150px;"/>
+            </div>
+          </div>
+          <div class="col-8">
+            <div style="text-align: center;margin-top: 1px;">
+              <br/>
+              <br/>
+              <strong style="font-size:  16pt;
+                                font-family: Arial, sans-serif;">ARMADA DEL ECUADOR</strong>
+              <br/>
+              <strong style="font-size:  11pt;
+                                font-family:Arial, sans-serif;">DIRECCIÓN NACIONAL DE LOS ESPACIOS ACUÁTICOS</strong>
+            </div>
+          </div>
+          <div class="col-2">
+            <div style="text-align: left;">
+              <br/>
+              <br/>
+              <img t-att-src="company_logo_2" style="height: 60px; width:60px;"/>
+            </div>
+          </div>
+        </div>
+        <div class="header-line" style="border-top: 2px solid #000; margin-top: 10px;"/>
+      </div>
+    </div>
+    <div class="footer" style="font-family: Tahoma, sans-serif; font-size: 12px; text-align: center;">
+      <strong>
+        <span style="float: left; font-family: Tahoma, sans-serif; font-size: 12px;">FP.GMP.01-01 Ver.02</span>
+      </strong>
+      <span style="margin: 0 auto; font-family: Tahoma, sans-serif; font-size: 12px; color: #0000FF; ">
+        <u>www.dirnea.org</u>
+      </span>
+      <strong>
+        <span style="float: right; font-family: Tahoma, sans-serif; font-size: 12px;">Página <span class="page"/>
+        de
+        <span class="topage"/>
+      </span>
+    </strong>
+  </div>
+</template>
+</odoo>

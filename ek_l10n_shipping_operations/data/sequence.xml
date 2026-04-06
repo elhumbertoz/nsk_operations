@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="ek_boats_information_sequence" model="ir.sequence">
+        <field name="name">ek.boats.information.sequence</field>
+        <field name="code">ek.boats.information.sequence</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field eval="'V-' + str(datetime.now().year) + '-'" name="prefix"/>
+        <field name="padding">4</field>
+        <field name="company_id"></field>
+    </record>
+    <record id="ek_operation_request_sequence" model="ir.sequence">
+        <field name="name">ek.operation.request.sequence</field>
+        <field name="code">ek.operation.request.sequence</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field name="padding">8</field>
+        <field name="company_id"></field>
+    </record>
+    <record id="ek_bl_manifest_record_id" model="ir.sequence">
+        <field name="name">ek.bl.manifest.record.sequence</field>
+        <field name="code">ek.bl.manifest.record.sequence</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field eval="'CEC' + str(datetime.now().year) + '7828'" name="prefix"/>
+        <field name="padding">4</field>
+        <field name="company_id"></field>
+    </record>
+</odoo>

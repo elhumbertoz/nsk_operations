@@ -1,0 +1,1804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="city_1" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">101</field>
+            <field name="name">CUENCA</field>
+        </record>
+
+
+        <record id="city_2" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">102</field>
+            <field name="name">GIRON</field>
+        </record>
+
+
+        <record id="city_3" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">103</field>
+            <field name="name">GUALACEO</field>
+        </record>
+
+
+        <record id="city_4" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">104</field>
+            <field name="name">NABON</field>
+        </record>
+
+
+        <record id="city_5" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">105</field>
+            <field name="name">PAUTE</field>
+        </record>
+
+
+        <record id="city_6" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">106</field>
+            <field name="name">PUCARA</field>
+        </record>
+
+
+        <record id="city_7" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">107</field>
+            <field name="name">SAN FERNANDO</field>
+        </record>
+
+
+        <record id="city_8" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">108</field>
+            <field name="name">SANTA ISABEL</field>
+        </record>
+
+
+        <record id="city_9" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">109</field>
+            <field name="name">SIGSIG</field>
+        </record>
+
+
+        <record id="city_10" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">110</field>
+            <field name="name">OÑA</field>
+        </record>
+
+
+        <record id="city_11" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">111</field>
+            <field name="name">CHORDELEG</field>
+        </record>
+
+
+        <record id="city_12" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">112</field>
+            <field name="name">EL PAN</field>
+        </record>
+
+
+        <record id="city_13" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">113</field>
+            <field name="name">SEVILLA DE ORO</field>
+        </record>
+
+
+        <record id="city_14" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">114</field>
+            <field name="name">GUACHAPALA</field>
+        </record>
+
+
+        <record id="city_15" model="res.city">
+            <field name="state_id" ref="base.state_ec_01" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">115</field>
+            <field name="name">CAMILO PONCE ENRIQUEZ</field>
+        </record>
+
+
+        <record id="city_16" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">201</field>
+            <field name="name">GUARANDA</field>
+        </record>
+
+
+        <record id="city_17" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">202</field>
+            <field name="name">CHILLANES</field>
+        </record>
+
+
+        <record id="city_18" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">203</field>
+            <field name="name">CHIMBO</field>
+        </record>
+
+
+        <record id="city_19" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">204</field>
+            <field name="name">ECHEANDIA</field>
+        </record>
+
+
+        <record id="city_20" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">205</field>
+            <field name="name">SAN MIGUEL</field>
+        </record>
+
+
+        <record id="city_21" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">206</field>
+            <field name="name">CALUMA</field>
+        </record>
+
+
+        <record id="city_22" model="res.city">
+            <field name="state_id" ref="base.state_ec_02" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">207</field>
+            <field name="name">LAS NAVES</field>
+        </record>
+
+
+        <record id="city_23" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">301</field>
+            <field name="name">AZOGUES</field>
+        </record>
+
+
+        <record id="city_24" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">302</field>
+            <field name="name">BIBLIAN</field>
+        </record>
+
+
+        <record id="city_25" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">303</field>
+            <field name="name">CAÑAR</field>
+        </record>
+
+
+        <record id="city_26" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">304</field>
+            <field name="name">LA TRONCAL</field>
+        </record>
+
+
+        <record id="city_27" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">305</field>
+            <field name="name">EL TAMBO</field>
+        </record>
+
+
+        <record id="city_28" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">306</field>
+            <field name="name">DELEG</field>
+        </record>
+
+
+        <record id="city_29" model="res.city">
+            <field name="state_id" ref="base.state_ec_03" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">307</field>
+            <field name="name">SUSCAL</field>
+        </record>
+
+
+        <record id="city_30" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">401</field>
+            <field name="name">TULCAN</field>
+        </record>
+
+
+        <record id="city_31" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">402</field>
+            <field name="name">BOLIVAR</field>
+        </record>
+
+
+        <record id="city_32" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">403</field>
+            <field name="name">ESPEJO</field>
+        </record>
+
+
+        <record id="city_33" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">404</field>
+            <field name="name">MIRA</field>
+        </record>
+
+
+        <record id="city_34" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">405</field>
+            <field name="name">MONTUFAR</field>
+        </record>
+
+
+        <record id="city_35" model="res.city">
+            <field name="state_id" ref="base.state_ec_04" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">406</field>
+            <field name="name">SAN PEDRO DE HUACA</field>
+        </record>
+
+
+        <record id="city_36" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">501</field>
+            <field name="name">LATACUNGA</field>
+        </record>
+
+
+        <record id="city_37" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">502</field>
+            <field name="name">LA MANA</field>
+        </record>
+
+
+        <record id="city_38" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">503</field>
+            <field name="name">PANGUA</field>
+        </record>
+
+
+        <record id="city_39" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">504</field>
+            <field name="name">PUJILI</field>
+        </record>
+
+
+        <record id="city_40" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">505</field>
+            <field name="name">SALCEDO</field>
+        </record>
+
+
+        <record id="city_41" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">506</field>
+            <field name="name">SAQUISILI</field>
+        </record>
+
+
+        <record id="city_42" model="res.city">
+            <field name="state_id" ref="base.state_ec_05" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">507</field>
+            <field name="name">SIGCHOS</field>
+        </record>
+
+
+        <record id="city_43" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">601</field>
+            <field name="name">RIOBAMBA</field>
+        </record>
+
+
+        <record id="city_44" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">602</field>
+            <field name="name">ALAUSI</field>
+        </record>
+
+
+        <record id="city_45" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">603</field>
+            <field name="name">COLTA</field>
+        </record>
+
+
+        <record id="city_46" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">604</field>
+            <field name="name">CHAMBO</field>
+        </record>
+
+
+        <record id="city_47" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">605</field>
+            <field name="name">CHUNCHI</field>
+        </record>
+
+
+        <record id="city_48" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">606</field>
+            <field name="name">GUAMOTE</field>
+        </record>
+
+
+        <record id="city_49" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">607</field>
+            <field name="name">GUANO</field>
+        </record>
+
+
+        <record id="city_50" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">608</field>
+            <field name="name">PALLATANGA</field>
+        </record>
+
+
+        <record id="city_51" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">609</field>
+            <field name="name">PENIPE</field>
+        </record>
+
+
+        <record id="city_52" model="res.city">
+            <field name="state_id" ref="base.state_ec_06" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">610</field>
+            <field name="name">CUMANDA</field>
+        </record>
+
+
+        <record id="city_53" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">701</field>
+            <field name="name">MACHALA</field>
+        </record>
+
+
+        <record id="city_54" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">702</field>
+            <field name="name">ARENILLAS</field>
+        </record>
+
+
+        <record id="city_55" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">703</field>
+            <field name="name">ATAHUALPA</field>
+        </record>
+
+
+        <record id="city_56" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">704</field>
+            <field name="name">BALSAS</field>
+        </record>
+
+
+        <record id="city_57" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">705</field>
+            <field name="name">CHILLA</field>
+        </record>
+
+
+        <record id="city_58" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">706</field>
+            <field name="name">EL GUABO</field>
+        </record>
+
+
+        <record id="city_59" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">707</field>
+            <field name="name">HUAQUILLAS</field>
+        </record>
+
+
+        <record id="city_60" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">708</field>
+            <field name="name">MARCABELI</field>
+        </record>
+
+
+        <record id="city_61" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">709</field>
+            <field name="name">PASAJE</field>
+        </record>
+
+
+        <record id="city_62" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">710</field>
+            <field name="name">PIÑAS</field>
+        </record>
+
+
+        <record id="city_63" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">711</field>
+            <field name="name">PORTOVELO</field>
+        </record>
+
+
+        <record id="city_64" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">712</field>
+            <field name="name">SANTA ROSA</field>
+        </record>
+
+
+        <record id="city_65" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">713</field>
+            <field name="name">ZARUMA</field>
+        </record>
+
+
+        <record id="city_66" model="res.city">
+            <field name="state_id" ref="base.state_ec_07" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">714</field>
+            <field name="name">LAS LAJAS</field>
+        </record>
+
+
+        <record id="city_67" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">801</field>
+            <field name="name">ESMERALDAS</field>
+        </record>
+
+
+        <record id="city_68" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">802</field>
+            <field name="name">ELOY ALFARO</field>
+        </record>
+
+
+        <record id="city_69" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">803</field>
+            <field name="name">MUISNE</field>
+        </record>
+
+
+        <record id="city_70" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">804</field>
+            <field name="name">QUININDE</field>
+        </record>
+
+
+        <record id="city_71" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">805</field>
+            <field name="name">SAN LORENZO</field>
+        </record>
+
+
+        <record id="city_72" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">806</field>
+            <field name="name">ATACAMES</field>
+        </record>
+
+
+        <record id="city_73" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">807</field>
+            <field name="name">RIOVERDE</field>
+        </record>
+
+
+        <record id="city_74" model="res.city">
+            <field name="state_id" ref="base.state_ec_08" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">808</field>
+            <field name="name">LA CONCORDIA</field>
+        </record>
+
+
+        <record id="city_75" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">901</field>
+            <field name="name">GUAYAQUIL</field>
+        </record>
+
+
+        <record id="city_76" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">902</field>
+            <field name="name">ALFREDO BAQUERIZO MORENO</field>
+        </record>
+
+
+        <record id="city_77" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">903</field>
+            <field name="name">BALAO</field>
+        </record>
+
+
+        <record id="city_78" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">904</field>
+            <field name="name">BALZAR</field>
+        </record>
+
+
+        <record id="city_79" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">905</field>
+            <field name="name">COLIMES</field>
+        </record>
+
+
+        <record id="city_80" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">906</field>
+            <field name="name">DAULE</field>
+        </record>
+
+
+        <record id="city_81" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">907</field>
+            <field name="name">DURAN</field>
+        </record>
+
+
+        <record id="city_82" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">908</field>
+            <field name="name">EMPALME</field>
+        </record>
+
+
+        <record id="city_83" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">909</field>
+            <field name="name">EL TRIUNFO</field>
+        </record>
+
+
+        <record id="city_84" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">910</field>
+            <field name="name">MILAGRO</field>
+        </record>
+
+
+        <record id="city_85" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">911</field>
+            <field name="name">NARANJAL</field>
+        </record>
+
+
+        <record id="city_86" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">912</field>
+            <field name="name">NARANJITO</field>
+        </record>
+
+
+        <record id="city_87" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">913</field>
+            <field name="name">PALESTINA</field>
+        </record>
+
+
+        <record id="city_88" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">914</field>
+            <field name="name">PEDRO CARBO</field>
+        </record>
+
+
+        <record id="city_89" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">916</field>
+            <field name="name">SAMBORONDON</field>
+        </record>
+
+
+        <record id="city_90" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">918</field>
+            <field name="name">SANTA LUCIA</field>
+        </record>
+
+
+        <record id="city_91" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">919</field>
+            <field name="name">SALITRE</field>
+        </record>
+
+
+        <record id="city_92" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">920</field>
+            <field name="name">SAN JACINTO DE YAGUACHI</field>
+        </record>
+
+
+        <record id="city_93" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">921</field>
+            <field name="name">PLAYAS</field>
+        </record>
+
+
+        <record id="city_94" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">922</field>
+            <field name="name">SIMON BOLIVAR</field>
+        </record>
+
+
+        <record id="city_95" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">923</field>
+            <field name="name">CRNEL. MARCELINO MARIDUEÑA</field>
+        </record>
+
+
+        <record id="city_96" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">924</field>
+            <field name="name">LOMAS DE SARGENTILLO</field>
+        </record>
+
+
+        <record id="city_97" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">925</field>
+            <field name="name">NOBOL</field>
+        </record>
+
+
+        <record id="city_98" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">927</field>
+            <field name="name">GNRAL. ANTONIO ELIZALDE</field>
+        </record>
+
+
+        <record id="city_99" model="res.city">
+            <field name="state_id" ref="base.state_ec_09" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">928</field>
+            <field name="name">ISIDRO AYORA</field>
+        </record>
+
+
+        <record id="city_100" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1001</field>
+            <field name="name">IBARRA</field>
+        </record>
+
+
+        <record id="city_101" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1002</field>
+            <field name="name">ANTONIO ANTE</field>
+        </record>
+
+
+        <record id="city_102" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1003</field>
+            <field name="name">COTACACHI</field>
+        </record>
+
+
+        <record id="city_103" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1004</field>
+            <field name="name">OTAVALO</field>
+        </record>
+
+
+        <record id="city_104" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1005</field>
+            <field name="name">PIMAMPIRO</field>
+        </record>
+
+
+        <record id="city_105" model="res.city">
+            <field name="state_id" ref="base.state_ec_10" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1006</field>
+            <field name="name">SAN MIGUEL DE URCUQUI</field>
+        </record>
+
+
+        <record id="city_106" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1101</field>
+            <field name="name">LOJA</field>
+        </record>
+
+
+        <record id="city_107" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1102</field>
+            <field name="name">CALVAS</field>
+        </record>
+
+
+        <record id="city_108" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1103</field>
+            <field name="name">CATAMAYO</field>
+        </record>
+
+
+        <record id="city_109" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1104</field>
+            <field name="name">CELICA</field>
+        </record>
+
+
+        <record id="city_110" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1105</field>
+            <field name="name">CHAGUARPAMBA</field>
+        </record>
+
+
+        <record id="city_111" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1106</field>
+            <field name="name">ESPINDOLA</field>
+        </record>
+
+
+        <record id="city_112" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1107</field>
+            <field name="name">GONZANAMA</field>
+        </record>
+
+
+        <record id="city_113" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1108</field>
+            <field name="name">MACARA</field>
+        </record>
+
+
+        <record id="city_114" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1109</field>
+            <field name="name">PALTAS</field>
+        </record>
+
+
+        <record id="city_115" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1110</field>
+            <field name="name">PUYANGO</field>
+        </record>
+
+
+        <record id="city_116" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1111</field>
+            <field name="name">SARAGURO</field>
+        </record>
+
+
+        <record id="city_117" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1112</field>
+            <field name="name">SOZORANGA</field>
+        </record>
+
+
+        <record id="city_118" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1113</field>
+            <field name="name">ZAPOTILLO</field>
+        </record>
+
+
+        <record id="city_119" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1114</field>
+            <field name="name">PINDAL</field>
+        </record>
+
+
+        <record id="city_120" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1115</field>
+            <field name="name">QUILANGA</field>
+        </record>
+
+
+        <record id="city_121" model="res.city">
+            <field name="state_id" ref="base.state_ec_11" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1116</field>
+            <field name="name">OLMEDO</field>
+        </record>
+
+
+        <record id="city_122" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1201</field>
+            <field name="name">BABAHOYO</field>
+        </record>
+
+
+        <record id="city_123" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1202</field>
+            <field name="name">BABA</field>
+        </record>
+
+
+        <record id="city_124" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1203</field>
+            <field name="name">MONTALVO</field>
+        </record>
+
+
+        <record id="city_125" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1204</field>
+            <field name="name">PUEBLOVIEJO</field>
+        </record>
+
+
+        <record id="city_126" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1205</field>
+            <field name="name">QUEVEDO</field>
+        </record>
+
+
+        <record id="city_127" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1206</field>
+            <field name="name">URDANETA</field>
+        </record>
+
+
+        <record id="city_128" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1207</field>
+            <field name="name">VENTANAS</field>
+        </record>
+
+
+        <record id="city_129" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1208</field>
+            <field name="name">VINCES</field>
+        </record>
+
+
+        <record id="city_130" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1209</field>
+            <field name="name">PALENQUE</field>
+        </record>
+
+
+        <record id="city_131" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1210</field>
+            <field name="name">BUENA FE</field>
+        </record>
+
+
+        <record id="city_132" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1211</field>
+            <field name="name">VALENCIA</field>
+        </record>
+
+
+        <record id="city_133" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1212</field>
+            <field name="name">MOCACHE</field>
+        </record>
+
+
+        <record id="city_134" model="res.city">
+            <field name="state_id" ref="base.state_ec_12" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1213</field>
+            <field name="name">QUINSALOMA</field>
+        </record>
+
+
+        <record id="city_135" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1301</field>
+            <field name="name">PORTOVIEJO</field>
+        </record>
+
+
+        <record id="city_136" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1302</field>
+            <field name="name">BOLIVAR</field>
+        </record>
+
+
+        <record id="city_137" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1303</field>
+            <field name="name">CHONE</field>
+        </record>
+
+
+        <record id="city_138" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1304</field>
+            <field name="name">EL CARMEN</field>
+        </record>
+
+
+        <record id="city_139" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1305</field>
+            <field name="name">FLAVIO ALFARO</field>
+        </record>
+
+
+        <record id="city_140" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1306</field>
+            <field name="name">JIPIJAPA</field>
+        </record>
+
+
+        <record id="city_141" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1307</field>
+            <field name="name">JUNIN</field>
+        </record>
+
+
+        <record id="city_142" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1308</field>
+            <field name="name">MANTA</field>
+        </record>
+
+
+        <record id="city_143" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1309</field>
+            <field name="name">MONTECRISTI</field>
+        </record>
+
+
+        <record id="city_144" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1310</field>
+            <field name="name">PAJAN</field>
+        </record>
+
+
+        <record id="city_145" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1311</field>
+            <field name="name">PICHINCHA</field>
+        </record>
+
+
+        <record id="city_146" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1312</field>
+            <field name="name">ROCAFUERTE</field>
+        </record>
+
+
+        <record id="city_147" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1313</field>
+            <field name="name">SANTA ANA</field>
+        </record>
+
+
+        <record id="city_148" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1314</field>
+            <field name="name">SUCRE</field>
+        </record>
+
+
+        <record id="city_149" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1315</field>
+            <field name="name">TOSAGUA</field>
+        </record>
+
+
+        <record id="city_150" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1316</field>
+            <field name="name">24 DE MAYO</field>
+        </record>
+
+
+        <record id="city_151" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1317</field>
+            <field name="name">PEDERNALES</field>
+        </record>
+
+
+        <record id="city_152" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1318</field>
+            <field name="name">OLMEDO</field>
+        </record>
+
+
+        <record id="city_153" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1319</field>
+            <field name="name">PUERTO LOPEZ</field>
+        </record>
+
+
+        <record id="city_154" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1320</field>
+            <field name="name">JAMA</field>
+        </record>
+
+
+        <record id="city_155" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1321</field>
+            <field name="name">JARAMIJO</field>
+        </record>
+
+
+        <record id="city_156" model="res.city">
+            <field name="state_id" ref="base.state_ec_13" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1322</field>
+            <field name="name">SAN VICENTE</field>
+        </record>
+
+
+        <record id="city_157" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1401</field>
+            <field name="name">MORONA</field>
+        </record>
+
+
+        <record id="city_158" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1402</field>
+            <field name="name">GUALAQUIZA</field>
+        </record>
+
+
+        <record id="city_159" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1403</field>
+            <field name="name">LIMON INDANZA</field>
+        </record>
+
+
+        <record id="city_160" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1404</field>
+            <field name="name">PALORA</field>
+        </record>
+
+
+        <record id="city_161" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1405</field>
+            <field name="name">SANTIAGO</field>
+        </record>
+
+
+        <record id="city_162" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1406</field>
+            <field name="name">SUCUA</field>
+        </record>
+
+
+        <record id="city_163" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1407</field>
+            <field name="name">HUAMBOYA</field>
+        </record>
+
+
+        <record id="city_164" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1408</field>
+            <field name="name">SAN JUAN BOSCO</field>
+        </record>
+
+
+        <record id="city_165" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1409</field>
+            <field name="name">TAISHA</field>
+        </record>
+
+
+        <record id="city_166" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1410</field>
+            <field name="name">LOGROÐO</field>
+        </record>
+
+
+        <record id="city_167" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1411</field>
+            <field name="name">PABLO SEXTO</field>
+        </record>
+
+
+        <record id="city_168" model="res.city">
+            <field name="state_id" ref="base.state_ec_14" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1412</field>
+            <field name="name">TIWINTZA</field>
+        </record>
+
+
+        <record id="city_169" model="res.city">
+            <field name="state_id" ref="base.state_ec_15" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1501</field>
+            <field name="name">TENA</field>
+        </record>
+
+
+        <record id="city_170" model="res.city">
+            <field name="state_id" ref="base.state_ec_15" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1503</field>
+            <field name="name">ARCHIDONA</field>
+        </record>
+
+
+        <record id="city_171" model="res.city">
+            <field name="state_id" ref="base.state_ec_15" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1504</field>
+            <field name="name">EL CHACO</field>
+        </record>
+
+
+        <record id="city_172" model="res.city">
+            <field name="state_id" ref="base.state_ec_15" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1507</field>
+            <field name="name">QUIJOS</field>
+        </record>
+
+
+        <record id="city_173" model="res.city">
+            <field name="state_id" ref="base.state_ec_15" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1509</field>
+            <field name="name">CARLOS JULIO AROSEMENA TOLA</field>
+        </record>
+
+
+        <record id="city_174" model="res.city">
+            <field name="state_id" ref="base.state_ec_16" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1601</field>
+            <field name="name">PASTAZA</field>
+        </record>
+
+
+        <record id="city_175" model="res.city">
+            <field name="state_id" ref="base.state_ec_16" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1602</field>
+            <field name="name">MERA</field>
+        </record>
+
+
+        <record id="city_176" model="res.city">
+            <field name="state_id" ref="base.state_ec_16" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1603</field>
+            <field name="name">SANTA CLARA</field>
+        </record>
+
+
+        <record id="city_177" model="res.city">
+            <field name="state_id" ref="base.state_ec_16" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1604</field>
+            <field name="name">ARAJUNO</field>
+        </record>
+
+
+        <record id="city_178" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1701</field>
+            <field name="name">QUITO</field>
+        </record>
+
+
+        <record id="city_179" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1702</field>
+            <field name="name">CAYAMBE</field>
+        </record>
+
+
+        <record id="city_180" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1703</field>
+            <field name="name">MEJIA</field>
+        </record>
+
+
+        <record id="city_181" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1704</field>
+            <field name="name">PEDRO MONCAYO</field>
+        </record>
+
+
+        <record id="city_182" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1705</field>
+            <field name="name">RUMIÑAHUI</field>
+        </record>
+
+
+        <record id="city_183" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1707</field>
+            <field name="name">SAN MIGUEL DE LOS BANCOS</field>
+        </record>
+
+
+        <record id="city_184" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1708</field>
+            <field name="name">PEDRO VICENTE MALDONADO</field>
+        </record>
+
+
+        <record id="city_185" model="res.city">
+            <field name="state_id" ref="base.state_ec_17" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1709</field>
+            <field name="name">PUERTO QUITO</field>
+        </record>
+
+
+        <record id="city_186" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1801</field>
+            <field name="name">AMBATO</field>
+        </record>
+
+
+        <record id="city_187" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1802</field>
+            <field name="name">BAÑOS DE AGUA SANTA</field>
+        </record>
+
+
+        <record id="city_188" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1803</field>
+            <field name="name">CEVALLOS</field>
+        </record>
+
+
+        <record id="city_189" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1804</field>
+            <field name="name">MOCHA</field>
+        </record>
+
+
+        <record id="city_190" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1805</field>
+            <field name="name">PATATE</field>
+        </record>
+
+
+        <record id="city_191" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1806</field>
+            <field name="name">QUERO</field>
+        </record>
+
+
+        <record id="city_192" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1807</field>
+            <field name="name">SAN PEDRO DE PELILEO</field>
+        </record>
+
+
+        <record id="city_193" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1808</field>
+            <field name="name">SANTIAGO DE PILLARO</field>
+        </record>
+
+
+        <record id="city_194" model="res.city">
+            <field name="state_id" ref="base.state_ec_18" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1809</field>
+            <field name="name">TISALEO</field>
+        </record>
+
+
+        <record id="city_195" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1901</field>
+            <field name="name">ZAMORA</field>
+        </record>
+
+
+        <record id="city_196" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1902</field>
+            <field name="name">CHINCHIPE</field>
+        </record>
+
+
+        <record id="city_197" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1903</field>
+            <field name="name">NANGARITZA</field>
+        </record>
+
+
+        <record id="city_198" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1904</field>
+            <field name="name">YACUAMBI</field>
+        </record>
+
+
+        <record id="city_199" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1905</field>
+            <field name="name">YANTZAZA</field>
+        </record>
+
+
+        <record id="city_200" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1906</field>
+            <field name="name">EL PANGUI</field>
+        </record>
+
+
+        <record id="city_201" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1907</field>
+            <field name="name">CENTINELA DEL CONDOR</field>
+        </record>
+
+
+        <record id="city_202" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1908</field>
+            <field name="name">PALANDA</field>
+        </record>
+
+
+        <record id="city_203" model="res.city">
+            <field name="state_id" ref="base.state_ec_19" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">1909</field>
+            <field name="name">PAQUISHA</field>
+        </record>
+
+
+        <record id="city_204" model="res.city">
+            <field name="state_id" ref="base.state_ec_20" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2001</field>
+            <field name="name">SAN CRISTOBAL</field>
+        </record>
+
+
+        <record id="city_205" model="res.city">
+            <field name="state_id" ref="base.state_ec_20" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2002</field>
+            <field name="name">ISABELA</field>
+        </record>
+
+
+        <record id="city_206" model="res.city">
+            <field name="state_id" ref="base.state_ec_20" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2003</field>
+            <field name="name">SANTA CRUZ</field>
+        </record>
+
+
+        <record id="city_207" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2101</field>
+            <field name="name">LAGO AGRIO</field>
+        </record>
+
+
+        <record id="city_208" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2102</field>
+            <field name="name">GONZALO PIZARRO</field>
+        </record>
+
+
+        <record id="city_209" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2103</field>
+            <field name="name">PUTUMAYO</field>
+        </record>
+
+
+        <record id="city_210" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2104</field>
+            <field name="name">SHUSHUFINDI</field>
+        </record>
+
+
+        <record id="city_211" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2105</field>
+            <field name="name">SUCUMBIOS</field>
+        </record>
+
+
+        <record id="city_212" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2106</field>
+            <field name="name">CASCALES</field>
+        </record>
+
+
+        <record id="city_213" model="res.city">
+            <field name="state_id" ref="base.state_ec_21" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2107</field>
+            <field name="name">CUYABENO</field>
+        </record>
+
+
+        <record id="city_214" model="res.city">
+            <field name="state_id" ref="base.state_ec_22" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2201</field>
+            <field name="name">ORELLANA</field>
+        </record>
+
+
+        <record id="city_215" model="res.city">
+            <field name="state_id" ref="base.state_ec_22" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2202</field>
+            <field name="name">AGUARICO</field>
+        </record>
+
+
+        <record id="city_216" model="res.city">
+            <field name="state_id" ref="base.state_ec_22" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2203</field>
+            <field name="name">LA JOYA DE LOS SACHAS</field>
+        </record>
+
+
+        <record id="city_217" model="res.city">
+            <field name="state_id" ref="base.state_ec_22" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2204</field>
+            <field name="name">LORETO</field>
+        </record>
+
+
+        <record id="city_218" model="res.city">
+            <field name="state_id" ref="base.state_ec_23" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2301</field>
+            <field name="name">SANTO DOMINGO</field>
+        </record>
+
+
+        <record id="city_219" model="res.city">
+            <field name="state_id" ref="base.state_ec_23" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2302</field>
+            <field name="name">LA CONCORDIA</field>
+        </record>
+
+
+        <record id="city_220" model="res.city">
+            <field name="state_id" ref="base.state_ec_24" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2401</field>
+            <field name="name">SANTA ELENA</field>
+        </record>
+
+
+        <record id="city_221" model="res.city">
+            <field name="state_id" ref="base.state_ec_24" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2402</field>
+            <field name="name">LA LIBERTAD</field>
+        </record>
+
+
+        <record id="city_222" model="res.city">
+            <field name="state_id" ref="base.state_ec_24" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">2403</field>
+            <field name="name">SALINAS</field>
+        </record>
+
+
+        <record id="city_223" model="res.city">
+            <field name="state_id" ref="base.state_ec_90" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">9001</field>
+            <field name="name">LAS GOLONDRINAS</field>
+        </record>
+
+
+        <record id="city_224" model="res.city">
+            <field name="state_id" ref="base.state_ec_90" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">9003</field>
+            <field name="name">MANGA DEL CURA</field>
+        </record>
+
+
+        <record id="city_225" model="res.city">
+            <field name="state_id" ref="base.state_ec_90" />
+            <field name="country_id" ref="base.ec" />
+            <field name="l10n_ec_code">9004</field>
+            <field name="name">EL PIEDRERO</field>
+        </record>
+
+    </data>
+</odoo>

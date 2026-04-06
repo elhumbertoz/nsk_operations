@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <record id="import_excel_data_embark_wizard_form" model="ir.ui.view">
+    <field name="name">import.excel.data.embark.wizard.form</field>
+    <field name="model">import.excel.data.embark.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Importar Datos de Embarque">
+        <sheet>
+          <group name="import">
+            <group>
+              <field name="file" filename="filename_document" widget="binary" invisible="use_in_regimen_61" options="{'accepted_file_extensions': '.xlsx'}" />
+            </group>
+            <group>
+              <field name="use_in_regimen_61" invisible="not use_in_regimen_61"/>
+              <field name="type" invisible="use_in_regimen_61" required="use_in_regimen_61"/>
+              <field name="ek_operation_request_id" invisible="1"/>
+            </group>
+          </group>
+        </sheet>
+        <footer>
+          <button name="import_records_attendance" string="Import File" type="object" class="btn-primary" data-hotkey="s" />
+          <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z" />
+        </footer>
+      </form>
+    </field>
+  </record>
+</odoo>

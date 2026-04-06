@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.shipping.trade.numbers View Tree -->
+    <record id="view_ek_shipping_trade_numbers_tree" model="ir.ui.view">
+        <field name="name">view.ek.shipping.trade.numbers.tree</field>
+        <field name="model">ek.shipping.trade.numbers</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0">
+                <field name="name"/>
+                <field name="note" />   
+                <field name="user_id"/>   
+                <field name="create_date"/>
+                <field name="ship_registration_id" optional="hide"/>
+                <field name="boats_information_id" optional="hide"/>
+                <field name="request_id" optional="hide"/>
+                <field name="type_id" optional="hide"/>
+                <field name="stage_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_ek_shipping_trade_numbers_inherit" model="ir.ui.view">
+        <field name="name">ek.shipping.trade.numbers.inherit</field>
+        <field name="model">ek.shipping.trade.numbers</field>
+        <field name="inherit_id" ref="ek_l10n_shipping_operations.view_ek_shipping_trade_numbers_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">ek_button_js_tree</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+    <!-- View ek.shipping.trade.numbers form -->
+    <!-- <record id="view_ek_shipping_trade_numbers_form" model="ir.ui.view">
+        <field name="name">view.ek.shipping.trade.numbers.form</field>
+        <field name="model">ek.shipping.trade.numbers</field>
+        <field name="arch" type="xml">
+            <form string="Ek Shipping Trade Numbers">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+
+    <!-- View ek.shipping.trade.numbers search -->
+    <record id="view_ek_shipping_trade_numbers_search" model="ir.ui.view">
+        <field name="name">view.ek.shipping.trade.numbers.search</field>
+        <field name="model">ek.shipping.trade.numbers</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="ship_registration_id"/>
+                <field name="boats_information_id"/>
+                <field name="request_id"/>
+                <field name="type_id"/>
+                <field name="stage_id"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <group expand="1" string="Group By">
+                    <filter string="Ship" name="ship_registration_id" domain="[]" context="{'group_by':'ship_registration_id'}"/>
+                    <filter string="Boats" name="boats_information_id" domain="[]" context="{'group_by':'boats_information_id'}"/>
+                    <filter string="Request" name="request_id" domain="[]" context="{'group_by':'request_id'}"/>
+                    <filter string="Type" name="type_id" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Stage" name="stage_id" domain="[]" context="{'group_by':'stage_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action ek.shipping.trade.numbers -->
+    <record id="action_ek_shipping_trade_numbers" model="ir.actions.act_window">
+        <field name="name">Shipping Trade Numbers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.shipping.trade.numbers</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="mennu_action_ek_shipping_trade_numbers"
+        parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+        action="action_ek_shipping_trade_numbers" />
+
+</odoo>

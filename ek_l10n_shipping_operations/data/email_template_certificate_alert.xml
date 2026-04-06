@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_certificate_alert" model="mail.template">
+            <field name="name">Alerta de Certificado/Inspección de Buque</field>
+            <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_ship_document_certificate"/>
+            <field name="subject">Alerta de Vencimiento: {{ object.name.name }} - Buque {{ object.ship_name_id.name }}</field>
+            <field name="partner_to">{{ object.get_contact_ids_str() }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hola,<br/><br/>
+                        Este es un aviso automático indicando que el siguiente documento/inspección está próximo a vencer o requiere su atención:
+                        <br/><br/>
+                        <strong>Buque:</strong> <t t-out="object.ship_name_id.name or ''">Buque</t><br/>
+                        <strong>Documento / Inspección:</strong> <t t-out="object.name.name or ''">Documento</t><br/>
+                        <strong>Fecha de Vencimiento:</strong> <t t-out="object.expiration_date or ''">Vencimiento</t><br/>
+                        
+                        <t t-if="object.range_from_date or object.range_to_date">
+                            <strong>Rango Tolerancia:</strong> <t t-out="object.range_from_date or ''"/> a <t t-out="object.range_to_date or ''"/><br/>
+                        </t>
+                        <br/>
+                        <t t-if="object.notes">
+                            <strong>Notas y Observaciones:</strong><br/>
+                            <div style="border-left: 3px solid #ccc; padding-left: 10px; margin-top: 5px;">
+                                <t t-out="object.notes"/>
+                            </div>
+                            <br/>
+                        </t>
+                        Por favor, tome las acciones correspondientes para mantener la documentación al día.
+                        <br/><br/>
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a t-att-href="object.get_base_url() + '/web#id=' + str(object.id) + '&amp;model=ek.ship.document.certificate&amp;view_type=form'"
+                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                Ver Documento
+                            </a>
+                        </div>
+                        <br/>
+                        Saludos,<br/>
+                        Sistema de Alertas Automáticas
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

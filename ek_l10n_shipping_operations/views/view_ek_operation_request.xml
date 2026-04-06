@@ -1,0 +1,1279 @@
+<odoo>
+  <record id="ek_operation_request_form" model="ir.ui.view">
+    <field name="name">ek.operation.request.form</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_prev_stage" type="object" class="oe_highlight" invisible="not show_back_button or fold">
+            <field readonly="1" name="prev_stage_label" options='{"no_open": True}'></field>
+          </button>
+          <button name="action_next_stage" type="object" class="oe_highlight" invisible="not show_button_next_stage  or show_button_close or fold">
+            <field readonly="1" name="next_stage_label" options='{"no_open": True}'></field>
+          </button>
+          <button string="Close" name="action_close" type="object" class="oe_highlight" invisible="not show_button_close or fold" />
+          <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="not show_button_cancel or fold" />
+          <button string="Print" name="action_print" type="object" class="oe_highlight" invisible="not show_print_button" />
+
+          <field name="show_print_button" invisible="1" />
+          <field name="fold" invisible="1" />
+          <field name="show_button_next_stage" invisible="1" />
+          <field name="show_button_cancel" invisible="1" />
+          <field name="show_button_close" invisible="1" />
+          <field name="show_button_prev_stage" invisible="1" />
+          <field name="show_back_button" invisible="1" />
+          <field name="block_type" invisible="1" />
+          <field name="next_stage_fold" invisible="1" />
+          <field name="available_notification_user_ids" invisible="1" />
+
+          <div invisible="not has_notification">
+            <button name="change_boolean_stop_processo" string="Stop Activited" type="object" class="oe_highlight" invisible="not processo_notification" />
+            <button name="change_boolean_start_processo" string="Active Activited" type="object" class="oe_highlight" invisible="processo_notification" />
+          </div>
+
+          <button name="action_download_report" type="object" string="Download Template" class="btn btn-secondary" icon="fa-download" invisible="not download_report" />
+          <button name="action_send_to_sign_report" type="object" string="Send to Sign Template" class="btn btn-link p-0" icon="fa-paper-plane" invisible="not send_to_sign_report" />
+          <button name="action_open_documents_sign_request" type="object" string="View Signed Documents" class="btn btn-link p-0" icon="fa-sign-in" invisible="not send_to_sign_report" />
+          <button name="copy_request_self" type="object" string="Generate Related Request" class="btn btn-link p-0" icon="fa-copy" invisible="not show_button_copy" />
+          <button name="search_dinamic_botton" type="object" string="Data Search" class="btn btn-link p-0" icon="fa-copy" invisible="not search_by_authorization" />
+          <div invisible="not has_signature">
+            <widget invisible="signed_document" name="signature" string="Firmar" highlight="1" full_name="firm_user_name" />
+            <button name="delete_signature_requets" type="object" string="Delete Signature" class="btn btn-link p-0" icon="fa-trash" invisible="not signed_document" />
+          </div>
+
+          <field name="has_signature" invisible="1" />
+
+          <!-- <field name="state" widget="statusbar" /> -->
+          <field name="stage_id" widget="statusbar_duration" options="{'clickable': false, 'fold_field': 'fold'}" />
+        </header>
+        <div class="alert alert-warning" role="alert" invisible="not messege_war_doc">
+          This request has a practical mode ship, verify and validate the TRB Y TRN before
+          CONFIRMING the request
+        </div>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <!-- <button class="oe_stat_button" name="action_open_documents_sale_order" type="object" groups="ek_l10n_shipping_operations.ek_manager_sale_order" invisible="sale_order_count == 0" icon="fa-file-text-o">
+              <field string="Sale Order" name="sale_order_count" widget="statinfo" />
+            </button> -->
+            <!-- <button class="oe_stat_button" name="action_open_documents_account_move" type="object" groups="ek_l10n_shipping_operations.ek_manager_account_invoice" invisible="invoice_count == 0" icon="fa-pencil-square-o">
+              <field string="Invoice" name="invoice_count" widget="statinfo" />
+            </button> -->
+            <!-- <button class="oe_stat_button" name="action_open_documents_purchase_order" groups="ek_l10n_shipping_operations.ek_manager_sale_purchase" type="object" invisible="purchase_count == 0" icon="fa-pencil-square-o">
+              <field string="Purchase Order" name="purchase_count" widget="statinfo" />
+            </button> -->
+            <!-- <button class="oe_stat_button" name="action_open_documents_related_request" type="object" invisible="count_childs == 0" icon="fa-window-restore">
+              <field string="Related Request" name="count_childs" widget="statinfo" />
+            </button> -->
+            <!-- ### -->
+            <!-- <button class="oe_stat_button" name="action_open_documents_sale_order_views" type="object" invisible="sale_order_count == 0" groups="ek_l10n_shipping_operations.ek_user_sale_order" icon="fa-file-text-o">
+              <field string="Sale Order" name="sale_order_count" widget="statinfo" />
+            </button> -->
+
+            <!-- <button class="oe_stat_button" name="action_open_documents_purchase_order_views" type="object" invisible="purchase_count == 0" groups="ek_l10n_shipping_operations.ek_user_sale_purchase" icon="fa-pencil-square-o">
+              <field string="Purchase Order" name="purchase_count" widget="statinfo" />
+            </button> -->
+            <!-- <button class="oe_stat_button" name="action_open_documents_account_move_views" type="object" groups="ek_l10n_shipping_operations.ek_user_account_invoice" invisible="invoice_count == 0" icon="fa-pencil-square-o">
+                              <field string="Invoice" name="invoice_count" widget="statinfo" />
+                          </button> -->
+            <!-- <button class="oe_stat_button" name="action_open_readonly_edit" type="object" icon="fa-pencil-square-o" string="Editar" groups="ek_l10n_shipping_operations_charging_regimes.group_operaction_readonly" /> -->
+            <!-- #### -->
+          </div>
+          <widget name="web_ribbon" title="En Proceso" bg_color="bg-primary" invisible="not processing_status == 'developing'" />
+          <widget name="web_ribbon" title="Realizado" bg_color="bg-success" invisible="not processing_status == 'done'" />
+          <widget name="web_ribbon" title="Cancelado" bg_color="bg-danger" invisible="not processing_status == 'cancel'" />
+
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="#Doc Internal" force_save="1" readonly="1" />
+            </h1>
+
+          </div>
+          <!-- INICIO INVISIBLE -->
+          <field name="crew_pay" force_save="1" invisible="1" />
+          <field name="is_analytic_account" force_save="1" invisible="1" />
+          <field name="is_agent_naviero" force_save="1" invisible="1" />
+          <field name="is_obligator_document" force_save="1" invisible="1" />
+          <field name="is_service_request" force_save="1" invisible="1" />
+          <field name="amount" force_save="1" invisible="1" />
+          <field name="ek_template_py3o_ids" invisible="1" force_save="1" />
+          <field name="ek_report_stages_mixin_ids" force_save="1" invisible="1" />
+          <field name="send_to_sign_report" invisible="1" force_save="1" />
+          <field name="download_report" invisible="1" force_save="1" />
+          <field name="show_button_copy" invisible="1" force_save="1" />
+          <field name="is_service_refunf" invisible="1" force_save="1" />
+          <field name="is_request_assignable" invisible="1" force_save="1" />
+          <field name="type_event_boot" invisible="1" force_save="1" />
+          <field name="type_event" invisible="1" force_save="1" />
+          <field name="is_separate" invisible="1" force_save="1" />
+          <field name="has_crew" invisible="1" force_save="1" />
+          <field name="has_service_maneuver" invisible="1" force_save="1" />
+          <field name="has_data_requeried_n_i" invisible="1" force_save="1" />
+          <field name="has_operator" invisible="1" force_save="1" />
+          <field name="has_data_zarpe" invisible="1" force_save="1" />
+          <field name="has_data_cargo" invisible="1" force_save="1" />
+          <field name="is_marginal_dock_setting" invisible="1" force_save="1" />
+          <field name="has_access_port" invisible="1" force_save="1" />
+          <field name="type_document_access" invisible="1" force_save="1" />
+          <field name="calculation_day_or_hours" invisible="1" force_save="1" />
+          <field name="search_by_authorization" invisible="1" force_save="1" />
+          <field name="has_notification" invisible="1" force_save="1" />
+          <field name="has_documents_notification" invisible="1" force_save="1" />
+          <field name="has_report_capitana" invisible="1" force_save="1" />
+          <field name="processing_status" required="1" invisible="1" force_save="1" />
+          <field name="send_email" invisible="1" force_save="1" />
+          <field name="commission" invisible="1" force_save="1" />
+          <field name="has_commission" invisible="1" force_save="1" />
+          <field name="is_capital_port" invisible="1" force_save="1" />
+          <field name="not_controlling_weight" widget="boolean_toggle" invisible="1" force_save="1" />
+          <field name="has_mrn_number" invisible="1" force_save="1" />
+          <field name="messege_war_doc" invisible="1" force_save="1" />
+          <field name="assigned_regimen_70" invisible="1" force_save="1" />
+          <field name="has_detail_items" widget="boolean_toggle" force_save="1" invisible="1" />
+          <field name="total_fuel" invisible="1" />
+          <field name="total_gasoline" invisible="1" />
+          <field name="total_water" invisible="1" />
+          <field name="block_user_asig" invisible="1" force_save="1" />
+          <field name="ek_user_groups_reminder_ids" invisible="1" force_save="1" />
+          <field name="processo_notification" invisible="1" force_save="1" />
+          <field name="is_dock_space_expansion" invisible="1" force_save="1" />
+          <field name="has_passanger" invisible="1" force_save="1" />
+          <field name="ek_res_partner_id_certificate_ids" invisible="1" force_save="1" />
+          <field name="display_dinamic_field" invisible="1" force_save="1" />
+          <field name="has_trade_numeber" invisible="1" force_save="1" />
+          <field name="has_confirmed_type" invisible="1" force_save="1" />
+          <field name="readonly_mass" invisible="1" />
+          <field name="has_credentials" invisible="1" force_save="1" />
+          <field name="validate_correction_request" invisible="1" force_save="1" />
+          <field name="table_aditional" invisible="1" force_save="1" />
+          <field name="display_name" invisible="1" force_save="1" />
+          <field name="has_delivery_reception" invisible="1" force_save="1" />
+          <!-- FIN INVISIBLE -->
+          <group>
+            <group>
+              <field name="stage_id" invisible="1" />
+              <field name="fold" invisible="1" />
+              <field name="confirm_stage" invisible="1" />
+              <field name="canceled_stage" invisible="1" />
+              <field name="ek_ship_registration_id" required="1" string="Ship" readonly="fold or confirm_stage or canceled_stage or readonly_mass" options="{'no_edit': True, 'no_create': True}" domain="[]" />
+              <field name="journey_crew_id" required="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" options="{'no_edit': True, 'no_create': True}" />
+              <field name="res_partner_id" required="1" readonly="1" options="{'no_edit': True, 'no_create': True}" />
+              <field name="requesting_contact_id" domain="[('parent_id', '=', res_partner_id)]" options="{'no_edit': True, 'no_create': True}" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <!-- <field name="ek_type_request_id" force_save="1" readonly="fold or confirm_stage
+              or canceled_stage or readonly_mass" domain="[('use_in_regimen_70','=',assigned_regimen_70)]" /> -->
+              <field name="type_id" force_save="1" required="1" readonly="block_type or not journey_crew_id" domain="[('use_in_regimen_70','=',assigned_regimen_70),('ir_form_view','!=',False),'|',('ship_ids','in',ek_ship_registration_id),('ship_ids','=',False)]" options="{'no_edit': True, 'no_create': True}" />
+              <field name="fold" invisible="1" />
+              <field name="block_type" invisible="1" />
+              <field name="parent_id" invisible="not parent_id" readonly="1" />
+              <field name="report_tr_n_n" invisible="not messege_war_doc" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="supplier_id" force_save="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" invisible="not is_capital_port" required="is_capital_port" options="{'no_edit': True, 'no_create': True}" />
+              <!-- nuevo -->
+              <!-- aduana inicio -->
+              <label for="ek_manifest_record_id" string="MRN" invisible="not has_mrn_number" required="has_mrn_number" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <div invisible="not has_mrn_number">
+                <field name="ek_manifest_record_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" invisible="0" string="MRN" readonly="ek_manifest_record_id or  fold or confirm_stage or canceled_stage or readonly_mass" context="{'default_ek_ship_registration_id': ek_ship_registration_id,'default_journey_crew_id': journey_crew_id }" options="{'no_edit': True, 'no_create': True}" />
+                <button name="generate_sequence_manifest" type="object" string="Generate" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="ek_manifest_record_id" />
+              </div>
+              <!-- aduana fin -->
+              <field name="ek_group_mail_template_id" invisible="not send_email" options="{'no_edit': True, 'no_create': True}" />
+            </group>
+            <group>
+              <field name="signed_document" readonly="1" widget="boolean_toggle" />
+              <field name="signed_document_false" readonly="1" widget="boolean_toggle" invisible="1" />
+              <field name="create_date" readonly="1" string="Fecha de creación" />
+              <field name="city_id" required="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" options="{'no_edit': True, 'no_create': True}" />
+              <field name="ek_template_py3o_id" readonly="fold or confirm_stage or canceled_stage or readonly_mass" invisible="not (send_to_sign_report or download_report)" options="{'no_edit': True, 'no_create': True}" />
+              <label for="agent_user_id" string="Agent" invisible="not is_agent_naviero" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <div>
+                <field name="agent_user_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" options="{'no_create':True}" readonly="fold or confirm_stage or canceled_stage or readonly_mass" required="is_agent_naviero" invisible="not is_agent_naviero" />
+                <button name="ek_assignable_user_request" type="object" string="Assign a User" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="not is_agent_naviero" />
+              </div>
+              <field name="company_id" groups="base.group_multi_company" options="{'no_edit': True, 'no_create': True}" />
+              <field name="check_default" invisible="True" />
+            </group>
+          </group>
+
+          <group string="Calculation data in days or hours" invisible="not calculation_day_or_hours">
+            <group>
+              <field name="type_calcule" required="calculation_day_or_hours" readonly="fold or confirm_stage or canceled_stage or readonly_mass" widget="radio" />
+              <field name="start_date_calculate" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="end_date_calculate" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="next_extended_date" invisible="not type_calcule == '2'" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="need_to_extend_hours" widget="boolean_toggle" invisible="1" />
+              <field name="need_extend_hours_text" readonly="1" force_save="1" invisible="1" />
+              <field name="text_self_calculate" readonly="1" force_save="1" invisible="1" />
+              <field name="contant_text_next" readonly="1" force_save="1" string="Process Audit" />
+            </group>
+            <group>
+              <field name="calcule_days" force_save="1" readonly="1" />
+              <field name="calcule_hours" widget="float_time" force_save="1" string="Total Hours" readonly="1" invisible="not type_calcule == '1'" />
+              <field name="extended_hours" widget="float_time" force_save="1" readonly="1" invisible="not type_calcule == '2'" />
+              <field name="total_hours_used" widget="float_time" invisible="1" force_save="1" readonly="1" />
+              <field name="total_hours_acumulate" widget="float_time" force_save="1" string="Total Hours" readonly="1" invisible="not type_calcule == '2'" />
+            </group>
+          </group>
+          <group>
+            <group string="Crew Pay" invisible="not crew_pay">
+              <button name="add_crew_pay" type="object" string="Add" class="btn-link mb-1 px-0" icon="fa-plus" invisible="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <group>
+                <field name="value_receive" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="quantity_bonus" invisible="not value_receive > 0" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="fishing_balance" invisible="not value_receive > 0" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </group>
+              <field name="notes_pay_crew" invisible="not value_receive > 0" readonly="fold or confirm_stage or canceled_stage or readonly_mass" placeholder="Detail" />
+            </group>
+            <group string="Date Arribo" invisible="not eta or not type_event_boot">
+              <field name="eta" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="ata" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <label for="fuel" string="Fuel" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <div>
+                <field name="fuel" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+              <label for="gasoline" string="Gasoline" />
+              <div>
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+              <label for="water" string="Water" />
+              <div>
+                <field name="water" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+            </group>
+            <group string="Date Zarpe" invisible="not etd or not type_event_boot">
+              <field name="etd" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <field name="atd" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <label for="fuel" string="Fuel" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              <div>
+                <field name="fuel" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+              <label for="gasoline" string="Gasoline" />
+              <div>
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+              <label for="water" string="Water" />
+              <div>
+                <field name="water" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </div>
+            </group>
+          </group>
+
+          <group>
+            <group invisible="not type_event_boot in ['zarpe'] ">
+              <separator string="Fuel" colspan="2" />
+              <field name="ek_table_fuel_ids" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+              <separator string="Gasoline" colspan="2" />
+              <field name="ek_table_gasoline_ids" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+              <separator string="Water" colspan="2" />
+              <field name="ek_table_water_ids" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+            </group>
+            <group string="Authorized Pourtario Operators" invisible="not display_dinamic_field or not display_dinamic_field.get('show_ek_authorized_pourtario_operators_table_ids',False)">
+              <field name="ek_authorized_pourtario_operators_table_ids" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" colspan="2">
+                <tree editable="bottom">
+                  <field name="res_partner_id" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="ek_type_service_boat_ids" widget="many2many_tags" required="1" options="{'no_edit': True, 'no_create': True}" />
+                </tree>
+              </field>
+            </group>
+          </group>
+          <group name="dinamic_view" col="2">
+            <!-- Dinamic view display, don't not delete -->
+          </group>
+          <notebook>
+            <page string="Service" invisible="not stage_id in stage_service_ids">
+              <field name="stage_service_ids" invisible="1" />
+              <field name="ek_service_request_line_ids" readonly="fold or canceled_stage ">
+                <tree editable="bottom">
+                  <field name="name" readonly="not edit_price" force_save="1" colspan="2" />
+                  <field name="product_qty" readonly="not edit_price" force_save="1" optional="hide" colspan="1" />
+                  <field name="price_unit" optional="hide" colspan="1" readonly="not edit_price" force_save="1" />
+                  <field name="edit_price" column_invisible="1" force_save="1" />
+                  <field name="product_id" options="{'no_edit': True, 'no_create': True}" readonly="not edit_price" optional="hide" force_save="1" colspan="2" />
+                </tree>
+              </field>
+            </page>
+            <page string="Refunf" invisible="not stage_id in stage_refund_ids">
+              <field name="stage_refund_ids" invisible="1" />
+              <field name="product_ids" readonly="fold or canceled_stage">
+                <tree editable="bottom">
+                  <field name="name" readonly="not edit_price" force_save="1" colspan="2" />
+                  <field name="product_qty" readonly="not edit_price" colspan="1" optional="hide" force_save="1" />
+                  <field name="price_unit" colspan="1" readonly="not edit_price" force_save="1" />
+                  <field name="supplier_id" force_save="1" optional="hide" colspan="2" readonly="not edit_price" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="edit_price" column_invisible="1" force_save="1" />
+                  <field name="product_id" options="{'no_edit': True, 'no_create': True}" readonly="not edit_price" force_save="1" colspan="2" optional="hide" />
+                </tree>
+              </field>
+            </page>
+            <page string="List" invisible="not has_crew">
+              <field name="crew_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree string="Contacts" sample="1" multi_edit="1" editable="bottom">
+                  <field name="name" string="Name" force_save="1" readonly="name" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="vat" string="ID or Passport" force_save="1" readonly="1" />
+                  <field name="ek_crew_member_hierarchy_title_id" readonly="1" force_save="1" string="Title" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="ek_crew_member_hierarchy_id" force_save="1" string="Plaza" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="nationality_id" force_save="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="used_crew_member_ids" column_invisible="1" force_save="1" />
+                  <field name="ek_academic_courses_ids" column_invisible="1" force_save="1" />
+                </tree>
+              </field>
+            </page>
+            <page string="Service or Maneuver Data" invisible="not has_service_maneuver">
+              <group string="" colspan="4" col="4">
+                <field name="day_hour_eta" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </group>
+              <group colspan="4" col="4">
+                <group col="1">
+                  <label for="eta_maneuvers" string="E.T.A." />
+                  <div>
+                    <field name="eta_maneuvers" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="etd_maneuvers" string="E.T.D." />
+                  <div>
+                    <field name="etd_maneuvers" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="mrn_imp" string="MRN IMP:" />
+                  <div>
+                    <field name="mrn_imp" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="mrn_imp" string="MRN EXP:" />
+                  <div>
+                    <field name="mrn_exp" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+              <group string="" colspan="4" col="4">
+              </group>
+              <group colspan="6" col="6">
+                <group col="1">
+                  <label for="has_embark" string="Embark" />
+                  <div>
+                    <field name="has_embark" nolabel="1" widget="boolean_toggle" readonly="fold or confirm_stage or canceled_stage or readonly_mass" class="oe_inline" />
+                    <field name="day_embark" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_discharge" string="Discharge" />
+                  <div>
+                    <field name="has_discharge" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_discharge" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_maintenance" string="Maintenance" />
+                  <div>
+                    <field name="has_maintenance" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_maintenance" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_provision" string="Provision" />
+                  <div>
+                    <field name="has_provision" nolabel="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_provision" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_fondeo" string="Fondeo" />
+                  <div>
+                    <field name="has_fondeo" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                    <field name="day_fondeo" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="others_services" string="Others" />
+                  <div>
+                    <field name="others_services" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                    <field name="day_others" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+            </page>
+            <page string="Data Required for National and International cargo" invisible="not has_data_requeried_n_i">
+              <field name="ek_requerid_burden_n_i_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="product_id" required="1" />
+                  <field name="customer_consignment" />
+                  <field name="tm" sum="Total" />
+                  <field name="n_bl" />
+                  <field name="senae_authorization" />
+                  <field name="dae_authorization" />
+                </tree>
+              </field>
+            </page>
+            <page string="Operator" invisible="not has_operator">
+              <group string="" colspan="4" col="4">
+              </group>
+              <group>
+                <group string=" ">
+                  <field string="Cargo Operator" name="cargo_operator1" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group string=" ">
+                  <field string=" " name="cargo_operator2" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" />
+                </group>
+              </group>
+              <group string="Related Rervice Operator" colspan="4" col="4">
+              </group>
+              <group>
+                <group>
+                  <field name="validity_and_physical_security" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="solid_waste_management" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="fumigation" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="water_supply" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="approve_fuel_per_tank_car" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="Approve_Provisions" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="provision_equipment_spare_parts" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" widget="many2many_tags" />
+                </group>
+                <group>
+                  <field name="supply_provision" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="equipment_inspection" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="recharge_against_fire" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="recharge_maintain_against_fire" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" />
+                  <field name="repair_maintain_nets_fishing" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="life_raft_service" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="salt" widget="many2many_tags" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="others_operators" domain="[('ek_type_boat_operators_ids', '!=', False),('is_company', '=', True)]" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+            </page>
+            <page string="Data Zarpe" invisible="not has_data_zarpe">
+              <group>
+                <group>
+                  <field name="datatime_request_practical" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="name_capital_practico" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="datatime_real_dear" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+
+                </group>
+              </group>
+
+            </page>
+            <page string="Data Cargo" invisible="not has_data_cargo">
+              <group>
+                <group>
+                  <field name="mrn_exit" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="mrn_arribal" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="code_operator_ship" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group />
+              </group>
+            </page>
+            <page string="Pourtario Access" invisible="not has_access_port">
+              <group string="Work Area" colspan="4" col="4" invisible="type_document_access in ['2']">
+              </group>
+              <group colspan="5" col="5" invisible="type_document_access in ['2']">
+                <group col="1">
+                  <label for="has_pier_one" string="Dock #1" />
+                  <div>
+                    <field name="has_pier_one" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_pier_two" string="Dock #2" />
+                  <div>
+                    <field name="has_pier_two" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_yard" string="Yard" />
+                  <div>
+                    <field name="has_yard" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_ship" string="Ship" />
+                  <div>
+                    <field name="has_ship" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1" invisible="not is_marginal_dock_setting">
+                  <label for="has_marginal_dock" string="Marginal Dock" />
+                  <div>
+                    <field name="has_marginal_dock" nolabel="1" widget="boolean_toggle" class="oe_inline" invisible="not is_marginal_dock_setting" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="char_name_buquer" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="reason_report" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group invisible="type_document_access in ['1']">
+                <group>
+                  <field name="blue_tip_dock" widget="boolean_toggle" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="maintenance_area_report" widget="boolean_toggle" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="permanence_period" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <button name="create_notification_record_request" type="object" string="Create Notification" class="btn btn-link p-0 oe_inline" icon="fa-arrow-circle-right" invisible="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <button name="create_crew_access_port" type="object" string="Create Crew" class="btn btn-link p-0 oe_inline" icon="fa-arrow-circle-right" invisible="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="end_period" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="estimated_actual_date" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="duration" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+
+              <field name="ek_acces_port_table_float_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" column_invisible="1" />
+                  <field name="res_partner_id" force_save="1" required="1" domain="[('is_company', '=', False)]" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="dni_passport" force_save="1" />
+                  <field name="function" force_save="1" />
+                  <field name="fleet_vehicle_ids" widget="many2many_tags" options="{'no_edit': True, 'no_create': True}" />
+                </tree>
+              </field>
+            </page>
+            <page string="Credentials" invisible="not has_credentials">
+              <group invisible="not has_credentials == '1'" colspan="3" col="3">
+                <group col="1">
+                  <label for="has_pier_two" string="International Docks" />
+                  <div>
+                    <field name="has_pier_two" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_yard" string="Yard" />
+                  <div>
+                    <field name="has_yard" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_ship" string="Ship" />
+                  <div>
+                    <field name="has_ship" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+              <field name="ek_acces_port_table_float_ids" invisible="not has_credentials == '1'" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" column_invisible="1" />
+                  <field name="res_partner_id" force_save="1" required="1" domain="[('is_company', '=', False)]" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="dni_passport" force_save="1" />
+                  <field name="function" force_save="1" />
+                  <field name="has_vehiculo" force_save="1" widget="boolean_toggle" />
+                  <field name="fleet_vehicle_ids" widget="many2many_tags" options="{'no_edit': True, 'no_create': True}" />
+                </tree>
+              </field>
+              <field name="ek_acces_port_table_float_ids" invisible="not has_credentials == '2'" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" column_invisible="1" />
+                  <field name="res_partner_id" force_save="1" required="1" domain="[('is_company', '=', False)]" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="dni_passport" force_save="1" />
+                  <field name="function" force_save="1" />
+                  <field name="has_vehiculo" force_save="1" widget="boolean_toggle" />
+                  <field name="fleet_vehicle_ids" widget="many2many_tags" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="aditionals" force_save="1" />
+                </tree>
+              </field>
+            </page>
+            <page string="Dock Space Expansion" invisible="not is_dock_space_expansion">
+              <group>
+                <group>
+                  <field name="has_availability" widget="boolean_toggle" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="permanence_period" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="has_extension" widget="boolean_toggle" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="end_period" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="estimated_actual_date" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="duration" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="ek_assignment_number_rp" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="ek_res_partner_id_certificate_id" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group>
+                  <field name="responsible_people_id" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="financial_chief" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <field name="ek_authorized_pourtario_operators_table_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="res_partner_id" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="ek_type_service_boat_ids" widget="many2many_tags" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="ek_type_boat_operators_ids" widget="many2many_tags" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="registration_number_opc" />
+                </tree>
+              </field>
+            </page>
+            <page string="Documentos" invisible="not has_documents_notification">
+              <field name="ek_management_document_ids" invisible="not has_documents_notification" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="name" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="date_start" required="1" />
+                  <field name="date_end" required="1" />
+                  <field name="document_status" force_save="1" required="1" />
+                  <field name="has_requires_reminder" widget="boolean_toggle" />
+                </tree>
+              </field>
+            </page>
+            <page string="Passenger" invisible="not has_passanger">
+              <field name="ship_passenger" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree>
+                  <field name="name" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="l10n_ec_birthdate" />
+                  <field name="nationality_id" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="l10n_latam_identification_type_id" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="vat" />
+                </tree>
+              </field>
+            </page>
+            <page string="Report for Captaincy" invisible="not has_report_capitana">
+              <group>
+                <group string="Report">
+                  <field string="Services Requested" name="ek_service_request_report_line_ids" force_save="1" widget="many2many_tags" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  <field name="text_descripton_capman" readonly="fold or confirm_stage or canceled_stage or readonly_mass" force_save="1" />
+                </group>
+                <group string="Personal Data">
+                  <field name="inform_data_capman" readonly="fold or confirm_stage or canceled_stage or readonly_mass" force_save="1" />
+                  <field name="number_booklet" readonly="fold or confirm_stage or canceled_stage or readonly_mass" force_save="1" />
+                  <field name="boat_registration" readonly="fold or confirm_stage or canceled_stage or readonly_mass" force_save="1" />
+                  <field name="vat" readonly="fold or confirm_stage or canceled_stage or readonly_mass" force_save="1" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                </group>
+                <group col="3" colspan="3">
+                </group>
+                <group col="1" colspan="1">
+                  <label for="title_original" string="Original" />
+                </group>
+                <group col="1" colspan="1">
+                  <label for="title_copy" string="Copy" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="title" string="Title" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="title" nolabel="1" style="width: 100%;" colspan="5" help="Title of the document" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="title_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="title_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="curse_01" string="Curse" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="curse_01" nolabel="1" help="Curse of the document" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_01_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <div>
+                    <field name="curse_01_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="curse_02" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="curse_02" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_02_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_02_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="curse_03" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="curse_03" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_03_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_03_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="curse_04" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="curse_04" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_04_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_04_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="curse_05" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="curse_05" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_05_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="curse_05_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="certificate_medical" string="Medical Certificate issued by DIRNEA" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="certificate_medical" nolabel="1" class="certificate_medical" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="certificate_medical_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="certificate_medical_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="file_medical" string="Medical Record" />
+                </group>
+                <group col="4" colspan="3">
+                  <field name="file_medical" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="file_medical_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="file_medical_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="seamn_book" string="Seaman's Book (Libretín) Anterior" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="seamn_book" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="seamn_book_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="seamn_book_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="credential_delivery" string="Previous Credential Delivery" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="credential_delivery" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="credential_delivery_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="credential_delivery_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="complaint_delivery" string="Submission of loss report" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="complaint_delivery" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="complaint_delivery_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="complaint_delivery_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="other_document_01" string="Other Documents" />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="other_document_01" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <div>
+                    <field name="other_document_01_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+                <group col="1" colspan="1">
+                  <field name="other_document_01_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="other_document_02" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="other_document_02" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+
+                <group col="1" colspan="1">
+                  <field name="other_document_02_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="other_document_02_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="1" colspan="1">
+                  <label for="other_document_03" string=" " />
+                </group>
+                <group col="3" colspan="3">
+                  <field name="other_document_03" nolabel="1" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+
+                <group col="1" colspan="1">
+                  <field name="other_document_03_original" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="1" colspan="1">
+                  <field name="other_document_03_copy" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+
+            </page>
+            <page string="Table Pay" invisible="not crew_pay">
+              <field name="ek_table_pay_crew_ids" force_save="1" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="name" required="1" readonly="name" force_save="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="beneficiary" force_save="1" />
+                  <field name="vat" readonly="vat" force_save="1" />
+                  <field name="ek_crew_member_hierarchy_title_id" force_save="1" readonly="ek_crew_member_hierarchy_title_id" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="ek_crew_member_hierarchy_id" force_save="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="nationality_id" readonly="nationality_id" force_save="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="v_unitary" force_save="1" />
+                  <field name="amount" force_save="1" />
+                  <field name="gross_total" force_save="1" sum="Total" />
+                  <field name="discount" force_save="1" sum="Total" />
+                  <field name="total_liquidation" force_save="1" sum="Total" />
+                  <field name="other_values" sum="Total" />
+                  <field name="date" force_save="1" />
+                  <field name="document" force_save="1" />
+                  <field name="detail" force_save="1" />
+                  <field name="used_crew_ids" column_invisible="1" force_save="1" />
+                </tree>
+              </field>
+            </page>
+            <page string="Reimbursement Expenses" invisible="not ek_product_reimbursement_expenses_ids">
+              <field name="ek_product_reimbursement_expenses_ids" invisible="1" />
+              <field name="ek_table_reimbursement_expenses_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="partner_id" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="n_document" required="1" />
+                  <field name="name" required="1" string="Detail" />
+                  <field name="date_emision" required="1" />
+                  <field name="amount" required="1" sum="Total" />
+                </tree>
+              </field>
+            </page>
+
+            <page string="Charge" invisible="not not_controlling_weight">
+              <field name="ek_produc_packages_goods_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="ek_requerid_burden_inter_nac_id" required="1" options="{'no_edit': True, 'no_create': True}" />
+                  <field name="name" />
+                  <field name="quantity" />
+                </tree>
+              </field>
+            </page>
+            <page string="Trade Number" invisible="not has_trade_numeber">
+              <button name="generate_manual_trade_number" invisible="fold" string="Generate Manual Trade Number" type="object" icon="fa-file-text-o" />
+              <field name="shipping_trade_numbers_ids" options="{'no_create': True}">
+                <tree editable="bottom">
+                  <field name="nunmer_print" readonly="False" widget="boolean_toggle" />
+                  <field name="name" readonly="True" />
+                  <field name="ship_registration_id" optional="hide" readonly="True" options="{'no_create': True}" />
+                  <field name="boats_information_id" optional="hide" readonly="True" options="{'no_create': True}" />
+                  <field name="request_id" readonly="True" options="{'no_create': True}" />
+                  <field name="type_id" optional="hide" readonly="True" options="{'no_create': True}" />
+                  <field name="stage_id" optional="hide" readonly="True" options="{'no_create': True}" />
+                  <field name="user_id" readonly="True" options="{'no_create': True}" />
+                  <field name="date" readonly="True" />
+                  <field name="note" optional="hide" readonly="True" />
+                </tree>
+              </field>
+            </page>
+            <page string="Table aditional" invisible="not table_aditional">
+              <field name="ek_table_aditional_self_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="field1" />
+                  <field name="field2" />
+                  <field name="field3" />
+                  <field name="field4" />
+                  <field name="field5" />
+                  <field name="field6" />
+                  <field name="field7" optional="hide" />
+                  <field name="field8" optional="hide" />
+                </tree>
+              </field>
+            </page>
+            <page invisible="1">
+              <field name="firm_user_name" />
+            </page>
+            <page string="Acta de Entrega/Recepción" invisible="not has_delivery_reception">
+              <!-- Campos de secuencia y código al inicio -->
+              <field name="delivery_report_has_sequence" invisible="1" force_save="1" />
+              <field name="can_delete_delivery_sequence" invisible="1" />
+              <group col="4">
+                <group col="2" colspan="2">
+                  <!-- <label for="delivery_report_sequence_code" string="Secuencia de Reporte" /> -->
+                  <field name="delivery_report_sequence_code" readonly="1"/>
+                </group>
+                <group col="2" colspan="2">
+                  <div style="width: 145px;">
+                    <button name="action_get_delivery_report_sequence" type="object" string="Generar Secuencia" class="btn-primary" invisible="delivery_report_has_sequence or fold or confirm_stage or canceled_stage or readonly_mass" />
+                    <button name="action_delete_delivery_report_sequence" type="object" class="btn-warning" icon="fa-trash" invisible="not delivery_report_has_sequence or not can_delete_delivery_sequence or fold or confirm_stage or canceled_stage or readonly_mass" />
+                  </div>
+                </group>
+              </group>
+              <group col="2" invisible="delivery_report_has_sequence">
+                <field name="delivery_report_code" string="Secuencia" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </group>
+              <group col="2">
+                <field name="delivery_report_comments" string="Comentarios" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                </group>
+                <group col="2" colspan="2">
+                  <label for="zarpe_reception" string="Recepción" />
+                </group>
+                <group col="2" colspan="2">
+                  <label for="zarpe_entrega" string="Entrega" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="zarpe_reception" string="Zarpe" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="zarpe_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="zarpe_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="matricula_reception" string="Matriculas" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="matricula_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="matricula_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="guia_combustible" string="Guias de Combustible" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="guia_combustible" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="guia_combustible_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="bitacora_navegation" string="Bitacora de Navegación" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="bitacora_navegation" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="bitacora_navegation_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="bitacora_pesca_reception" string="Bitacora de Pesca" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="bitacora_pesca_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="bitacora_pesca_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="seamans_book_reception" string="Seaman's Book" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="seamans_book_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="seamans_book_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="permiso_provisional_reception" string="Permiso Provisional" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="permiso_provisional_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="permiso_provisional_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="passport_reception" string="Pasaporte" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="passport_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="passport_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="cedula_reception" string="Cedula" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="cedula_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="cedula_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+              <group colspan="6" col="6">
+                <group col="2" colspan="2">
+                  <label for="otros_reception" string="Otros" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="otros_reception" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+                <group col="2" colspan="2">
+                  <field name="otros_entrega" nolabel="1" placeholder="X" class="oe_inline" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+                </group>
+              </group>
+            </page>
+
+            <!-- Nueva pestaña de Notificaciones -->
+            <page string="Notificaciones" name="notifications_page" invisible="fold or canceled_stage or next_stage_fold">
+              <field name="notification_ids" nolabel="1" readonly="id == False">
+                <tree editable="bottom">
+                  <field name="sequence" widget="handle" />
+                  <field name="user_id" widget="many2one_avatar_user" domain="[('id', 'in', parent.available_notification_user_ids)]" />
+                  <field name="notify" widget="boolean_toggle" readonly="parent.id == False" />
+                  <field name="create_activity" widget="boolean_toggle" readonly="parent.id == False" />
+                </tree>
+              </field>
+            </page>
+
+          </notebook>
+          <group>
+            <field name="informe_work" col="2" required="display_dinamic_field and display_dinamic_field.get('required_informe_work',False)" invisible="not display_dinamic_field or not display_dinamic_field.get('show_informe_work',False)" />
+            <!-- Campo principal: texto limpio sin HTML para edición amigable -->
+            <field name="description_name" invisible="1" />
+          </group>
+          <group>
+            <!-- Campo de descripción HTML editable -->
+            <field name="description_name_html" string="Explicación" widget="html" readonly="fold or confirm_stage or canceled_stage" help="Descripción con formato HTML editable. Los cambios se rastrearán en el chatter." />
+            <div class="oe_button_box">
+              <button name="regenerate_description_fields" icon="fa-refresh" type="object" class="btn btn-sm btn-primary" help="Regenera la descripción desde la plantilla del tipo de solicitud" style="margin-right: 10px;" invisible="fold or confirm_stage or canceled_stage" />
+            </div>
+          </group>
+        </sheet>
+        <div class="oe_chatter" name="oe_chatter">
+          <field name="message_follower_ids" />
+          <field name="message_ids" />
+          <field name="activity_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+  <record id="ek_operation_request_tree" model="ir.ui.view">
+    <field name="name">ek.operation.request.tree</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <tree create="true" default_order="create_date desc">
+        <field name="display_name" string="#Doc Interno" />
+        <field name="ek_ship_registration_id" string="Ship" />
+        <field name="state_boats" />
+        <field name="journey_crew_id" string="Travel" />
+        <field name="state_travel" string="State Travel" />
+        <field name="res_partner_id" string="Customer" />
+        <field name="type_id" string="Type Request" />
+        <field name="stage_id" widget="badge" />
+        <field name="create_date" string="Fecha de creación" />
+        <field name="end_request_datetime" />
+        <field name="agent_user_id" string="Assigned User" />
+        <field name="create_uid" string="Creator User" />
+        <field name="days_time_request_results" widget="float_time" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- Nueva vista tree mejorada para acceso directo a solicitudes -->
+  <record id="ek_operation_request_enhanced_tree" model="ir.ui.view">
+    <field name="name">ek.operation.request.enhanced.tree</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <tree create="true" default_order="create_date desc">
+        <field name="display_name" string="#Doc Interno" />
+        <field name="ek_ship_registration_id" string="Buque" />
+        <field name="journey_crew_id" string="Travel" />
+        <field name="res_partner_id" string="Customer" />
+        <field name="type_id" string="Type Request" />
+        <field name="stage_id" widget="badge" />
+        <field name="processing_status" string="Status" widget="badge" decoration-success="processing_status == 'done'" decoration-warning="processing_status == 'developing'" decoration-danger="processing_status == 'cancel'" />
+        <field name="create_date" string="Fecha de creación" />
+        <field name="agent_user_id" string="Assigned User" />
+        <field name="days_time_request_results" widget="float_time" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- Nueva vista search mejorada con agrupación directa -->
+  <record id="ek_operation_request_enhanced_search" model="ir.ui.view">
+    <field name="name">ek.operation.request.enhanced.search</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="display_name" string="#Doc Interno" />
+        <field name="name" string="Name" />
+        <field name="ek_ship_registration_id" string="Ship" />
+        <field name="journey_crew_id" string="Travel" />
+        <field name="res_partner_id" string="Customer" />
+        <field name="type_id" string="Type Request" />
+        <field name="agent_user_id" string="Assigned User" />
+
+        <filter name="filter_processing_status_done" string="Completed" domain="[('processing_status', '=', 'done')]" />
+        <filter name="filter_processing_status_developing" string="In Process" domain="[('processing_status', '=', 'developing')]" />
+        <filter name="filter_processing_status_cancel" string="Cancelled" domain="[('processing_status', '=', 'cancel')]" />
+
+        <group expand="1" string="Group By" colspan="12" col="10">
+          <!-- Agrupación principal por buque -->
+          <filter name="group_by_ship" string="Ships" context="{'group_by':'ek_ship_registration_id'}" />
+          <!-- Agrupación por viaje dentro de cada buque -->
+          <filter name="group_by_journey" string="Travels" context="{'group_by':'journey_crew_id'}" />
+          <!-- Agrupación por estado de procesamiento -->
+          <filter name="group_by_processing_status" string="Request Status" context="{'group_by':'processing_status'}" />
+          <!-- Agrupación por tipo de solicitud -->
+          <filter name="group_by_type" string="Request Type" context="{'group_by':'type_id'}" />
+          <!-- Agrupación por cliente -->
+          <filter name="group_by_customer" string="Customers" context="{'group_by':'res_partner_id'}" />
+          <!-- Agrupación por usuario asignado -->
+          <filter name="group_by_agent" string="Assigned Users" context="{'group_by':'agent_user_id'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="ek_operation_request_search" model="ir.ui.view">
+    <field name="name">ek.operation.request.search</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="display_name" string="#Doc Interno" />
+        <field name="name" string="Name" />
+        <field name="ek_ship_registration_id" string="Ship" />
+        <field name="journey_crew_id" string="Travel" />
+        <field name="res_partner_id" string="Customer" />
+        <field name="type_id" string="Type Request" />
+        <group expand="1" string="Group By" colspan="12" col="10">
+          <filter name="group_by_processing_status" string="Request Status" context="{'group_by':'processing_status'}" />
+          <filter name="group_by_ek_ship_registration_id" string="Ships" context="{'group_by':'ek_ship_registration_id'}" />
+          <filter name="group_by_journey_crew_id" string="Travel" context="{'group_by':'journey_crew_id'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+  <record id="ek_service_request_tree" model="ir.ui.view">
+    <field name="name">ek.service.request.tree</field>
+    <field name="model">ek.service.request.group</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="order" widget="handle" />
+        <field name="name" />
+        <field name="position" />
+        <field name="line_strong" widget="boolean_toggle" />
+      </tree>
+    </field>
+  </record>
+  <record id="ek_service_request_line_tree" model="ir.ui.view">
+    <field name="name">ek.service.request.line.tree</field>
+    <field name="model">ek.service.request.line</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="order" widget="handle" />
+        <field name="name" />
+        <field name="space" />
+        <field name="show_by_default" widget="boolean_toggle" />
+        <field name="ek_service_request_group_id" optional="hide" />
+      </tree>
+    </field>
+  </record>
+  <record id="ek_service_request_line_search" model="ir.ui.view">
+    <field name="name">ek.service.request.line.search</field>
+    <field name="model">ek.service.request.line</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" string="Service" />
+        <group expand="1" string="Agrupar" colspan="12" col="10">
+          <filter name="ek_service_request_group_id_filter" string="Group Service" context="{'group_by':'ek_service_request_group_id'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+</odoo>

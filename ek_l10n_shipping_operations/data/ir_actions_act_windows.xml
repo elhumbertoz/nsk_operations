@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record model="ir.actions.act_window" id="ek_ship_registration_act_window">
+    <field name="name">Ship Registration</field>
+    <field name="res_model">ek.ship.registration</field>
+    <field name="view_mode">kanban,tree,form</field>
+  </record>
+  <record model="ir.actions.act_window" id="ek_operation_request_act_window">
+    <field name="name">Request</field>
+    <field name="res_model">ek.operation.request</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'search_default_group_by_processing_status':1,'search_default_group_by_ek_ship_registration_id':1,'search_default_group_by_journey_crew_id':1}</field>
+  </record>
+
+  <!-- Nueva acción para vista mejorada de solicitudes -->
+  <record model="ir.actions.act_window" id="ek_operation_request_enhanced_act_window">
+    <field name="name">Solicitudes</field>
+    <field name="res_model">ek.operation.request</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+  </record>
+
+  <!-- Nueva acción específica para solicitudes desde viajes -->
+  <record model="ir.actions.act_window" id="ek_operation_request_from_journey_act_window">
+    <field name="name">Solicitudes del Viaje</field>
+    <field name="res_model">ek.operation.request</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'create': True, 'edit': True, 'delete': True}</field>
+  </record>
+
+  <record model="ir.actions.act_window" id="ek_service_request_act_window">
+    <field name="name">Service Request Group</field>
+    <field name="res_model">ek.service.request.group</field>
+    <field name="view_mode">tree</field>
+  </record>
+  <record model="ir.actions.act_window" id="ek_service_request_line_act_window">
+    <field name="name">Service Request Line</field>
+    <field name="res_model">ek.service.request.line</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{'search_default_ek_service_request_group_id_filter':1}</field>
+  </record>
+
+  <!-- Acción de ventana principal para Seguimiento de Reembolsos -->
+  <record id="action_ek_reimbursement_tracking" model="ir.actions.act_window">
+    <field name="name">Seguimiento de Reembolsos</field>
+    <field name="res_model">ek.reimbursement.tracking</field>
+    <field name="view_mode">tree,kanban,form,pivot</field>
+    <field name="context">{
+      'search_default_group_by_ship': 1,
+      'search_default_group_by_journey': 1,
+      'search_default_filter_not_ignored': 1,
+      'search_default_filter_pending': 1,
+      'filter_not_recovered': 1,
+      'create': False,
+      'delete': False
+    }</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Los registros de seguimiento se crean automáticamente
+      </p>
+      <p>
+        Los registros de seguimiento de reembolsos se crean automáticamente 
+        cuando cambias la etapa de una solicitud de tipo reembolso.
+        Aquí podrás hacer seguimiento de todos los productos de reembolso 
+        desde las solicitudes de operación hasta su recuperación final.
+      </p>
+    </field>
+  </record>
+
+  <!-- Acción para reembolsos pendientes -->
+  <record id="action_ek_reimbursement_tracking_pending" model="ir.actions.act_window">
+    <field name="name">Reembolsos Pendientes</field>
+    <field name="res_model">ek.reimbursement.tracking</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="domain">[('ignored', '=', False), ('state', 'not in', ['recovered', 'cancelled'])]</field>
+    <field name="context">{
+      'search_default_group_by_ship': 1,
+      'search_default_group_by_journey': 1,
+      'search_default_filter_6_15_days': 1,
+      'create': False,
+      'delete': False
+    }</field>
+  </record>
+
+  <!-- Acción para dashboard -->
+  <record id="action_ek_reimbursement_tracking_dashboard" model="ir.actions.act_window">
+    <field name="name">Dashboard de Reembolsos</field>
+    <field name="res_model">ek.reimbursement.tracking</field>
+    <field name="view_mode">kanban,pivot,tree,form</field>
+    <field name="context">{
+      'search_default_group_by_days_range': 1,
+      'search_default_filter_not_ignored': 1,
+      'create': False,
+      'delete': False
+    }</field>
+  </record>
+</odoo>

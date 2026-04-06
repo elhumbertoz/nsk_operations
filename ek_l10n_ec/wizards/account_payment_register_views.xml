@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_credit_card" model="ir.ui.view">
+        <field name="name">account.payment.register.form.credit_card</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="payment_method_code" invisible="1"/>
+            </form>
+            <xpath expr="//field[@name='group_payment']" position="before">
+
+                <separator name="credit_card_details" string="Detalles de la tarjeta de crédito"
+                               invisible="payment_method_code != 'credit_card'" colspan="2"
+                    />
+                    <field  name="l10n_ec_acquiring_bank_id"
+                            invisible="payment_method_code != 'credit_card'"
+                            options="{'no_open':True, 'no_create': True}"
+                            
+                            required="payment_method_code == 'credit_card'" />
+                    <field  name="l10n_ec_lot" options="{'no_create': True}"
+                            invisible="payment_method_code != 'credit_card'"
+                            
+                            required="payment_method_code == 'credit_card'"
+                    />
+                    <field  name="l10n_ec_credit_auth" options="{'no_create': True}"
+                            
+                            invisible="payment_method_code != 'credit_card'"
+                    />
+                    <field  name="l10n_ec_credit_card_number" placeholder="No. xxxxxxxxxxx0463" options="{'no_create': True}"
+                            
+                            invisible="payment_method_code != 'credit_card'"
+                    />
+                    <field  name="l10n_ec_credit_card_ref" placeholder="2340345"
+                            invisible="payment_method_code != 'credit_card'"
+                            
+                    />
+                    <field  name="l10n_ec_credit_valid_card"
+                            invisible="payment_method_code != 'credit_card'"
+                            
+                            placeholder="e.j. 02/2020"
+                    />
+                    <field  name="l10n_ec_credit_card_type"
+                            invisible="payment_method_code != 'credit_card'"
+                            
+                            required="payment_method_code == 'credit_card'"
+                    />
+                    <field  name="l10n_ec_credit_card_deferred_id"
+                            invisible="l10n_ec_credit_card_type == 'normal'"
+                            
+                            options="{'no_open':True, 'no_create': True}"
+                            required="l10n_ec_credit_card_type != 'normal'"
+                            />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

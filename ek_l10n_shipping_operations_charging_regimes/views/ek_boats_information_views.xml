@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_ek_boats_information_regimens_form" model="ir.ui.view">
+    <field name="name">ek.boats.information.regimen.form</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <form string="">
+        <header>
+          <button name="action_cancelled_request" string="Cancelado" type="object" icon="fa-check-circle" class="oe_stat_button" invisible="state not in ['draft']"/>
+          <button name="action_finalize_travel" string="Finalizado" type="object" class="oe_stat_button" invisible="1"/>
+
+          <field name="state" widget="statusbar" statusbar_visible="draft"/>
+        </header>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="action_open_documents_request" type="object" icon="fa-share-square-o">
+              <field string="Solicitudes" name="request_count" widget="statinfo"/>
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_sale_order" type="object" icon="fa-file-text-o">
+              <field string="Ventas" name="sale_order_count" widget="statinfo"/>
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_account_move" type="object" icon="fa-pencil-square-o">
+              <field string="Facturas" name="invoice_count" widget="statinfo"/>
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_purchase_order" type="object" icon="fa-pencil-square-o">
+              <field string="Compras" name="purchase_count" widget="statinfo"/>
+            </button>
+          </div>
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Name" readonly="1"/>
+            </h1>
+            <h1>
+              <field name="ref_container" placeholder="Ref."/>
+            </h1>
+          </div>
+
+          <group>
+            <group>
+              <field name="validate_finalized" invisible="1"/>
+              <field name="ship_name_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="company_id" force_save="1" readonly="1" groups="base.group_multi_company" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="supplies_detail"/>
+              <field name="supplier_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="custom_agent"/>
+            </group>
+            <group>
+              <field name="shipper_id"/>
+              <field name="shipping_company"/>
+              <field name="type_container_id"/>
+              <field name="type_move_container"/>
+              <field name="load_number"/>
+              <field name="container_number"/>
+              <field name="bl_number"/>
+              <field name="value_of_container" invisible="1" />
+            </group>
+          </group>
+
+          <group>
+            <group string="Date Origin">
+              <field name="ek_res_world_seaports_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" string="Origin Location"/>
+              <field name="eta" string="Departure Port Of Origin"/>
+              <field name="ata" string="Arrival of Date"/>
+            </group>
+
+            <group string="Date Destination">
+              <field name="ek_res_world_seaports_d_id" string="Origin Destination"/>
+              <field name="etd" string="Transfer Date"/>
+              <field name="atd" string="Desconsolidation Date"/>
+              <field name="rcd" string="Return Container Date"/>
+            </group>
+          </group>
+
+          <group>
+            <group string="Date ">
+              <field name="create_date"/>
+              <field name="date_finished"/>
+            </group>
+            <group/>
+          </group>
+
+          <notebook>
+            <page string="Items en Contenedor">
+              <button name="open_items_container" type="object" string="Search" class="btn btn-link p-0" icon="fa-search"/>
+              <field name="ek_produc_packages_goods_ids">
+                <tree editable="bottom">
+                  <field name="tariff_item"/>
+                  <field name="id_hs_copmt_cd" optional="hide" string="Código Complementario"/>
+                  <field name="id_hs_spmt_cd" optional="hide" />
+                  <field name="ek_requerid_burden_inter_nac_id"/>
+                  <field name="gross_weight" sum="total"/>
+                  <field name="quantity" sum="total"/>
+                  <field name="uom_id" optional="hide" />
+                  <field name="fob" sum="total"/>
+                  <field name="total_fob" sum="total"/>
+                  <field name="invoice_number" string="N. Factura"/>
+                  <field name="supplier" string="Proveedor" optional="hide" />
+                  <field name="ek_ship_registration_id" column_invisible="1"/>
+                  <field name="ek_boats_information_id" column_invisible="1"/>
+                  <field name="delivery_product" sum="total" string="Producto"/>
+                  <field name="quantity_hand" sum="total" string="Cantidad"/>
+                  <field name="id_bl"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Notas">
+              <field name="notes" nolabel="1"/>
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter" name="oe_chatter">
+          <field name="message_follower_ids"/>
+          <field name="message_ids"/>
+          <field name="activity_ids"/>
+        </div>
+      </form>
+    </field>
+  </record>
+  <record id="ek_boats_information_tree_reguimen" model="ir.ui.view">
+    <field name="name">ek.boats.information.tree.reguimen</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <tree create="true" edit="true" expand="true" multi_edit="1" sample="1" js_class="hr_employee_list">
+        <field name="name" string="Name"/>
+        <field name="ref_container"/>
+        <field name="create_date"/>
+        <field name="state"/>
+      </tree>
+    </field>
+  </record>
+  <record id="ek_boats_information_search_regimen" model="ir.ui.view">
+    <field name="name">ek.boats.information.search.reguime</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <search>
+        <searchpanel>
+          <field name="ship_name_id" string="Regimen" icon="fa-archive" enable_counters="1"/>
+        </searchpanel>
+      </search>
+
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="ek_boats_container_information_act">
+    <field name="name">Contenedores</field>
+    <field name="res_model">ek.boats.information</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="ek_boats_information_search_regimen"/>
+    <field name="domain">[("assigned_regimen_70","=",True)]</field>
+    <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('ek_boats_information_tree_reguimen')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_ek_boats_information_regimens_form')})]"/>
+
+  </record>
+
+  <record id="menu_boat" model="ir.ui.menu">
+    <field name="action" ref="ek_l10n_shipping_operations_charging_regimes.ek_boats_container_information_act"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Contenedores</field>
+    <field name="parent_id" ref="ek_l10n_shipping_operations.menu_boat_information_principal"/>
+    <field name="sequence">3</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+
+  <record id="ek_product_packagens_goods_search" model="ir.ui.view">
+    <field name="name">ek.product.packagens.goods.search</field>
+    <field name="model">ek.product.packagens.goods</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="ek_requerid_burden_inter_nac_id"/>
+        <field name="tariff_item"/>
+        <field name="invoice_number"/>
+        <field name="supplier"/>
+        <field name="id_bl"/>
+
+      </search>
+    </field>
+  </record>
+
+  <record id="ek_product_packagens_goods_tree_items" model="ir.ui.view">
+    <field name="name">ek.product.packagens.goods.tree</field>
+    <field name="model">ek.product.packagens.goods</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <header>
+          <button name="delete_table_70" type="object" string="Delete" class="btn-link mb-1 px-0" icon="fa-refresh" />
+        </header>
+        <field name="tariff_item" />
+        <field name="name" column_invisible="1" />
+        <field name="id_hs_copmt_cd" />
+        <field name="id_hs_spmt_cd" />
+        <field name="ek_requerid_burden_inter_nac_id"/>
+        <field name="quantity" />
+        <field name="gross_weight" />
+        <field name="product_weight_in_lbs" />
+        <field name="fob"/>
+        <field name="total_fob"/>
+        <field name="quantity_hand" />
+        <field name="invoice_number" />
+        <field name="supplier" />
+        <field name="id_bl" />
+      </tree>
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record
+        id="view_account_payment_search_credit_card"
+        model="ir.ui.view">
+      <field name="name">account.payment.credit.card.search</field>
+      <field name="model">account.payment</field>
+      <field
+          name="inherit_id"
+          ref="account.view_account_payment_search" />
+      <field
+          name="arch"
+          type="xml">
+        <xpath
+            expr="//filter[@name='state_sent']"
+            position="before">
+          <filter
+              string="Cobros con tarjeta de crédito"
+              domain="[('payment_method_id.code', '=', 'credit_card')]"
+              name="credit_card_list" />
+          <filter
+              string="Anticipos por cruzar"
+              domain="[('advance_amount_residual', '!=', 0)]"
+              name="advance_amount_residual" />
+
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Inherit Form View to Modify it -->
+    <record
+        id="view_account_payment_advance_form"
+        model="ir.ui.view">
+      <field name="name">account.payment.advance.form</field>
+      <field name="model">account.payment</field>
+      <field
+          name="inherit_id"
+          ref="account.view_account_payment_form" />
+      <field
+          name="arch"
+          type="xml">
+
+        <xpath
+            expr="//field[@name='payment_method_line_id']"
+            position="after">
+          <!-- Add your fields or attributes here -->
+          <field
+              name="is_advance"
+              invisible="is_internal_transfer == True or not partner_id or (partner_type == 'customer' and payment_type != 'inbound') or (partner_type == 'supplier' and payment_type != 'outbound')"
+              readonly="state != 'draft'"
+              groups="ek_l10n_ec.group_account_payment_advance" />
+        </xpath>
+
+        <xpath
+            expr="//div[@name='button_box']"
+            position="after">
+          <field
+              name="advance_amount_residual"
+              invisible="1" />
+          <field
+              name="is_advance"
+              invisible="1"
+              groups="!ek_l10n_ec.group_account_payment_advance" />
+          <widget
+              name="web_ribbon"
+              text="Anticipo por Cruzar"
+              bg_color="text-bg-info"
+              invisible="not is_advance or state != 'posted' or advance_amount_residual == 0" />
+        </xpath>
+
+        <xpath
+            expr="//field[@name='partner_bank_id']"
+            position="before">
+          <separator
+              name="credit_card_details"
+              string="Detalles de la tarjeta de crédito"
+              invisible="payment_method_code != 'credit_card'"
+              colspan="2" />
+          <field
+              name="l10n_ec_acquiring_bank_id"
+              invisible="payment_method_code != 'credit_card'"
+              options="{'no_open':True, 'no_create': True}"
+              readonly="state != 'draft'"
+              required="payment_method_code == 'credit_card'" />
+          <field
+              name="l10n_ec_lot"
+              options="{'no_create': True}"
+              invisible="payment_method_code != 'credit_card'"
+              readonly="state != 'draft'"
+              required="payment_method_code == 'credit_card'" />
+          <field
+              name="l10n_ec_credit_auth"
+              options="{'no_create': True}"
+              readonly="state != 'draft'"
+              invisible="payment_method_code != 'credit_card'" />
+          <field
+              name="l10n_ec_credit_card_number"
+              placeholder="No. xxxxxxxxxxx0463"
+              options="{'no_create': True}"
+              readonly="state != 'draft'"
+              invisible="payment_method_code != 'credit_card'" />
+          <field
+              name="l10n_ec_credit_card_ref"
+              placeholder="2340345"
+              invisible="payment_method_code != 'credit_card'"
+              readonly="state != 'draft'" />
+          <field
+              name="l10n_ec_credit_valid_card"
+              invisible="payment_method_code != 'credit_card'"
+              readonly="state != 'draft'"
+              placeholder="e.j. 02/2020" />
+          <field
+              name="l10n_ec_credit_card_type"
+              invisible="payment_method_code != 'credit_card'"
+              readonly="state != 'draft'"
+              required="payment_method_code == 'credit_card'" />
+          <field
+              name="l10n_ec_credit_card_deferred_id"
+              invisible="l10n_ec_credit_card_type == 'normal'"
+              readonly="state != 'draft'"
+              options="{'no_open':True, 'no_create': True}"
+              required="l10n_ec_credit_card_type != 'normal'" />
+        </xpath>
+
+      </field>
+    </record>
+
+    <record
+        id="view_account_payment_form_inherit_account_accountant_hotkey"
+        model="ir.ui.view">
+      <field name="name">account.payment.form.inherit.account_accountant_hotkey</field>
+      <field name="model">account.payment</field>
+      <field
+          name="inherit_id"
+          ref="account_accountant.view_account_payment_form_inherit_account_accountant" />
+      <field
+          name="arch"
+          type="xml">
+        <xpath
+            expr="//button[@name='action_open_manual_reconciliation_widget']"
+            position="attributes">
+          <attribute name="data-hotkey">y</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record
+        id="account_payment_advance_tree"
+        model="ir.ui.view">
+      <field name="name">account.payment.advance.tree</field>
+      <field name="model">account.payment</field>
+      <field
+          name="inherit_id"
+          ref="account.view_account_payment_tree" />
+      <field
+          name="arch"
+          type="xml">
+        <xpath
+            expr="//field[@name='amount_company_currency_signed']"
+            position="after">
+          <field
+              name="advance_amount_residual"
+              optional="hide"
+              sum="Total Pendiente de Cruce" />
+        </xpath>
+
+      </field>
+    </record>
+
+    <record
+        model="ir.actions.act_window"
+        id="action_account_customer_advance_payment">
+      <field name="name">Anticipos de Clientes</field>
+      <field name="res_model">account.payment</field>
+      <field name="view_mode">tree,form,calendar,graph,pivot</field>
+      <field
+          name="view_id"
+          ref="account.view_account_payment_tree" />
+      <field
+          name="search_view_id"
+          ref="account.view_account_payment_search" />
+      <field name="domain">[('is_advance', '=', True),('partner_type', '=', 'customer')]</field>
+      <field name="context">{
+        'default_is_advance': True,
+        'search_default_advance_amount_residual': 1,
+        'default_payment_type': 'inbound',
+        'default_partner_type': 'customer',
+        'search_default_inbound_filter': 1,
+        'default_move_journal_types': ('bank', 'cash'),
+        'display_account_trust': True}</field>
+    </record>
+
+    <menuitem
+        action="action_account_customer_advance_payment"
+        id="menu_account_customer_advance_payment"
+        sequence="39"
+        groups="ek_l10n_ec.group_account_payment_advance"
+        parent="account.menu_finance_receivables" />
+
+    <record
+        model="ir.actions.act_window"
+        id="action_account_supplier_advance_payment">
+      <field name="name">Anticipos a Proveedores</field>
+      <field name="res_model">account.payment</field>
+      <field name="view_mode">tree,form,calendar,graph,pivot</field>
+      <field
+          name="view_id"
+          ref="account.view_account_payment_tree" />
+      <field
+          name="search_view_id"
+          ref="account.view_account_payment_search" />
+      <field name="domain">[('is_advance', '=', True),('partner_type', '=', 'supplier')]</field>
+      <field name="context">{
+        'default_is_advance': True,
+        'search_default_advance_amount_residual': 1,
+        'default_payment_type': 'outbound',
+        'default_partner_type': 'supplier',
+        'search_default_outbound_filter': 1,
+        'default_move_journal_types': ('bank', 'cash'),
+        'display_account_trust': True}</field>
+    </record>
+
+    <menuitem
+        action="action_account_supplier_advance_payment"
+        id="menu_account_supplier_advance_payment"
+        sequence="49"
+        groups="ek_l10n_ec.group_account_payment_advance"
+        parent="account.menu_finance_payables" />
+
+  </data>
+</odoo>

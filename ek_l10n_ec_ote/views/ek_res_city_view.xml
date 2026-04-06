@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_country_city_form_view" model="ir.ui.view">
+        <field name="name">ek.res.country.city.form</field>
+        <field name="model">ek.res.country.city</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="code" placeholder="Código"/>/<field name="name" placeholder="Nombre"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="country_id"/>
+                        </group>
+                        <group>
+                            <field name="state_id" domain="[('country_id', '=', country_id)]" required="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_country_city_tree_view" model="ir.ui.view">
+        <field name="name">ek.res.country.city.tree</field>
+        <field name="model">ek.res.country.city</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_country_city_search_view" model="ir.ui.view">
+        <field name="name">ek.res.country.city.search</field>
+        <field name="model">ek.res.country.city</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Estado/Provincia" name="state_id" context="{'group_by': 'state_id'}"/>
+                    <filter name="country_id" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_country_city_act_window" model="ir.actions.act_window">
+        <field name="name">Ciudades</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.res.country.city</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Cree las ciudades pertenecientes a un país.
+            </p>
+        </field>
+    </record>
+
+    <!--<menuitem name="Ciudades" id="res_country_city_menu" parent="contacts.menu_localisation" action="res_country_city_act_window"/>-->
+    <!-- <menuitem id="base_address_extended.menu_res_city" parent="contacts.menu_localisation" action="res_country_city_act_window"/> -->
+
+    <record id="res_country_canton_tree_view" model="ir.ui.view">
+        <field name="name">ek.res.country.canton.tree</field>
+        <field name="model">ek.res.country.canton</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="city_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_country_canton_search_view" model="ir.ui.view">
+        <field name="name">ek.res.country.canton.search</field>
+        <field name="model">ek.res.country.canton</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="city_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="city_id" context="{'group_by': 'city_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_country_canton_act_window" model="ir.actions.act_window">
+        <field name="name">Parroquias</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.res.country.canton</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Cree las parroquias pertenecientes a un país
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="res_country_canton_menu" parent="contacts.menu_localisation" action="res_country_canton_act_window"/>
+
+    <record id="res_state_zone_tree_view" model="ir.ui.view">
+        <field name="name">ek.res.state.zone.tree</field>
+        <field name="model">ek.res.state.zone</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="channel_id"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_state_zone_search_view" model="ir.ui.view">
+        <field name="name">ek.res.state.zone.search</field>
+        <field name="model">ek.res.state.zone</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Estado/Provincia" name="state_id" context="{'group_by': 'state_id'}"/>
+                    <filter name="country_id" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_state_zone_act_window" model="ir.actions.act_window">
+        <field name="name">Zonas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.res.state.zone</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Cree las zonas pertenecientes a un país
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="res_state_zone_menu" parent="contacts.menu_localisation" action="res_state_zone_act_window"/>
+
+    <record id="res_region_tree_view" model="ir.ui.view">
+        <field name="name">ek.res.region.tree</field>
+        <field name="model">ek.res.region</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_region_search_view" model="ir.ui.view">
+        <field name="name">ek.res.region.search</field>
+        <field name="model">ek.res.region</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="country_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="country_id" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_region_act_window" model="ir.actions.act_window">
+        <field name="name">Regiones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.res.region</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Cree las regiones pertenecientes a un país
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="res_region_menu" parent="contacts.menu_localisation" action="res_region_act_window"/>
+
+    <record id="res_sector_tree_view" model="ir.ui.view">
+        <field name="name">ek.res.sector.tree</field>
+        <field name="model">ek.res.sector</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="zone_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_sector_search_view" model="ir.ui.view">
+        <field name="name">ek.res.sector.search</field>
+        <field name="model">ek.res.sector</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="zone_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="zone_id" context="{'group_by': 'zone_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_sector_act_window" model="ir.actions.act_window">
+        <field name="name">Sectores</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.res.sector</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Cree los sectores pertenecientes a un país
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Sectores" id="res_sector_menu" parent="contacts.menu_localisation" action="res_sector_act_window"/>
+
+    <record id="view_ek_classification_tree" model="ir.ui.view">
+        <field name="name">ek.classification.tree</field>
+        <field name="model">ek.classification</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="complete_name" optional="hide"/>
+                <field name="parent_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ek_classification_search" model="ir.ui.view">
+        <field name="name">ek.classification.search</field>
+        <field name="model">ek.classification</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ek_classification" model="ir.actions.act_window">
+        <field name="name">Clasificaciones</field>
+        <field name="res_model">ek.classification</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_ek_classification_search"/>
+    </record>
+
+    <menuitem id="menu_ek_classification" parent="contacts.res_partner_menu_config" action="action_ek_classification"/>
+
+    <menuitem id="res_sector_menu" parent="contacts.menu_localisation" action="res_sector_act_window"/>
+
+    <record id="view_ek_channel_tree" model="ir.ui.view">
+        <field name="name">ek.channel.tree</field>
+        <field name="model">ek.res.channel</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="complete_name" optional="hide"/>
+                <field name="parent_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ek_channel_search" model="ir.ui.view">
+        <field name="name">ek.channel.search</field>
+        <field name="model">ek.res.channel</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ek_res_channel" model="ir.actions.act_window">
+        <field name="name">Canales</field>
+        <field name="res_model">ek.res.channel</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_ek_channel_search"/>
+    </record>
+
+    <menuitem id="menu_ek_res_channel" parent="contacts.res_partner_menu_config" action="action_ek_res_channel"/>
+
+    <record id="view_ek_route_tree" model="ir.ui.view">
+        <field name="name">ek.route.tree</field>
+        <field name="model">ek.res.route</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ek_route_search" model="ir.ui.view">
+        <field name="name">ek.route.search</field>
+        <field name="model">ek.res.route</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ek_res_route" model="ir.actions.act_window">
+        <field name="name">Rutas</field>
+        <field name="res_model">ek.res.route</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_ek_route_search"/>
+    </record>
+
+    <menuitem id="menu_ek_res_route" parent="contacts.menu_localisation" action="action_ek_res_route"/>
+    <!-- This Menu Item must have a parent and an action -->
+    
+    <record id="view_ek_customer_rank_tree" model="ir.ui.view">
+        <field name="name">ek.res.customer.rank.tree</field>
+        <field name="model">ek.res.customer.rank</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ek_customer_rank_search" model="ir.ui.view">
+        <field name="name">ek.res.customer.rank.search</field>
+        <field name="model">ek.res.customer.rank</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ek_customer_rank" model="ir.actions.act_window">
+        <field name="name">Ranking de Cliente</field>
+        <field name="res_model">ek.res.customer.rank</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_ek_customer_rank_search"/>
+    </record>
+
+    <menuitem id="menu_ek_customer_rank" parent="contacts.menu_localisation" action="action_ek_customer_rank"/>
+    <!-- This Menu Item must have a parent and an action -->
+</odoo>

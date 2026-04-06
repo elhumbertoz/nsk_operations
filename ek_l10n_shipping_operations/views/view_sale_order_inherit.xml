@@ -1,0 +1,128 @@
+<odoo>
+    <record id="shipping_operations_sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_header']" position="after">
+                <group>
+                    <group string="Nautical Operations">
+                        <field name="ek_ship_registration_id" string="Buque"/>
+                        <field name="journey_crew_id"/>
+                        <field name="operation_request_id"/>
+                       
+
+                    </group>
+
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="purchase_order_id" readonly="1"  string="Orden de Compra"/>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="shipping_operations_sale_order_tree_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.inherit.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ek_ship_registration_id" string="Buque" />
+                <field name="journey_crew_id" />
+                <field name="operation_request_id"/>
+              </xpath>
+              <xpath expr="//field[@name='state']" position="after">
+                <field name="processing_status" widget="badge" decoration-info="processing_status.fold == False" decoration-success="processing_status.fold == True" />
+                <field name="creation_status" widget="badge" decoration-info="creation_status.fold == False" decoration-success="creation_status.fold == True"/>
+                <field name="create_date"/>
+
+              </xpath>
+
+        </field>
+    </record>
+
+    <record id="shipping_operations_purchase_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_calculation_rounding_method']" position="after">
+                        <field name="ek_ship_registration_id" string="Buque"/>
+                        <field name="journey_crew_id"/>
+                        <field name="operation_request_id"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="sale_order_id" readonly="1" string="Pedido de Venta" />
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+    <record id="shipping_operations_purchase_order_tree_view_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.tree.shipping</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                        <field name="ek_ship_registration_id" string="Buque"/>
+                        <field name="journey_crew_id"/>
+                        <field name="operation_request_id"/>
+            </xpath>
+            <xpath expr="//field[@name='state']"  position="after">
+                <field name="processing_status" widget="badge" decoration-info="processing_status.fold == False" decoration-success="processing_status.fold == True" />
+                <field name="creation_status" widget="badge" decoration-info="creation_status.fold == False" decoration-success="creation_status.fold == True"/>
+                <field name="create_date"/>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_sale_order_tree_custom_ek" model="ir.ui.view">
+        <field name="name">sale.order.tree.custom</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="ek_ship_registration_id" string="Buque"/>
+                <field name="journey_crew_id"/>
+                <field name="operation_request_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                 <field name="creation_status"/>
+                <field name="processing_status" widget="badge" decoration-info="processing_status == 'developing'" decoration-success="processing_status == 'done'" />
+                <field name="create_date"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_tree_custom_ek" model="ir.ui.view">
+        <field name="name">purchase.order.tree.custom</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="ek_ship_registration_id" string="Buque"/>
+                <field name="journey_crew_id"/>
+                <field name="operation_request_id"/>
+                <field name="state"/>
+                <field name="amount_total"/>
+                <field name="creation_status"/>
+                <field name="processing_status" widget="badge" decoration-info="processing_status == 'developing'" decoration-success="processing_status == 'done'" />
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+ 
+</odoo>

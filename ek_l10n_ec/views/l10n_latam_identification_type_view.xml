@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_latam_identification_type_code_ats_tree" model="ir.ui.view">
+        <field name="name">l10n_latam.identification.type.code.ats.tree</field>
+        <field name="model">l10n_latam.identification.type</field>
+        <field name="inherit_id" ref="l10n_latam_base.view_l10n_latam_identification_type_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="code_ats_sales"/>
+                <field name="code_ats_purchase"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_partner_sustento_form" model="ir.ui.view">
+        <field name="name">res.partner.sustento.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_account_position_id']" position="after">
+                <field name="withholding_issues" widget="boolean_toggle" groups="account.group_account_manager" invisible="parent_id"/>
+                <field name="l10n_latam_document_sustento" options="{'no_create': True, 'no_open': True}" invisible="parent_id"/>
+                <field name="l10n_ec_sri_payment_id" options="{'no_create': True, 'no_open': True}" invisible="parent_id"/>
+                <t groups="account.group_account_manager">
+                    <label for="l10n_ec_max_day_for_receipt_invoices" invisible="parent_id"/>
+                    <div class="o_row" name="div_l10n_ec_max_day_for_receipt_invoices" invisible="parent_id">
+                        <field name="l10n_ec_max_day_for_receipt_invoices" class="oe_inline"/>
+                        (de cada mes)
+                    </div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

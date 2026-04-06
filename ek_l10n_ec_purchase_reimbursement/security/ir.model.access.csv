@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_ek_purchase_reimbursement_wizard_manager,ek_purchase_reimbursement_wizard_manager,model_ek_purchase_reimbursement_wizard,,1,1,1,1
+access_ek_account_move_reimbursement_wizard_manager,ek_account_move_reimbursement_wizard_manager,model_ek_account_move_reimbursement_wizard,,1,1,1,1
+access_change_journal_wizard_manager,change_journal_wizard_manager,model_change_journal_wizard,,1,1,1,1

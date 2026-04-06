@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="categoria_modulo_operaciones" model="ir.module.category">
+            <field name="name">Operaciones</field>
+            <field name="sequence" eval="9999"/>
+
+        </record>
+        <record id="group_operaction_readonly" model="res.groups">
+            <field name="name">Edit Request</field>
+            <field name="category_id" ref="categoria_modulo_operaciones"/>
+        </record>
+    
+
+</odoo>

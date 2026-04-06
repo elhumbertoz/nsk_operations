@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.generate.shipping.trade.numbers.wizard form -->
+    <record id="view_ek_generate_shipping_trade_numbers_form" model="ir.ui.view">
+        <field name="name">ek.generate.shipping.trade.numbers.wizard.form</field>
+        <field name="model">ek.generate.shipping.trade.numbers.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Office Trade Number">
+                <group name="type_group" colspan="4">
+                    <field name="note" required="1" col="2" 
+                        />
+                    <field name="link_request" widget="boolean_toggle"/>
+                    <field name="operation_request_id" invisible="not link_request" required="link_request"/>
+
+
+                </group>                
+                <footer>
+                    <button
+                        name="generate_shipping_trade_numbers"
+                        string="Generate Trade Number"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_ek_generate_shipping_trade_numbers_form_related" model="ir.ui.view">
+        <field name="name">ek.generate.shipping.trade.numbers.wizard.form.related</field>
+        <field name="model">ek.generate.shipping.trade.numbers.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Office Trade Number">
+                <group name="type_group" colspan="4">
+                    <field name="note" required="1" col="2" 
+                        />
+                    <field name="operation_request_id" invisible="1"/>
+
+
+                </group>                
+                <footer>
+                    <button
+                        name="generate_shipping_trade_numbers"
+                        string="Generate Trade Number"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  © 2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="sri_cancellation_number_wizard_form" model="ir.ui.view">
+        <field name="name">sri_cancellation_number_wizard.form</field>
+        <field name="model">sri.cancellation.number.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Payment Lines">
+                <group invisible="not move_id">
+                    <field name="move_id" readonly="1" force_save="1" string="Documento"/>
+                </group>
+                <group>
+                    <p colspan="2">Código de anulación emitido del SRI (10 u 11 dígitos)</p>
+                    <field name="code" colspan="2"/>
+                </group>
+                <footer>
+                    <button
+                        type="object"
+                        name="button_cancel_posted_moves"
+                        string="Solicitar Anulación"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancelar" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

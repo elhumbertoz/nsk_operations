@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ek_external_layout_standard_header">
+        <div t-attf-class="header o_company_#{env.company.id}_layout" t-att-style="report_header_style">
+            <div class="row">
+                <div class="col-3 mb4">
+                    <img t-if="env.company.logo" t-att-src="image_data_uri(env.company.logo)"
+                        style="max-height: 45px;" alt="Logo" />
+                </div>
+                <div class="col-9 text-end" style="margin-top:22px;" t-if="env.company.report_header"
+                    t-field="env.company.report_header" name="moto">Company tagline</div>
+            </div>
+            <div t-if="env.company.logo or env.company.report_header" class="row zero_min_height">
+                <div class="col-12">
+                    <div style="border-bottom: 1px solid black;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6" name="company_address">
+                    <ul class="list-unstyled" name="company_address_list">
+                        <li t-if="env.company.is_company_details_empty">
+                            <span t-field="env.company.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                <div
+                                    class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                    <strong>Company address block</strong>
+                                    <div>Contains the company address.</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li t-else="">
+                            <span t-field="env.company.company_details">
+                                <div
+                                    class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                    <strong>Company details block</strong>
+                                    <div>Contains the company details.</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li t-if="not forced_vat" />
+                        <li t-else="">
+                            <t t-esc="env.company.country_id.vat_label or 'Tax ID'">Tax ID</t>: <span
+                                t-esc="forced_vat">US12345671</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div t-attf-class="o_company_#{env.company.id}_layout footer o_background_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <div t-field="env.company.report_footer"/>
+                </ul>
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    of
+                    <span class="topage"/>
+                </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-out="o.name">(document name)</span>
+                </div>
+            </div>
+        </div>
+
+
+    </template>
+
+</odoo>

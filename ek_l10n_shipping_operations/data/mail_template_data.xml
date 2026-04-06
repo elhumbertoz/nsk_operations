@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="email_request_confirm" model="mail.template">
+        <field name="name">Request: Operation request</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request" />
+        <field name="subject"> Document Confirmacion, {{ object.name }}</field>
+        <field name="email_from">{{ object.company_id.email }}</field>
+        <field name="email_to">{{ object.res_partner_id.email_formatted }}</field>
+        <field name="body_html" type="html">
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">BARCO : <span
+                    t-out="object.ek_ship_registration_id.name or ''">Nombre barco</span></p>
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">Numero de la solicitud <strong
+                    style="box-sizing:border-box;font-weight:bolder;"><span
+                    t-out="object.name or ''">000000000</span></strong>.</p>
+
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">
+                <strong style="box-sizing:border-box;font-weight:bolder;">Información:</strong>
+            </p>
+            <ul
+                style="padding:0 0 0 32px;margin:0px 0 16px 0;box-sizing:border-box;list-style-type:disc;">
+                <li><strong style="box-sizing:border-box;font-weight:bolder;">Tipo:</strong>
+                    <span
+                    t-out="object.type_id.name or ''">Nombre tipo</span></li>
+            </ul>
+
+            <table border="1" cellpadding="10" cellspacing="0" width="100%"
+                style="box-sizing:border-box;border-collapse:collapse;caption-side:bottom;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Pasaporte</th>
+                        <th>Título</th>
+                        <th>Plaza</th>
+                        <th>Nacionalidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="object.crew_ids" t-as="line">
+                        <tr>
+                            <td>
+                                <span t-out="line.name.name or ''">Nombre</span>
+                            </td>
+                            <td>
+                                <span t-out="line.vat or ''">Pasaporte</span>
+                            </td> <!--
+                            Cambié object.vat por line.passport_number -->
+                            <td>
+                                <span t-out="line.ek_crew_member_hierarchy_title_id.name or ''">
+                                    Título</span>
+                            </td>
+                            <td>
+                                <span t-out="line.ek_crew_member_hierarchy_id.name or ''">Plaza</span>
+                            </td>
+                            <td>
+                                <span t-out="line.nationality_id.name or ''">Nacionalidad</span>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">
+                <strong style="box-sizing:border-box;font-weight:bolder;">Tripulante:</strong>
+            </p>
+
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">${object.description_name}</p>
+
+            <p style="margin:0px 0 16px 0;box-sizing:border-box;">Best regards,
+                ${object.company_id.name}</p>
+
+        </field>
+    </record>
+</odoo>

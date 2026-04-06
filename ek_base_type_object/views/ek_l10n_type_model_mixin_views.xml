@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.l10n.type.model.mixin View Tree -->
+    <record id="view_ek_l10n_type_model_mixin_tree" model="ir.ui.view">
+        <field name="name">view.ek.l10n.type.model.mixin.tree</field>
+        <field name="model">ek.l10n.type.model.mixin</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="model_id"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" context="{'create': False}"/>
+                <field name="active" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View ek.l10n.type.model.mixin form -->
+    <record id="view_ek_l10n_type_model_mixin_form" model="ir.ui.view">
+        <field name="name">view.ek.l10n.type.model.mixin.form</field>
+        <field name="model">ek.l10n.type.model.mixin</field>
+        <field name="arch" type="xml">
+            <form string="Ek L10n Type Model Mixin">
+                <header>
+                    
+                    <button 
+                        name="action_create_view" string="Activate Type" class="oe_highlight"
+                        type="object" data-hotkey="q" invisible="ir_form_view or not active"
+                    />
+                    <button 
+                        name="action_delete_view" string="Desactivate Type" class="oe_highlight"
+                        type="object" data-hotkey="w" invisible="not ir_form_view or not active"
+                    />                    
+                </header>               
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="view_objects" type="object"
+                            class="oe_stat_button" icon="fa-truck" invisible="count_used_types == 0">
+                            <div class="o_stat_info">
+                                <field name="count_used_types" widget="statinfo" string="Objects"/>
+                            </div>
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Inactive"
+                        bg_color="bg-danger"
+                        invisible="ir_form_view"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="Active"
+                        bg_color="text-bg-success"
+                        invisible="not ir_form_view  or not active"
+
+                    />
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="code" style="width: 25%" placeholder="Code..." force_save="1" readonly="ir_form_view"  class="oe_inline" /> / <field name="name" placeholder="Name..." force_save="1"  class="oe_inline"  readonly="ir_form_view"/>                           
+                        </h1>
+                    </div>
+                    
+                    <group name="config">
+                        <group name="grp_2">
+                            <field name="active" invisible="True"/>
+                            <field name="model_id"  required="1" readonly="ir_form_view or fields_ids" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                            
+                            
+                        </group>
+                        <group name="grp_1">      
+                            <field name="group_id"/>                          
+                            <field name="resource_calendar_id"  required="1" readonly="ir_form_view" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                            
+                        </group>                        
+                    </group>
+                    <notebook>
+                        <page string="Fields Flow" name="fields">
+                            <field name="fields_ids" nolabel="1" col="2" readonly="ir_form_view or not model_id"/>
+                        </page>
+                        <page name="stages_page" string="Stages Flow">
+                            <field name="stage_ids" widget="many2many_tags" readonly="ir_form_view"/>
+                        </page>
+                        <page name="member_page" string="Members Flow">
+                            <field name="member_ids" context="{'default_type_id': id}" nolabel="1"/>
+                        </page>
+                        <page name="notify_stage" string="Activity Notify Flow">
+                            <field name="notify_stage_ids" nolabel="1">
+                                <tree string="" editable="bottom">
+                                    <field name="stage_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>      
+                                    <field name="activity_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>      
+                                    <field name="user_ids" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags"/>      
+                                    <field name="delay_count"/>      
+                                    <field name="note"/>      
+                                    <field name="type_id" column_invisible="True"/> 
+                                    <field name="member_ids" column_invisible="True"/>      
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="aditional_config" string="Aditional Config Flow">
+                            <group name="aconfig" string="Configurations">
+                                <group name="left_config">
+                                    <field name="report_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                                    <field name="next_stage_parent_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                                    <field name="company_id" groups="base.group_multi_company" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                                    <field name="ir_form_view"  invisible="not ir_form_view"/>
+                                </group>
+                                <group name="right_config">
+                                    <field name="has_internal_sequence"/>
+                                    <field name="internal_sequence" invisible="not has_internal_sequence" required="has_internal_sequence"/>
+                                    
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- View ek.l10n.type.model.mixin search -->
+    <record id="view_ek_l10n_type_model_mixin_search" model="ir.ui.view">
+        <field name="name">view.ek.l10n.type.model.mixin.search</field>
+        <field name="model">ek.l10n.type.model.mixin</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <group expand="1" string="Group By">
+                    <filter string="Name" name="name" context="{'group_by':'name'}"/>
+                    <filter string="Group" name="group_id" context="{'group_by':'group_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action ek.l10n.type.model.mixin -->
+    <record id="action_ek_l10n_type_model_mixin" model="ir.actions.act_window">
+        <field name="name">Dinamic Object Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.l10n.type.model.mixin</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    
+</odoo>

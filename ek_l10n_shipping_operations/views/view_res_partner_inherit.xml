@@ -1,0 +1,184 @@
+<odoo>
+    <record id="shipping_operations_res_partner_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page string="Documentation">
+                    <field name="ek_academic_courses_ids" nolabel="1">
+                        <tree  editable="bottom" >
+                            <field name="document_type" required="1"/>
+                            <field name="course_document_name" required="1"/>
+                            <field name="start_date" />
+                            <field name="end_date" required="1"/>
+                            <field name="document_certificate" />
+                            <field name="observation" />
+                            <field name="document_status" />
+                            <field name="days" />
+                            <field name="type_send" required="1"/>
+                            <button class="oe_stat_button"
+                                    name="open_document_id"
+                                    type="object"
+                                    icon="fa-file-text-o">
+                           
+                            </button>
+                        
+                        </tree>
+                       
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='title']" position="after">
+                <field name="nationality_id" invisible="is_company"/>
+                <field  name="is_crew" widget="boolean_toggle" invisible="is_company"/> 
+                <field name="ek_crew_member_hierarchy_id" invisible="not is_crew or   is_company" />
+                <field name="send_notificacion_user_ek"   widget="boolean_toggle" />
+                <field name="ek_user_groups_reminder_id" invisible="not send_notificacion_user_ek"/>
+
+
+                <field name="ek_type_service_boat_ids" widget="many2many_tags" invisible="not is_company"/>
+                <field  name="ek_type_boat_operators_ids"  widget="many2many_tags" invisible="not is_company"/> 
+                <field name="registration_number_opc"  />
+                <field name="fishing_bonus"/>
+            </xpath>
+
+
+            <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button class="oe_stat_button"
+                    name="action_open_ek_crew_history_count"
+                    type="object"
+                    icon="fa-file-text-o">
+                    <field string="Crew History" name="ek_crew_history_count" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button"
+                    name="action_open_ek_table_pay_crew"
+                    type="object"
+                    icon="fa-file-text-o">
+                    <field string="Crew Pay" name="count_crew_pay" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button"
+                    name="action_open_ek_academic_course"
+                    type="object"
+                    icon="fa-file-text-o">
+                    <field string="Documento NSK" name="count_documento_nsk" widget="statinfo" />
+                </button>
+                
+            </xpath>
+          
+        </field>
+    </record>
+
+
+    <record id="ek_academic_courses_form" model="ir.ui.view">
+        <field name="name">ek_academic_courses_form</field>
+        <field name="model">ek.academic.courses</field>
+        <field name="arch" type="xml">
+            <form string="Documentation">
+                <header>
+                    <field name="document_status" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="document_certificate"  placeholder="N°Document/Certificate" required="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="document_type" required="1"/>
+                            <field name="course_document_name" required="1"/>
+                            <field name="type_send" required="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="days"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="observation" string="Observation."
+                            placeholder="Observation " />
+                    </group>
+                </sheet>
+                <div class="oe_chatter" name="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="message_ids" />
+                    <field name="activity_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="ek_academic_courses_tree" model="ir.ui.view">
+        <field name="name">ek.academic.courses.tree</field>
+        <field name="model">ek.academic.courses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="document_type" />
+                <field name="course_document_name" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="document_certificate" />
+                <field name="observation" />
+                <field name="document_status" />
+                <field name="days" />
+                <field name="type_send" />
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="ek_crew_history_tree" model="ir.ui.view">
+        <field name="name">ek.crew.history.tree</field>
+        <field name="model">ek.crew.history</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="vat"/>
+                <field name="ship_name_id"/>
+                <field name="travel_id"/>
+                <field name="ek_res_world_seaports_id"/>
+                <field name="ek_res_world_seaports_d_id"/>
+                <field name="ek_crew_member_hierarchy_arribo_id"/>
+                <field name="ek_boat_location_arribo_id"/>
+                <field name="city_arribo_id"/>
+                <field name="eta"/>
+                <field name="ata"/>
+                <field name="ek_crew_member_hierarchy_zarpe_id"/>
+                <field name="ek_boat_location_zarpe_id"/>
+                <field name="city_zarpe_id"/>
+                <field name="etd"/>
+                <field name="atd"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ek_table_pay_crew_tree" model="ir.ui.view">
+        <field name="name">ek.table.pay.crew.tree</field>
+        <field name="model">ek.table.pay.crew</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" required="1" readonly="name" force_save="1"/>
+                <field name="beneficiary" force_save="1"/>
+                <field name="vat" readonly="vat" force_save="1"/>
+                <field name="ek_crew_member_hierarchy_title_id" force_save="1" readonly="ek_crew_member_hierarchy_title_id"/>
+                <field name="ek_crew_member_hierarchy_id" force_save="1"/>
+                <field name="nationality_id" readonly="nationality_id" force_save="1"/>
+                <field name="v_unitary" force_save="1"/>
+                <field name="amount" force_save="1"/>
+                <field name="gross_total" force_save="1" sum="Total"/>
+                <field name="discount" force_save="1" sum="Total"/>
+                <field name="total_liquidation" force_save="1" sum="Total" />
+                <field name="date" force_save="1"/>
+                <field name="document" force_save="1"/>
+                <field name="detail" force_save="1"/>
+                <field name="used_crew_ids" column_invisible="1" force_save="1"/>
+
+            </tree>
+        </field>
+    </record>
+</odoo>

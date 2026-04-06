@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <template id="report_move_document">
+      <div class="page">
+        <h3 class="text-end">
+                    ID. <span t-esc="str(o.id)"/>
+        </h3>
+        <h3 style="text-align:center;">
+          <span t-field="o.journal_id" t-att-class="'text-capitalize'"/>
+        </h3>
+        <div class="row">
+          <strong>Fecha: </strong>
+          <span t-esc="(o.date.strftime('%A, %d de %B de %Y').replace('January', 'enero').replace('February', 'febrero').replace('March', 'marzo').replace('April', 'abril').replace('May', 'mayo').replace('June', 'junio').replace('July', 'julio').replace('August', 'agosto').replace('September', 'septiembre').replace('October', 'octubre').replace('November', 'noviembre').replace('December', 'diciembre').replace('Monday', 'lunes').replace('Tuesday', 'martes').replace('Wednesday', 'miércoles').replace('Thursday', 'jueves').replace('Friday', 'viernes').replace('Saturday', 'sábado').replace('Sunday', 'domingo')).capitalize()"/>
+        </div>
+        <div t-if="o.l10n_latam_document_type_id_code != '100'" class="row">
+          <strong>No: </strong>
+          <span t-field="o.name"/>
+        </div>
+        <div t-if="o.l10n_ref_payment_cash_invoice and o.move_type != 'out_invoice'" class="row">
+          <strong>Factura: </strong>
+          <span t-field="o.l10n_ref_payment_cash_invoice"/>
+        </div>
+        <div t-if="o.l10n_latam_internal_type != 'withhold' and o.l10n_latam_document_type_id" class="row">
+          <strong>Tipo de documento: </strong>
+          <span t-if="o.l10n_latam_document_type_id">
+            <span t-field="o.l10n_latam_document_type_id.name"/>
+ - </span>
+          <span t-field="o.l10n_latam_document_sustento"/>
+        </div>
+        <t t-if="o.l10n_latam_document_type_id_code != '100' and o.l10n_latam_internal_type != 'withhold'">
+          <div t-if="o.invoice_payment_term_id" class="row">
+            <strong>Vencimiento: </strong>
+            <span t-field="o.invoice_payment_term_id"/>
+          </div>
+        </t>
+        <t t-if="o.partner_id">
+          <div>
+            <strong t-if="o.l10n_ec_withhold_type == 'out_withhold' or o.move_type == 'out_invoice'">Cliente: </strong>
+            <strong t-else="">Proveedor: </strong>
+            <span t-field="o.partner_id"/>
+          </div>
+        </t>
+        <t t-elif="o.l10n_ref_partner_cash_invoice">
+          <div>
+            <strong>Proveedor: </strong>
+            <span t-field="o.l10n_ref_partner_cash_invoice"/>
+          </div>
+        </t>
+        <div t-if="o.ship_name_id" class="row">
+          <strong>Buque: </strong>
+          <span t-field="o.ship_name_id"/>
+        </div>
+        <div t-if="o.journey_crew_id" class="row">
+          <strong>Viaje: </strong>
+          <span t-field="o.journey_crew_id"/>
+        </div>
+        <div class="row" t-if="o.ref">
+          <div class="col-12">
+            <strong>Concepto: </strong>
+            <span t-field="o.ref"/>
+          </div>
+        </div>
+        <hr/>
+        <h4>Detalle Contable</h4>
+        <table class="table table-condensed table-sm  o_main_table small">
+          <thead>
+            <tr style="background-color: #042069;">
+              <th style="vertical-align: middle; color: white; margin: 0;">Código</th>
+              <th style="vertical-align: middle; color: white; margin: 0;">Cuenta</th>
+              <th style="vertical-align: middle; color: white; margin: 0;">Dist. Analítica</th>
+              <th style="vertical-align: middle; color: white; margin: 0;">Impuestos</th>
+              <th class="text-center" style="vertical-align: middle; color: white; margin: 0;">Debe</th>
+              <th class="text-center" style="vertical-align: middle; color: white; margin: 0;">Haber</th>
+            </tr>
+          </thead>
+          <tbody class="invoice_tbody">
+            <t t-set="total" t-value="0"/>
+            <tr t-foreach="o.line_ids" t-as="s">
+              <td>
+                <span t-field="s.account_id.code"/>
+              </td>
+              <td>
+                <span t-field="s.account_id.name"/>
+              </td>
+              <td>
+                <t t-if="s.analytic_distribution">
+                  <t t-foreach="s.analytic_distribution.items()" t-as="analytic">
+                    <t t-set="analytic_account_id" t-value="analytic[0]"/>
+                    <t t-if="isinstance(analytic_account_id, str) and ',' in analytic_account_id">
+                      <!-- Manejar múltiples IDs separados por coma -->
+                      <t t-foreach="analytic_account_id.split(',')" t-as="acc_id">
+                        <t t-set="analytic_account" t-value="env['account.analytic.account'].browse(int(acc_id.strip()))"/>
+                        <div>
+                          <span t-esc="analytic_account.name"/>
+                          (
+                          <span t-esc="analytic[1]"/>
+                          %)
+                        </div>
+                      </t>
+                    </t>
+                    <t t-else="">
+                      <!-- Manejar un solo ID -->
+                      <t t-set="analytic_account" t-value="env['account.analytic.account'].browse(int(analytic_account_id))"/>
+                      <div>
+                        <span t-esc="analytic_account.name"/>
+                        (
+                        <span t-esc="analytic[1]"/>
+                        %)
+                      </div>
+                    </t>
+                  </t>
+                </t>
+              </td>
+              <td>
+                <span t-field="s.tax_tag_ids"/>
+              </td>
+              <td class="text-end">
+                <span t-field="s.debit"/>
+              </td>
+              <td class="text-end">
+                <span t-field="s.credit"/>
+              </td>
+              <t t-set="total" t-value="total + s.debit"/>
+            </tr>
+            <tr>
+              <td colspan="3"/>
+              <td class="text-end" style="background-color: #e9ecef;">
+                <strong>TOTAL</strong>
+              </td>
+              <td class="text-end" style="background-color: #e9ecef;">
+                <strong>
+                  <span t-esc="total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </strong>
+              </td>
+              <td class="text-end" style="background-color: #e9ecef;">
+                <strong>
+                  <span t-esc="total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row" style="text-align:center;margin-top:45px;">
+          <table class="table">
+            <tr style="height: 160px;">
+              <th style="padding-top: 100px;">
+                <strong>________________________________________________________</strong>
+                <br/>
+                <strong>Elaborado: </strong>
+                <br/>
+                <span t-field="o.create_uid" style="margin: 0; font-size: .75rem"/>
+              </th>
+              <th style="padding-top: 100px;">
+                <strong>________________________________________________________</strong>
+                <br/>
+                <strong>Revisado por</strong>
+              </th>
+            </tr>
+          </table>
+        </div>
+        <div class="container-fluid" style="margin-top: -10px;">
+          <div class="row">
+            <div class="col-12 small py-1" style="font-size: .7rem;">
+              REPORTE GENERADO POR: <t t-esc="user.name"/>
+              (
+            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+              )
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="report_move_tmpl">
+    <t t-call="web.external_layout">
+      <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+          <t t-call="ek_l10n_ec.report_move_document" t-lang="o.env.lang"/>
+        </t>
+      </t>
+    </t>
+  </template>
+</data>
+</odoo>

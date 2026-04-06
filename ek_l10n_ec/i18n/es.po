@@ -1,0 +1,932 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * ek_l10n_ec
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-30 00:47+0000\n"
+"PO-Revision-Date: 2017-05-30 00:47+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Spanish (Ecuador) (https://www.transifex.com/oca/teams/23907/"
+"es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.update_journal_lock_dates_wizard_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_journal
+msgid "Journal"
+msgstr "Libro diario"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_journal__fiscalyear_lock_date
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__fiscalyear_lock_date
+msgid "Lock Date"
+msgstr "Fecha de bloqueo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_journal__period_lock_date
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__period_lock_date
+msgid "Lock Date for Non-Advisers"
+msgstr "Fecha de bloqueo para no asesores"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_update_journal_lock_dates_wizard
+msgid "Mass Update Journal Lock Dates Wizard"
+msgstr "Asistente para la actualización masiva de fechas de bloqueo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_journal__fiscalyear_lock_date
+msgid ""
+"No users, including Advisers, can edit accounts prior to and inclusive of "
+"this date for this journal. Use it for fiscal year locking for this journal, "
+"for example."
+msgstr ""
+"Ningún usuario, incluyendo Asesores, pueden editar cuentas antes de y en "
+"esta fecha para este diario. Utilícela, por ejemplo, para bloquear un año "
+"fiscal para este Diario."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_journal__period_lock_date
+msgid ""
+"Only users with the 'Adviser' role can edit accounts prior to and inclusive "
+"of this date for this journal. Use it for period locking inside an open "
+"fiscal year for this journal, for example."
+msgstr ""
+"Sólo los usuarios con el rol 'Asesor' pueden editar cuentas antes de y en "
+"esta fecha para este Diario. Utilícelo para bloquear un período dentro de un "
+"año fiscal abierto para este diario, por ejemplo."
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.update_journal_lock_dates_wizard_view_form
+msgid "Update"
+msgstr "Actualizar"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.update_journal_lock_dates_wizard_action
+msgid "Update journals lock dates"
+msgstr "Actualizar fechas de bloqueo"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/wizards/update_journal_lock_dates.py:0
+#, python-format
+msgid "You are not allowed to execute this action."
+msgstr "No está autorizado a realizar esta acción."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot add/modify entries for the journal '%(journal)s' prior to and "
+"inclusive of the lock date %(journal_date)s"
+msgstr ""
+"No puede añadir/modificar asientos para el diario '%(journal)s' con "
+"anterioridad y hasta la fecha de bloqueo %(journal_date)s"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot add/modify entries for the journal '%(journal)s' prior to and "
+"inclusive of the lock date %(journal_date)s. Check the Journal settings or "
+"ask someone with the 'Adviser' role"
+msgstr ""
+"No puede añadir/modificar asientos para el Diario '%(journal)s' con "
+"anterioridad y hasta la fecha de bloqueo %(journal_date)s. Compruebe la "
+"configuración del Diario o pregunte a alguien con el grupo de acceso 'Asesor'"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_account
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__always
+msgid "Always"
+msgstr "Siempre"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Always' with account '%(account)s' but the "
+"analytic account is missing in the account move line with label '%(move)s'."
+msgstr ""
+"La política analítica está configurada como \"Siempre\" para la cuenta "
+"'%(account)s' pero falta la cuenta analítica en la línea de movimiento de la "
+"cuenta con la etiqueta '%(move)s'."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Never' with account '%(account)s' but the account "
+"move line with label '%(move)s' has an analytic account "
+"'%(analytic_account)s'."
+msgstr ""
+"La política analítica está configurada como \"Nunca\" para la cuenta "
+"'%(account)s', pero la línea de movimiento de la cuenta con la etiqueta "
+"'%(move)s' tiene una cuenta analítica '%(analytic_account)s'."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Posted moves' with account '%(account)s' but the "
+"analytic account is missing in the account move line with label '%(move)s'."
+msgstr ""
+"La política analítica está configurada como \"Movimientos publicados\" para "
+"la cuenta '%(account)s' pero falta la cuenta analítica en la línea de "
+"movimiento de la cuenta con la etiqueta '%(move)s'."
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Apuntes contables"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__never
+msgid "Never"
+msgstr "Nunca"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__optional
+msgid "Optional"
+msgstr "Opcional"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_account__analytic_policy
+msgid "Policy for analytic account"
+msgstr "Política para la cuenta analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__posted
+msgid "Posted moves"
+msgstr "Movimientos publicados"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_account__analytic_policy
+msgid ""
+"Sets the policy for analytic accounts.\n"
+"If you select:\n"
+"- Optional: The accountant is free to put an analytic account on an account "
+"move line with this type of account.\n"
+"- Always: The accountant will get an error message if there is no analytic "
+"account.\n"
+"- Posted moves: The accountant will get an error message if no analytic "
+"account is defined when the move is posted.\n"
+"- Never: The accountant will get an error message if an analytic account is "
+"present.\n"
+"\n"
+"This field is company dependent."
+msgstr ""
+"Establece la política para las cuentas analíticas. Si se selecciona: \n"
+"- 'Opcional', el contable es libre de poner una cuenta analítica en una "
+"línea de movimiento de una cuenta con este tipo de cuenta.\n"
+"- 'Siempre', el contable recibirá un mensaje de error si no hay una cuenta "
+"analítica.\n"
+"- 'Movimientos publicados', el contable recibirá un mensaje de error si no "
+"se define una cuenta analítica cuando se publica el movimiento.\n"
+"- 'Nunca', el contable recibirá un mensaje de error si hay una cuenta "
+"analítica presente.\n"
+"\n"
+"Este campo depende de la compañía."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__account_id
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_ek_l10n_ec_wizard
+msgid "Account Move Update Analytic Account Wizard"
+msgstr "Asistente de actualización de movimiento de cuentas analíticas"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__analytic_precision
+msgid "Analytic Precision"
+msgstr "Precisión Analítica"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__current_analytic_distribution
+msgid "Current Analytic Distribution"
+msgstr "Distribución analítica actual"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__line_id
+msgid "Invoice line"
+msgstr "Línea de factura"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__analytic_distribution
+msgid "New Analytic Distribution"
+msgstr "Nueva distribución analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__move_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_move_form_view
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_move_line_tree_view
+msgid "Update Analytic"
+msgstr "Actualización Analítica"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Update Analytic Distribution"
+msgstr "Actualizar distribución analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.action_view_ek_l10n_ec
+msgid "Update Analytic for selected Account Moves"
+msgstr "Actualización analítica para los movimientos de cuenta seleccionados"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Update analytic lines"
+msgstr "Actualización de las líneas analíticas"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/wizard/invoice_merge.py:0
+#, python-format
+msgid "All invoices must have the same: \n"
+msgstr "Todas las facturas deben tener el mismo: \n"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_invoice_merge
+msgid "Are you sure you want to merge these invoices?"
+msgstr "¿Está seguro de querer fusionar estas facturas?"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_invoice_merge
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/wizard/invoice_merge.py:0
+#, python-format
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__error_message
+msgid "Error Message"
+msgstr "Mensaje de error"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__date_invoice
+msgid "Invoice Date"
+msgstr "Fecha de la factura"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__keep_references
+msgid "Keep references from original invoices"
+msgstr "Guardar referencias a las facturas originales"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización de"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_invoice_merge__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_invoice_merge
+msgid "Merge Invoices"
+msgstr "Fusionar facturas"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.action_view_invoice_merge
+#: model:ir.model,name:ek_l10n_ec.model_invoice_merge
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_invoice_merge
+msgid "Merge Partner Invoice"
+msgstr "Fusionar factura de empresa"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/wizard/invoice_merge.py:0
+#, python-format
+msgid "Merge-able State (ex : %s)"
+msgstr "Estado Mergeable (ex : %s)"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_invoice_merge
+msgid ""
+"Please note that:<br/><br/>\n"
+"                        Invoices will only be merged if:<br/>\n"
+"                        * Invoices are in state 'draft'.<br/>\n"
+"                        * Invoices belong to the same partner.<br/>\n"
+"                        * Invoices have the same company, partner, address,\n"
+"                        currency, journal, salesman, account and type.<br/"
+"><br/>\n"
+"                        Lines will only be merged if:<br/>\n"
+"                        * Invoice lines are exactly the same except for the\n"
+"                        product, quantity and unit.<br/>"
+msgstr ""
+"Por favor tenga en cuenta que::<br/><br/>\n"
+"                        Las facturas solo se fusionarán si:<br/>\n"
+"                        * Facturas en estado 'borrador'.<br/>\n"
+"                        * Facturas pertenecen al mismo partner.<br/>\n"
+"                        * Facturas tienen la misma compañía, partner, "
+"dirección, \n"
+"                        moneda, diario, comercial, cuenta y tipo.<br/><br/>\n"
+"                        Las líneas solo se fusionarán si:<br/>\n"
+"                        * Las líneas de factura son exactamente las mismas "
+"excepto por el \n"
+"                        producto, cantidad y unidad.<br/>"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move_refund_reason
+msgid "Account Move Refund Reason"
+msgstr "Traslado de cuenta Motivo del reembolso"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Reversión de asiento"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ecs_search
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_cancellation
+msgid "Cancellation"
+msgstr "Cancelación"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_agreement
+msgid "Commercial and/or Collection Agreement"
+msgstr "Acuerdo comercial y / o de cobranza"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_correction
+msgid "Data Correction"
+msgstr "Corrección de Datos"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_noref
+msgid "Invoice without reference"
+msgstr "Factura sin referencia"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__write_uid
+msgid "Last Updated by"
+msgstr "Última modificación el"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización por"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_error
+msgid "Lease and/or Minimum Charge Error"
+msgstr "Arrendamiento y / o error de carga mínima"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_refund_reason__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_others
+msgid "Others"
+msgstr "Otros"
+
+#. module: ek_l10n_ec
+#: model:account.move.refund.reason,name:ek_l10n_ec.refund_reason_difference
+msgid "Price Difference"
+msgstr "Diferencia de Precio"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec
+msgid "Reason Name"
+msgstr "Nombre del motivo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_bank_statement_line__reason_id
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move__reason_id
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_move_reversal__reason_id
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_payment__reason_id
+msgid "Refund Reason"
+msgstr "Motivo del Reembolso"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.refund_reason_action
+#: model:ir.ui.menu,name:ek_l10n_ec.refund_reasons_menu
+msgid "Refund Reasons"
+msgstr "Motivos de Reembolso"
+
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_payment_method__bank_account_required
+msgid ""
+"Activate this option if this payment method requires you to know the bank "
+"account number of your customer or supplier."
+msgstr ""
+"Activa esta opción si este método de pago debe requerirte informar el número "
+"de cuenta bancaria de tu cliente o proveedor."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_payment_method__active
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__variable_journal_ids
+msgid "Allowed Bank Journals"
+msgstr "Diarios de banco permitidos"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_form
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_form
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_payment_method__bank_account_required
+msgid "Bank Account Required"
+msgstr "Cuenta bancaria requerida"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_payment_method__code
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__payment_method_code
+msgid "Code (Do Not Modify)"
+msgstr "Código (no modificar)"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_outbound_ct1
+msgid "Credit Transfer to Suppliers"
+msgstr "Orden de pago a proveedores"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_inbound_dd1
+msgid "Direct Debit of customers"
+msgstr "Orden de cobro de clientes"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_outbound_dd2
+msgid "Direct Debit of suppliers from La Banque Postale"
+msgstr "Adeudo directo de proveedores de La Banque Postale"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_outbound_dd1
+msgid "Direct Debit of suppliers from Société Générale"
+msgstr "Adeudo directo de proveedores de Société Générale"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__ek_l10n_ec__bank_account_link__fixed
+msgid "Fixed"
+msgstr "Fijo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__fixed_journal_id
+msgid "Fixed Bank Journal"
+msgstr "Diario de banco fijo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_ek_l10n_ec__bank_account_link
+msgid ""
+"For payment modes that are always attached to the same bank account of your "
+"company (such as wire transfer from customers or SEPA direct debit from "
+"suppliers), select 'Fixed'. For payment modes that are not always attached "
+"to the same bank account (such as SEPA Direct debit for customers, wire "
+"transfer to suppliers), you should select 'Variable', which means that you "
+"will select the bank account on the payment order. If your company only has "
+"one bank account, you should always select 'Fixed'."
+msgstr ""
+"Para modos de pago que siempre estarán asociados a la misma cuenta bancaria "
+"de la compañía (como las transferencias bancarias de clientes o los débitos "
+"directos SEPA de proveedores), selecciona 'Fijado\". Para modos de pagos en "
+"los que puede cambiar la cuenta bancaria (como el débito directo de clientes "
+"o las transferencias de proveedores), seleccione 'Variable', lo que "
+"significa que podrá seleccionar la cuenta bancaria en la orden de pago. Si "
+"su compañía tiene una única cuenta bancaria, debería seleccionar siempre "
+"'Fijo'."
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_search
+msgid "Inbound"
+msgstr "Entrante"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_inbound_ct2
+msgid "Inbound Credit Trf La Banque Postale"
+msgstr "Transf. entrante La Banque Postale"
+
+#. module: ek_l10n_ec
+#: model:account.payment.mode,name:ek_l10n_ec.payment_mode_inbound_ct1
+msgid "Inbound Credit Trf Société Générale"
+msgstr "Transf. entrante Société Générale"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_journal
+msgid "Journal"
+msgstr "Diario"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__bank_account_link
+msgid "Link to Bank Account"
+msgstr "Enlazado a la cuenta bancaria"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+msgid "Name or Code"
+msgstr "Nombre o código"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__note
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_form
+msgid "Note"
+msgstr "Nota"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/ek_l10n_ec.py:0
+#, python-format
+msgid ""
+"On the payment mode %(name)s, the bank account link is 'Fixed' but the fixed "
+"bank journal is not set"
+msgstr ""
+"En el modo de pago %(name)s, la cuenta bancaria relacionada es 'Fija' pero "
+"el diario bancario fijo no está establecido"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/ek_l10n_ec.py:0
+#, python-format
+msgid ""
+"On the payment mode %(paymode)s, the payment method is %(paymethod)s (it is "
+"in fact a debit method), but this debit method is not part of the debit "
+"methods of the fixed bank journal %(journal)s"
+msgstr ""
+"En el modo de pago %(paymode)s, el método de pago %(paymethod)s (es de hecho "
+"un metodo de débito), pero no está establecido entre los métodos de débito "
+"del banco del diario %(journal)s"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/ek_l10n_ec.py:0
+#, python-format
+msgid ""
+"On the payment mode %(paymode)s, the payment method is %(paymethod)s, but "
+"this payment method is not part of the payment methods of the fixed bank "
+"journal %(journal)s"
+msgstr ""
+"En el modo de pago %(paymode)s, el método de pago es %(paymethod)s, pero "
+"este método de pago no forma parte de los métodos de pago del diario "
+"bancario fijo %(journal)s"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_search
+msgid "Outbound"
+msgstr "Saliente"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__payment_method_id
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_form
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_search
+msgid "Payment Method"
+msgstr "Método de pago"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.account_payment_method_action
+#: model:ir.model,name:ek_l10n_ec.model_account_payment_method
+#: model:ir.ui.menu,name:ek_l10n_ec.account_payment_method_menu
+msgid "Payment Methods"
+msgstr "Métodos de pago"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_form
+msgid "Payment Mode"
+msgstr "Modo de pago"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.ek_l10n_ec_action
+#: model:ir.model,name:ek_l10n_ec.model_ek_l10n_ec
+#: model:ir.ui.menu,name:ek_l10n_ec.ek_l10n_ec_menu
+msgid "Payment Modes"
+msgstr "Modos de pago"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__payment_type
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+msgid "Payment Type"
+msgstr "Tipo de pago"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_payment_method__payment_mode_ids
+msgid "Payment modes"
+msgstr "Modos de pago"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_payment_method_search
+msgid "Search Payment Methods"
+msgstr "Buscar métodos de pago"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.ek_l10n_ec_search
+msgid "Search Payment Modes"
+msgstr "Buscar modos de pago"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_journal.py:0
+#, python-format
+msgid ""
+"The company of the journal  %(journal)s does not match with the company of "
+"the payment mode  %(paymode)s where it is being used in the Allowed Bank "
+"Journals."
+msgstr ""
+"La compañía del diario  %(journal)s no coincide con la compañía del modo de "
+"pago   %(paymode)s donde se está usando en Diarios de Banco Permitidos."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_journal.py:0
+#, python-format
+msgid ""
+"The company of the journal %(journal)s does not match with the company of "
+"the payment mode %(paymode)s where it is being used as Fixed Bank Journal."
+msgstr ""
+"La compañía del diario %(journal)s no coincoide con la compañía del modo de "
+"pago %(paymode)s donde se usa como Diario de Banco Fijo."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/ek_l10n_ec.py:0
+#, python-format
+msgid ""
+"The company of the payment mode %(paymode)s, does not match with one of the "
+"Allowed Bank Journals."
+msgstr ""
+"La compañía del modo de pago %(paymode)s, no coincide con ninguna de los "
+"Diarios de Banco Permitidos."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_payment_method__code
+#: model:ir.model.fields,help:ek_l10n_ec.field_ek_l10n_ec__payment_method_code
+msgid ""
+"This code is used in the code of the Odoo module that handles this payment "
+"method. Therefore, if you change it, the generation of the payment file may "
+"fail."
+msgstr ""
+"Este código se usa en el código del módulo de Odoo que gestiona el método de "
+"pago. Por lo tanto, si lo cambias, la generación del fichero de pago podría "
+"fallar."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__ek_l10n_ec__bank_account_link__variable
+msgid "Variable"
+msgstr "Variable"

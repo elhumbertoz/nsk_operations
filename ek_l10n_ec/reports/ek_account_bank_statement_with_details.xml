@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_account_bank_statement_with_details_document">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="row mt32 mb32"/>
+                    <div class="row mt32 mb32">
+                        <div class="col-6" t-if="o.date">
+                            <strong>Fecha:</strong>
+                            <span t-field="o.date"/>
+                        </div>
+                        <div class="col-6" t-if="o.journal_id">
+                            <strong>Diario:</strong>
+                            <span t-field="o.journal_id"/>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-6">
+                            <strong>Documento:</strong>
+                            <span t-field="o.name"/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Usuario:</strong>
+                            <span t-field="o.env.user.name"/>
+                        </div>
+                    </div>
+                    <t t-if="o.line_ids">
+                        <hr/>
+                        <table class="table table-condensed table-sm  o_main_table small">
+                            <thead>
+                                <tr>
+                                    <th>Cuenta</th>
+                                    <th>Fecha</th>
+                                    <th>Empresa</th>
+                                    <th>Tipo</th>
+                                    <th>Referencia</th>
+                                    <th>Concepto</th>
+                                    <th>Cuenta Bancaria</th>
+                                    <th class="text-end">Debe</th>
+                                    <th class="text-end">Haber</th>
+                                    <th class="text-end">Balance</th>
+                                </tr>
+                            </thead>
+                            <t t-set="balance" t-value="o.balance_start"/>
+                            <tbody class="invoice_tbody">
+                                <tr>
+                                    <td class="text-end" colspan="9">
+                                        <strong>Saldo Inicial</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong>
+                                            <!--<span t-field="o.amount_total"/>-->
+                                            <span t-field="o.balance_start"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                            />
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <t t-foreach="o.line_ids" t-as="l">
+                                    <tr>
+                                        <td>
+                                            <span t-field="o.journal_id.default_account_id.code"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.date"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.partner_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.transaction_type"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.ref"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.payment_ref"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.account_number"/>
+                                        </td>
+                                        <t t-set="balance" t-value="balance + l.amount"/>
+                                        <t t-if="l.amount >= 0">
+                                            <td class="text-end">
+                                                <span t-field="l.amount"/>
+                                            </td>
+                                            <td class="text-end">-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="text-end">-</td>
+                                            <td class="text-end">
+                                                <span t-esc="abs(l.amount)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </t>
+                                        <td class="text-end">
+                                            <span t-esc="balance" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td class="text-end" colspan="9">
+                                        <strong>Saldo Final</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong>
+                                            <!--<span t-field="o.amount_total"/>-->
+                                            <span t-field="o.balance_end"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                            />
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_account_bank_statement_with_details">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="inside_foreach_docs" t-value="o"/>
+                    <t t-call="ek_l10n_ec.report_account_bank_statement_with_details_document" t-lang="o.env.lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

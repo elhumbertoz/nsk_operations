@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="journal_report_pdf_export_users" inherit_id="account_reports.pdf_export_filters">
+            <xpath expr="//div[@name='pdf_options_header']" position="before">
+                <t t-if="options.get('print_user', False) != False">
+                    <div class="row" name="filter_info_user">
+                        <div class="col-3">Usuario:</div>
+                        <div class="col-9 o_text_muted" t-out="options['print_user']"/>
+                    </div>
+                </t>
+                <t t-if="options.get('print_date', False) != False">
+                    <div class="row" name="filter_info_date">
+                        <div class="col-3">Fecha:</div>
+                        <div class="col-9 o_text_muted" t-out="options['print_date']"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="report_pdf_export_users_footer" inherit_id="account_reports.pdf_export_main">
+            <xpath expr="//ul[hasclass('o_footnote')]" position="after">
+                <t t-if="options.get('print_footer', False) != False">
+                    <div class="table-responsive" style="margin-top: 100px;">
+                        <table class="table table-sm table-borderless" style="text-align: center;">
+                            <tr>
+                                <td t-if="options.get('show_general_manager', False) != False">
+                                    <strong>_______________________</strong>
+                                    <p/>
+                                    <strong>Gerente General</strong>
+                                </td>
+                                <td t-if="options.get('show_auditor', False) != False">
+                                    <strong>_______________________</strong>
+                                    <p/>
+                                    <strong>Auditor</strong>
+                                </td>
+                                <td t-if="options.get('show_controller', False) != False">
+                                    <strong>_______________________</strong>
+                                    <p/>
+                                    <strong>Contralor</strong>
+                                </td>
+                                <td t-if="options.get('show_counter', False) != False">
+                                    <strong>_______________________</strong>
+                                    <p/>
+                                    <strong>Contador</strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+
+
+
+
+    </data>
+</odoo>

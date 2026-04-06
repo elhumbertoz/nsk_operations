@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="SRI" id="menu_sri_reporting" sequence="50" parent="account.menu_finance_entries"/>
+    <menuitem name="Anexos" id="menu_sri_reporting_annexes" sequence="0" parent="menu_sri_reporting"/>
+</odoo>

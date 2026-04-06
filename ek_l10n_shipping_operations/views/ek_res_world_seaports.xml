@@ -1,0 +1,29 @@
+<odoo>
+
+    <record id="ek_res_world_seaports_tree" model="ir.ui.view">
+        <field name="name">ek.res.world.seaports.tree</field>
+        <field name="model">ek.res.world.seaports</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" >
+                <field name="name"  required="1"/>
+                <field name="code" required="1" />
+                <field name="res_country_id"/>
+                <field name="res_country_state_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ek_res_world_seaports_act_window">
+        <field name="name">Ports</field>
+        <field name="res_model">ek.res.world.seaports</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+
+    
+    <menuitem id="menu_seaports"
+        parent="menu_setting_request_requests"
+        action="ek_res_world_seaports_act_window" />
+
+   
+</odoo>

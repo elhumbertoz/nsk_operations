@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_update_lines_nsk_wizard_form" model="ir.ui.view">
+        <field name="name">wizard.update.lines.nsk.wizard.form</field>
+        <field name="model">wizard.update.lines.nsk</field>
+        <field name="arch" type="xml">
+            <form string="Update">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ship_name_id" />
+                            <field name="journey_crew_id" />
+
+                        </group>
+                        <group>
+                            <field name="new_ship_name_id" />
+                            <field name="new_journey_crew_id" />
+
+
+                        </group>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="action_update_lines"
+                        string="Update Lines"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="s"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

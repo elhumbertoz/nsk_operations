@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_l10n_ec_account_payment_term_form" model="ir.ui.view">
+        <field name="name">view.ek.l10n.ec.account.payment.term.form</field>
+        <field name="model">account.payment.term</field>
+        <field name="inherit_id" ref="account.view_payment_term_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="periodicity"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+// Estilos personalizados para la vista kanban de registros de buques
+.o_kanban_view.ek_ship_registration_kanban .o_kanban_renderer {
+  // Establecer el ancho mínimo de las tarjetas kanban
+  --KanbanRecord-width: 400px;
+
+  // Para vistas agrupadas, ajustar el ancho de las columnas
+  &.o_kanban_grouped {
+    --KanbanGroup-width: calc(400px + (2 * var(--KanbanGroup-padding-h)));
+  }
+}
+
+// Estilos específicos para las tarjetas de buques
+.ek_ship_registration_kanban .o_kanban_record {
+
+  // Asegurar que el contenido interno respete el ancho mínimo
+  .oe_kanban_global_click {
+    min-width: 400px;
+    width: 100%;
+  }
+}

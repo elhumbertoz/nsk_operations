@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="manifest_carga_wizard_form_id" model="ir.ui.view">
+        <field name="name">manifest.carga.wizard</field>
+        <field name="model">manifest.carga.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="action_report_id" />
+                            <field name="ship_name_id" />
+                            <field name="journey_crew_id" />
+                            <field name="ek_manifest_record_id" />
+
+
+                        </group>
+                        <group>
+                            <field name="arrival" />
+                            <field name="exit" />
+
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="shipowner" />
+                            <field name="agent" />
+                            <field name="nationality" />
+                            <field name="captain" />
+
+
+                        </group>
+                        <group>
+                            <field name="port_emision" />
+                            <field name="port_embarque" />
+                            <field name="destin_final" />
+
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" />
+                    </group>
+                    <field name="item_ids" />
+                </sheet>
+                <footer>
+                    <button name="action_print_manifest" string="Imprimir Manifest" type="object"
+                        class="btn-primary" icon="fa-print" data-hotkey="s" close="1" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="act_window_manifest_carga_wizard_form_id" model="ir.actions.act_window">
+        <field name="name">Manifiesto</field>
+        <field name="res_model">manifest.carga.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="manifest_carga_wizard_form_id" />
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request" />
+        <field name="binding_view_types">tree</field>
+    </record>
+
+
+</odoo>

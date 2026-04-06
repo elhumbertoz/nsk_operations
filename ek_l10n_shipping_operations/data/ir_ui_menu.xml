@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="menu_boat_information" model="ir.ui.menu">
+    <field name="action" eval="False"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Operations</field>
+    <field name="parent_id" eval="False"/>
+    <field name="sequence">1</field>
+    <field name="web_icon">ek_l10n_shipping_operations,static/description/icon_menu.png</field>
+  </record>
+  <record id="menu_boat_information_principal" model="ir.ui.menu">
+    <field name="action" ref="ek_operation_request_enhanced_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Fleet</field>
+    <field name="parent_id" eval="menu_boat_information"/>
+    <field name="sequence">1</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <!-- Solicitudes primero -->
+  <record id="menu_operation_requests_enhanced" model="ir.ui.menu">
+    <field name="action" ref="ek_operation_request_enhanced_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Solicitudes</field>
+    <field name="parent_id" ref="menu_boat_information_principal"/>
+    <field name="sequence">1</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <record id="menu_ship_registration" model="ir.ui.menu">
+    <field name="action" ref="ek_ship_registration_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Ship Registration</field>
+    <field name="parent_id" ref="menu_boat_information_principal"/>
+    <field name="sequence">2</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <!-- Menú de Reembolsos -->
+  <record id="menu_reimbursements" model="ir.ui.menu">
+    <field name="action" ref="action_ek_reimbursement_tracking"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Reembolsos</field>
+    <field name="parent_id" ref="menu_boat_information_principal"/>
+    <field name="sequence">3</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <record id="menu_setting_request_requests" model="ir.ui.menu">
+    <field name="action" eval="False"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Setting</field>
+    <field name="parent_id" eval="menu_boat_information"/>
+    <field name="sequence">4</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <record id="menu_ek_service_request" model="ir.ui.menu">
+    <field name="action" ref="ek_service_request_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Service Requests</field>
+    <field name="parent_id" ref="menu_setting_request_requests"/>
+    <field name="sequence">4</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <record id="menu_ek_service_request_line" model="ir.ui.menu">
+    <field name="action" ref="ek_service_request_line_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Service Requests Line</field>
+    <field name="parent_id" ref="menu_setting_request_requests"/>
+    <field name="sequence">5</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <!-- Menú de Seguimiento de Reembolsos en Contabilidad > Clientes -->
+  <record id="menu_reimbursement_tracking_accounting" model="ir.ui.menu">
+    <field name="action" ref="action_ek_reimbursement_tracking"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [ref('account.group_account_readonly')])]"/>
+    <field name="name">Seguimiento de Reembolsos</field>
+    <field name="parent_id" ref="account.menu_finance_receivables"/>
+    <field name="sequence">150</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <!-- Menú de Seguimiento de Reembolsos en Ventas > Órdenes -->
+  <record id="menu_reimbursement_tracking_sales_orders" model="ir.ui.menu">
+    <field name="action" ref="action_ek_reimbursement_tracking"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_salesman')])]"/>
+    <field name="name">Seguimiento de Reembolsos</field>
+    <field name="parent_id" ref="sale.sale_order_menu"/>
+    <field name="sequence">15</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+        <data noupdate="1">
+            <!-- Add you code here -->
+            <record id="widget_mixin_many2many_tags" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2many</field>
+                <field name="value">many2many_tags</field>
+                <field name="widget">Many2Many Tags</field>
+            </record>
+            <record id="widget_mixin_many2many_checkboxes" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2many</field>
+                <field name="value">many2many_checkboxes</field>
+                <field name="widget">Many2Many Checkboxes</field>
+            </record>
+            <record id="widget_mixin_many2many_kanban" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2many</field>
+                <field name="value">many2many_kanban</field>
+                <field name="widget">Many2Many Kanban</field>
+            </record>
+            <record id="widget_mixin_many2many_binary" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2many</field>
+                <field name="value">many2many_binary</field>
+                <field name="widget">Many2Many Binary</field>
+            </record>
+            
+            <record id="widget_mixin_many2many_badge" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2one</field>
+                <field name="value">badge</field>
+                <field name="widget">Many2one Badge</field>
+            </record>
+            <record id="widget_mixin_many2one_avatar_user" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">many2one</field>
+                <field name="value">many2one_avatar_user</field>
+                <field name="widget">Many2one Avatar User</field>
+            </record>
+
+            <record id="widget_mixin_product_discount" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">product_discount</field>
+                <field name="widget">Product Discount</field>
+            </record>
+            
+            <record id="widget_mixin_percentage" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">percentage</field>
+                <field name="widget">Percentage</field>
+            </record>
+            
+            <record id="widget_mixin_timesheet_uom_timer" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">timesheet_uom_timer</field>
+                <field name="widget">Time Spent</field>
+            </record>
+            
+            <record id="widget_mixin_website_urls" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">char</field>
+                <field name="value">website_urls</field>
+                <field name="widget">Url</field>
+            </record>
+            
+            <record id="widget_mixin_domain" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">char</field>
+                <field name="value">domain</field>
+                <field name="widget">Domain</field>
+            </record>
+            
+            <record id="widget_mixin_boolean_toggle" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">boolean</field>
+                <field name="value">boolean_toggle</field>
+                <field name="widget">Toggle</field>
+            </record>
+            
+            <record id="widget_mixin_selection_badge" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">selection</field>
+                <field name="value">selection_badge</field>
+                <field name="widget">Selection Badge</field>
+            </record>
+
+            <record id="widget_mixin_selection_radio" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">selection</field>
+                <field name="value">radio</field>
+                <field name="widget">Radio</field>
+            </record>
+
+            <record id="widget_mixin_selection_priority" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">selection</field>
+                <field name="value">priority</field>
+                <field name="widget">Priority</field>
+            </record>
+            
+            <record id="widget_mixin_daterange" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">datetime</field>
+                <field name="value">daterange</field>
+                <field name="widget">Daterange</field>
+            </record>
+            <record id="widget_mixin_datetime_date" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">datetime</field>
+                <field name="value">date</field>
+                <field name="widget">Date</field>
+            </record>
+
+
+            <record id="widget_mixin_pie_chart" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">integer</field>
+                <field name="value">pie_chart</field>
+                <field name="widget">Percentage Pie</field>
+            </record>
+            <record id="widget_mixin_progressbar" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">integer</field>
+                <field name="value">progressbar</field>
+                <field name="widget">Progress Bar</field>
+            </record>
+
+            <record id="widget_mixin_float_pie_chart" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">pie_chart</field>
+                <field name="widget">Percentage Pie</field>
+            </record>
+            <record id="widget_mixin_float_progressbar" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">progressbar</field>
+                <field name="widget">Progress Bar</field>
+            </record>
+
+            <record id="widget_mixin_float_percentage" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">percentage</field>
+                <field name="widget">Percentage</field>
+            </record>
+            <record id="widget_mixin_float_time" model="ek.l10n.type.widget.mixin">
+                <field name="ttype">float</field>
+                <field name="value">float_time</field>
+                <field name="widget">Time</field>
+            </record>
+        </data>
+</odoo>

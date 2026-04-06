@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Definición del formato de papel para el comprobante de pago -->
+        <record id="paperformat_voucher_with_move" model="report.paperformat">
+            <field name="name">Formato de Comprobante de Pago</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">45</field>
+            <field name="dpi">90</field>
+        </record>
+        
+        <record id="voucher_with_move" model="ir.actions.report">
+            <field name="name">Comprobante de Pago Detallado</field>
+            <field name="model">account.payment</field>
+            <field name="report_name">ek_l10n_ec.report_voucher_with_move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_file">ek_l10n_ec.voucher_print</field>
+            <field name="print_report_name">'Comprobante - %s' % (object.name).replace('/', '')</field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="paperformat_id" ref="ek_l10n_ec.paperformat_voucher_with_move"/>
+        </record>
+        
+        <record id="report_move" model="ir.actions.report">
+            <field name="name">Asiento Contable</field>
+            <field name="model">account.move</field>
+            <field name="report_name">ek_l10n_ec.report_move_tmpl</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_file">ek_l10n_ec.report_move_tmpl</field>
+            <field name="print_report_name">'Comprobante - %s' % (object.name).replace('/', '')</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+        </record>
+
+        <record id="ek_report_invoice_provision" model="ir.actions.report">
+            <field name="name">Comprobante de Compra/Venta (Detallado)</field>
+            <field name="model">account.move</field>
+            <field name="report_name">ek_l10n_ec.report_invoice_provision</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_file">ek_l10n_ec.report_invoice_provision</field>
+            <field name="print_report_name">'Comprobante - %s' % (object.name).replace('/', '')</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+        </record>
+
+        <record id="ek_report_invoice_provision_with_details" model="ir.actions.report">
+            <field name="name">Comprobante de Compra/Venta</field>
+            <field name="model">account.move</field>
+            <field name="report_name">ek_l10n_ec.report_invoice_provision_with_details</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_file">ek_l10n_ec.report_invoice_provision_with_details</field>
+            <field name="print_report_name">'Comprobante - %s' % (object.name).replace('/', '')</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+        </record>
+
+        <record id="paperformat_bank_statement_with_details" model="report.paperformat">
+            <field name="name">Formato de Extracto Detallado</field>
+            <field name="default" eval="True"/>
+            <field name="format">B2</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">60</field>
+            <field name="margin_bottom">3</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">50</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="ek_account_bank_statement_with_details" model="ir.actions.report">
+            <field name="name">Extracto Detallado (PDF)</field>
+            <field name="model">account.bank.statement</field>
+            <field name="report_name">ek_l10n_ec.report_account_bank_statement_with_details</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_file">ek_l10n_ec.report_account_bank_statement_with_details</field>
+            <field name="print_report_name">'Extracto - %s' % (object.name).replace('/', '')</field>
+            <field name="binding_model_id" ref="account.model_account_bank_statement"/>
+            <field name="paperformat_id" ref="ek_l10n_ec.paperformat_bank_statement_with_details"/>
+        </record>
+
+<!--        <record id="ek_account_bank_statement_with_details_xlsx" model="ir.actions.report">-->
+<!--            <field name="name">Extracto Detallado (XLSX)</field>-->
+<!--            <field name="model">account.bank.statement</field>-->
+<!--            <field name="report_name">ek_l10n_ec.account_bank_statement_with_details_xls</field>-->
+<!--            <field name="report_type">xlsx</field>-->
+<!--            <field name="report_file">ek_l10n_ec.account_bank_statement_with_details_xls</field>-->
+<!--            <field name="print_report_name">'Extracto - %s' % (object.name).replace('/', '')</field>-->
+<!--            <field name="binding_model_id" ref="account.model_account_bank_statement"/>-->
+<!--        </record>-->
+    </data>
+</odoo>

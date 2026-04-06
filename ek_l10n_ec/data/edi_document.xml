@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="common_reimbursument_template">
+            <reembolsos t-if="is_invoice and move.l10n_latam_document_type_id.code in ['41','03']">
+                    <reembolsoDetalle t-as="item" t-foreach="reembolsos">
+                        <tipoIdentificacionProveedorReembolso t-out="item['tipoIdentificacionProveedorReembolso']"/>
+                        <identificacionProveedorReembolso t-out="item['identificacionProveedorReembolso']"/>
+                        <codPaisPagoProveedorReembolso t-out="item['codPaisPagoProveedorReembolso']"/>
+                        <tipoProveedorReembolso t-out="item['tipoProveedorReembolso']"/>
+                        <codDocReembolso t-out="item['codDocReembolso']"/>
+                        <estabDocReembolso t-out="item['estabDocReembolso']"/>
+                        <ptoEmiDocReembolso t-out="item['ptoEmiDocReembolso']"/>
+                        <secuencialDocReembolso t-out="item['secuencialDocReembolso']"/>
+                        <fechaEmisionDocReembolso t-out="strftime(item['fechaEmisionDocReembolso'])"/>
+                        <numeroautorizacionDocReemb t-out="item['numeroautorizacionDocReemb']"/>
+                        <detalleImpuestos>
+                            <detalleImpuesto t-as="tax" t-foreach="item['detalleImpuestos']">
+                                <codigo t-out="tax['codigo']"/>
+                                <codigoPorcentaje t-out="tax['codigoPorcentaje']"/>
+                                <tarifa t-out="tax['tarifa']"/>
+                                <baseImponibleReembolso t-out="tax['baseImponibleReembolso']"/>
+                                <impuestoReembolso t-out="tax['impuestoReembolso']"/>
+
+                            </detalleImpuesto>
+                        </detalleImpuestos>
+
+                    </reembolsoDetalle>
+            </reembolsos>
+        </template>
+
+        <template id="common_l10n_ec_taxinherit_template"
+                  inherit_id="l10n_ec_edi.common_tax_info_template">
+            <xpath expr="//codDoc" position="replace">
+                <codDoc t-out="'07' if is_withhold else '01' if move.l10n_latam_document_type_id.code in ['41','03'] and is_invoice else move.l10n_latam_document_type_id.code"/>
+            </xpath>
+        </template>
+
+        <template id="common_l10n_ec_infonherit_template"
+                  inherit_id="l10n_ec_edi.common_info_template">
+            <xpath expr="//totalDescuento" position="after">
+                <codDocReembolso t-if="is_invoice and move.l10n_latam_document_type_id.code in ['41','03']"
+                                 t-out="move.l10n_latam_document_type_id.code"/>
+                <totalComprobantesReembolso t-if="is_invoice and move.l10n_latam_document_type_id.code in ['41','03']"
+                                            t-out="format_num_2(totalComprobantesReembolso)"/>
+                <totalBaseImponibleReembolso t-if="is_invoice and move.l10n_latam_document_type_id.code in ['41','03']"
+                                             t-out="format_num_2(totalBaseImponibleReembolso)"/>
+                <totalImpuestoReembolso t-if="is_invoice and move.l10n_latam_document_type_id.code in ['41','03']"
+                                        t-out="format_num_2(totalImpuestoReembolso)"/>
+            </xpath>
+        </template>
+
+
+
+
+
+        <template id="common_l10n_ec_invoice_iherit_template"
+                  inherit_id="l10n_ec_edi.invoice_template">
+            <xpath expr="//t[@t-call='l10n_ec_edi.common_details_info_template']" position="after">
+                <t t-call="ek_l10n_ec.common_reimbursument_template"/>
+
+
+            </xpath>
+        </template>
+
+        <!-- <template id="common_tax_lines_template">
+            <codigo t-out="tax_data['code']"/>
+            <codigoPorcentaje t-out="tax_data['code_percentage']"/>
+            <tarifa t-if="tarifa_pre_base" t-out="format_num_6(abs(tax_data['rate']))"/>
+            <baseImponible t-out="format_num_6(currency_round(abs(tax_data['base_amount'])))"/>
+            <tarifa t-if="tarifa_post_base" t-out="format_num_6(abs(tax_data['rate']))"/>
+            <valor t-out="format_num_2(abs(tax_data['tax_amount']))"/>
+        </template> -->
+
+        <!-- IBPRN TAX CALCULATE -->
+        <!-- <template id="common_ek_tax_lines_template">
+            <codigo t-out="tax_data['code']"/>
+            <codigoPorcentaje t-if="int(tax_data['code_percentage']) != 5" t-out="tax_data['code_percentage']"/>
+            <codigoPorcentaje t-if="int(tax_data['code_percentage']) == 5" t-out="5001"/>
+            <tarifa t-if="int(tax_data['code_percentage']) != 5 and tarifa_pre_base" t-out="format_num_6(abs(tax_data['rate']))"/>
+            <tarifa t-if="int(tax_data['code_percentage']) == 5 and  tarifa_pre_base" t-out="0.00"/>
+            <baseImponible t-out="format_num_6(currency_round(abs(tax_data['base_amount'])))"/>
+            <tarifa t-if="int(tax_data['code_percentage']) != 5 and tarifa_post_base" t-out="format_num_6(abs(tax_data['rate']))"/>
+            <valor t-out="format_num_2(abs(tax_data['tax_amount']))"/>
+        </template> -->
+        
+        <template id="common_tax_lines_template" inherit_id="l10n_ec_edi.common_details_info_template">
+            <xpath expr="//detalles/detalle/impuestos/impuesto" position="replace">                
+                    <impuesto t-foreach="line_tax_details.values()" t-as="tax_data">
+                        <t t-if="int(tax_data['code_percentage']) == 5">
+                            <t t-call="l10n_ec_edi.common_tax_lines_template">
+                                <t t-set="tarifa_pre_base" t-value="True"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-call="l10n_ec_edi.common_tax_lines_template">
+                                <t t-set="tarifa_pre_base" t-value="True"/>
+                            </t>
+                        </t>
+                    </impuesto>
+            </xpath>
+            <xpath expr="//detalles/detalle/codigoPrincipal" position="after">
+                <codigoAuxiliar t-if="product.l10n_ec_auxiliary_code and (is_invoice or is_liquidation)" t-out="product.l10n_ec_auxiliary_code"/>
+            </xpath>
+        </template>
+
+        <template  id="common_info_template" inherit_id="l10n_ec_edi.common_info_template">
+            <xpath expr="//totalConImpuestos/totalImpuesto" position="replace">
+                <totalImpuesto t-as="tax_data" t-foreach="tax_totals.values()">
+                    <t t-if="int(tax_data['code_percentage']) == 5">
+                        <t t-call="l10n_ec_edi.common_tax_lines_template">
+                            <t t-set="tarifa_post_base" t-value="True if is_invoice else False"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-call="l10n_ec_edi.common_tax_lines_template">
+                            <t t-set="tarifa_post_base" t-value="True if is_invoice else False"/>
+                        </t>
+                    </t>
+                </totalImpuesto>
+            </xpath>
+<!--            <xpath expr="//moneda[@t-if='is_cnote']" position="replace">-->
+<!--                <moneda t-if="is_cnote">DOLAR</moneda>-->
+<!--            </xpath>-->
+<!--            &lt;!&ndash; Reemplazo de la etiqueta 'moneda' para facturas y liquidaciones &ndash;&gt;-->
+<!--            <xpath expr="//moneda[@t-if='is_invoice or is_liquidation']" position="replace">-->
+<!--                <moneda t-if="is_invoice or is_liquidation">DOLAR</moneda>-->
+<!--            </xpath>-->
+
+        </template>
+        <!-- END IBPRN TAX CALCULATE -->
+
+    </data>
+</odoo>

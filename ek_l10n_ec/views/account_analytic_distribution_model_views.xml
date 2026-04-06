@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+      
+    <!-- View account.analytic.distribution.model tree -->
+    <record id="view_account_analytic_distribution_model_tree" model="ir.ui.view">
+        <field name="name">view.account.analytic.distribution.model.tree</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="inherit_id" ref="analytic.account_analytic_distribution_model_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_prefix']" position="after">
+              <field name="journal_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- model.name inherit form view -->
+    <record id="account_analytic_distribution_model_form_view" model="ir.ui.view">
+      <field name="name">view.account.analytic.distribution.model.form</field>
+      <field name="model">account.analytic.distribution.model</field>
+      <field name="inherit_id" ref="analytic.account_analytic_distribution_model_form_view"/>
+      <field name="arch" type="xml">
+        <!-- Add your xpath here -->
+        <xpath expr="//field[@name='partner_category_id']" position="after">
+              <field name="journal_id" optional="show"/>
+            </xpath>
+      </field>
+    </record>
+
+  </odoo>

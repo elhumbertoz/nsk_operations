@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="wizard_account_withhold_form_inherit" model="ir.ui.view">
+        <field name="name">l10n_ec.wizard.account.withhold.form.inherit</field>
+        <field name="model">l10n_ec.wizard.account.withhold</field>
+        <field name="inherit_id" ref="l10n_ec_edi.wizard_account_withhold_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='document_number']" position="after">
+                <!-- Add your fields or attributes here -->
+                <field name="l10n_ec_withhold_type" invisible="1"/>
+                <field name="l10n_ec_authorization_number"
+                       required="manual_document_number and l10n_ec_withhold_type != 'in_withhold'"
+                       invisible="not manual_document_number or l10n_ec_withhold_type == 'in_withhold'"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

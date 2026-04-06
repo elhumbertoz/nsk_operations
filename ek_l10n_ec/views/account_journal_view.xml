@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_account_journal_sustento_and_auth_required_form" model="ir.ui.view">
+        <field name="name">account.journal.withhold.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_payment.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='inbound_payment_method_line_ids']//field[@name='payment_account_id']" position="after">
+                <field name="code" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='refund_sequence']" position="after">
+                
+                <field name="l10n_latam_document_auth_required" invisible="type != 'purchase'"/>
+                <field name="l10n_latam_document_sustento_required" invisible="type != 'purchase'"/>
+            </xpath>
+            <field name="account_control_ids" position="after">
+                <field name="fiscalyear_lock_date" groups="account.group_account_manager"/>
+                <field name="period_lock_date" groups="account.group_account_manager"/>
+            </field>
+
+            <field name="bank_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_journal_tree">
+        <field name="name">account.journal.tree</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_tree"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="fiscalyear_lock_date"/>
+                <field name="period_lock_date"/>
+            </field>
+        </field>
+    </record>
+</odoo>

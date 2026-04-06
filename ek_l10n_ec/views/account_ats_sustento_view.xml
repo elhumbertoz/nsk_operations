@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_ats_sustento_tree" model="ir.ui.view">
+        <field name="name">account.ats.sustento.tree</field>
+        <field name="model">account.ats.sustento</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sustento del Comprobante">
+                <field name="code"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_ats_sustent_form" model="ir.ui.view">
+        <field name="name">account.ats.sustento.form</field>
+        <field name="model">account.ats.sustento</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Sustento del Comprobante">
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="code" required="1"/>
+                        <field name="type"/>
+                        <field name="account_ats_doc_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_ats_sustent" model="ir.actions.act_window">
+        <field name="name">Sustentos Tributarios</field>
+        <field name="res_model">account.ats.sustento</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_account_ats_sustent" id="menu_action_account_ats_sustento" sequence="21" parent="account.account_account_menu"/>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- View ek.type.request form -->
+  <record id="view_ek_type_request_form" model="ir.ui.view">
+    <field name="name">view.ek.type.request.form</field>
+    <field name="model">ek.l10n.type.model.mixin</field>
+    <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_type_request_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='use_in_regimen_70']" position="after">
+        <!-- Add your fields here -->
+        <field name="change_state_travel_after_confirm" invisible="1"/>
+        <field name="use_in_regimen_60" widget="boolean_toggle" invisible="1"/>
+        <field name="regime" readonly="ir_form_view"/>
+        <field name="has_bl_import" readonly="ir_form_view" widget="boolean_toggle" />
+        <field name="sequence_bl_import" readonly="ir_form_view" invisible="not has_bl_import" required="has_bl_import"/>
+        <field name="has_bl_export" readonly="ir_form_view" widget="boolean_toggle"/>
+        <field name="sequence_bl_export" readonly="ir_form_view" invisible="not has_bl_export" required="has_bl_export"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

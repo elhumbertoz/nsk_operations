@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- View ek.account.move.reimbursement.wizard form -->
+  <record id="view_ek_account_move_reimbursement_wizard_form" model="ir.ui.view">
+    <field name="name">view.ek.account.move.reimbursement.wizard.form</field>
+    <field name="model">ek.account.move.reimbursement.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Nuevo Reembolso - Importador Simplificado">
+        <sheet>
+          <group col="2">
+            <group>
+              <field name="partner_id" readonly="1" force_save="1"/>
+            </group>
+            <group>
+              <field name="invoice_id" readonly="1" force_save="1"/>
+              <field name="available_move_ids" invisible="1"/>
+            </group>
+          </group>
+
+          <field name="move_ids" nolabel="1" domain="[('id', 'in', available_move_ids)]">
+            <tree editable="bottom" delete="1" create="0">
+              <field name="name" readonly="1"/>
+              <field name="partner_id" readonly="1"/>
+              <field name="invoice_date" readonly="1"/>
+              <field column_invisible="1" name="currency_id"/>
+              <field name="amount_total" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}" string="Total Bruto"/>
+              <field name="assumed_retentions" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}" string="Retenciones"/>
+              <field name="reimbursement_total_net" readonly="1" sum="Total Neto" widget="monetary" options="{'currency_field': 'currency_id'}" string="Total Neto"/>
+              <field name="credit_notes_applied_amount" readonly="1" sum="Total NC" widget="monetary" options="{'currency_field': 'currency_id'}" string="NC"/>
+              <field name="credit_notes_applied_percentage" readonly="1" widget="badge" string="% NC" decoration-info="credit_notes_applied_percentage != '0.0%'" decoration-muted="credit_notes_applied_percentage == '0.0%'"/>
+              <field name="all_credit_notes_ids" readonly="1" string="NC" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_open': False}"/>
+              <field name="state" readonly="1"/>
+            </tree>
+          </field>
+        </sheet>
+        <footer>
+          <button name="action_import_from_move" type="object" string="Importar Seleccionadas" class="oe_highlight"/>
+          <button name="action_load_all" type="object" string="Cargar Todas" class="btn-secondary"/>
+          <button name="action_clear_selection" type="object" string="Borrar Todas" class="btn-secondary"/>
+          <button special="cancel" string="Cancelar"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Action ek.account.move.reimbursement.wizard -->
+  <record id="action_ek_account_move_reimbursement_wizard" model="ir.actions.act_window">
+    <field name="name">Seleccione facturas</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">ek.account.move.reimbursement.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+</odoo> 

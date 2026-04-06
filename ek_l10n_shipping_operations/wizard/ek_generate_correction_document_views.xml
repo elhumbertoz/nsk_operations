@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.generate.correction.document form -->
+    <record id="view_ek_generate_correction_document_form" model="ir.ui.view">
+        <field name="name">view.ek.generate.correction.document.form</field>
+        <field name="model">ek.generate.correction.document</field>
+        <field name="arch" type="xml">
+            <form string="Ek Generate Correction Document">
+                <group name="type_group" colspan="4">
+                    <field name="type_id" required="1" col="2" 
+                        domain="[('is_correction_request', '=', True),('ir_form_view','!=',False)]"
+                        options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                    <field name="operation_request_id" invisible="1"/>
+                </group>                
+                <footer>
+                    <button
+                        name="copy_request_self"
+                        string="Generate Relacion"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

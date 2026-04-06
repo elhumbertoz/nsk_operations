@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_l10n_stages_delete_mixin_wizard" model="ir.ui.view">
+        <field name="name">ek.l10n.stages.delete.mixin.wizard.form</field>
+        <field name="model">ek.l10n.stages.delete.mixin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <field name="object_count" invisible="1"/>
+                <field name="stages_active" invisible="1"/>
+                <div invisible="object_count &gt; 0">
+                    <p>Are you sure you want to delete these stages?</p>
+                </div>
+                <div invisible="not stages_active or object_count == 0">
+                    <p>You cannot delete stages containing objects. You can either archive them or first delete all of their objects.</p>
+                </div>
+                <div invisible="stages_active or object_count == 0">
+                    <p>You cannot delete stages containing objects. You should first delete all of their objects.</p>
+                </div>
+                <footer>
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or object_count == 0" />
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="object_count &gt; 0" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ek_l10n_stages_delete_confirmation_mixin_wizard" model="ir.ui.view">
+        <field name="name">ek.l10n.stages.delete.mixin.wizard.form</field>
+        <field name="model">ek.l10n.stages.delete.mixin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>This will archive the stages and all of the objets they contain from the following types:</p>
+                    <!-- <field name="type_ids" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                    </field> -->
+                    <field name="type_ids" readonly="1" widget="many2many_tags"/>
+                    <p>Are you sure you want to continue?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_ek_l10n_stage_unarchive_wizard" model="ir.ui.view">
+        <field name="name">ek.l10n.stages.delete.mixin.wizard.form</field>
+        <field name="model">ek.l10n.stages.delete.mixin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>Would you like to unarchive all of the objects contained in these stages as well?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_unarchive_objects" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

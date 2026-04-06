@@ -1,0 +1,259 @@
+<odoo>
+  <record id="ek_boats_information_form" model="ir.ui.view">
+    <field name="name">ek.boats.information.form</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_confirm_request" string="Confirm" type="object" class="oe_highlight" invisible="1" />
+          <button name="action_done_request" string="Done" type="object" class="oe_highlight" invisible="1"/>
+          <button name="action_cancelled_request" string="Cancelled" type="object" icon="fa-check-circle" class="oe_stat_button" invisible="state not in ['draft']"/>
+          <button name="action_finalize_travel" string="Finalized" type="object" class="oe_stat_button" invisible="1"/>
+
+          <field name="state" widget="statusbar" statusbar_visible="draft" />
+
+        </header>
+        <div class="alert alert-warning" role="alert" invisible="not ship_document_certificate_count_expired !=  0">
+                        HE BOAT REGISTERS DOCUMENTATION EXPIRING OR EXPIRED PLEASE VERIFY AND UPDATE 
+          <button name="action_open_documents_expired_boat" type="object" string="VER.." class="btn btn-link p-0" icon="fa-file-o" />
+        </div>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="action_open_documents_request" type="object" icon="fa-share-square-o">
+              <field string="Request" name="request_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_enhanced_requests" type="object" icon="fa-list-alt">
+              <field string="Enhanced Requests" name="request_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_sale_order" type="object" groups="ek_l10n_shipping_operations.ek_manager_sale_order" icon="fa-file-text-o">
+              <field string="Sale Order" name="sale_order_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_account_move" type="object" groups="ek_l10n_shipping_operations.ek_manager_account_invoice" icon="fa-pencil-square-o">
+              <field string="Invoice" name="invoice_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_purchase_order" type="object" groups="ek_l10n_shipping_operations.ek_manager_sale_purchase" icon="fa-pencil-square-o">
+              <field string="Purchase Order" name="purchase_count" widget="statinfo" />
+            </button>
+
+            <!-- ### -->
+            <button class="oe_stat_button" name="action_open_documents_sale_order_views" type="object" invisible="sale_order_count == 0" groups="ek_l10n_shipping_operations.ek_user_sale_order" icon="fa-file-text-o">
+              <field string="Sale Order" name="sale_order_count" widget="statinfo" />
+            </button>
+
+            <button class="oe_stat_button" name="action_open_documents_purchase_order_views" type="object" invisible="purchase_count == 0" groups="ek_l10n_shipping_operations.ek_user_sale_purchase" icon="fa-pencil-square-o">
+              <field string="Purchase Order" name="purchase_count" widget="statinfo" />
+            </button>
+            <!-- <button class="oe_stat_button" name="action_open_documents_account_move_views" type="object" groups="ek_l10n_shipping_operations.ek_user_account_invoice" invisible="invoice_count == 0" icon="fa-pencil-square-o">
+                              <field string="Invoice" name="invoice_count" widget="statinfo" />
+                          </button> -->
+
+            <!-- #### -->
+
+
+
+          </div>
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Name" readonly="1"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="state" invisible="1"/>
+              <field name="validate_finalized" invisible="1"/>
+              <field name="ship_document_certificate_count_expired" invisible="1"/>
+              <field name="ship_name_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="ek_res_world_seaports_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" string="Origin Location"/>
+              <field name="ek_res_world_seaports_d_id" string="Origin Destination"/>
+              <field name="bussiness_name_id" force_save="1" readonly="1" string="Armador" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+
+              <field name="ship_flag_id" force_save="1" readonly="1" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="boat_registration" force_save="1" readonly="1"/>
+              <field name="company_id" force_save="1" readonly="1" groups="base.group_multi_company" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+              <field name="state_boats" force_save="1" readonly="1"/>
+              <field name="reason_arrival_ids" widget="many2many_tags"/>
+            </group>
+            <group>
+
+
+            </group>
+          </group>
+
+          <group>
+            <group string="Date Arribo">
+              <field name="eta" required="1"/>
+              <field name="ata" required="1"/>
+              <label for="fuel" string="Fuel"/>
+              <div>
+                <field name="fuel" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+
+
+              <label for="gasoline" string="Gasoline"/>
+              <div>
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+
+              <label for="water" string="Water"/>
+              <div>
+                <field name="water" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+            </group>
+            <group string="Date Zarpe">
+              <field name="etd" required="1"/>
+              <field name="atd" required="1"/>
+              <label for="fuel_zarpe" string="Fuel"/>
+              <div>
+                <field name="fuel_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="fuel_uom_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+
+
+              <label for="gasoline_zarpe" string="Gasoline"/>
+              <div>
+                <field name="gasoline_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="gasoline_uom_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+
+              <label for="water_zarpe" string="Water"/>
+              <div>
+                <field name="water_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+                <field name="water_uom_zarpe" force_save="1" class="oe_inline" readonly="0"/>
+              </div>
+            </group>
+          </group>
+
+          <group>
+            <group string="MRN - Customs">
+              <field name="mrn_arribal"/>
+              <field name="mrn_exit"/>
+            </group>
+            <group string="Date ">
+              <field name="create_date"/>
+              <field name="date_finished" readonly="1" />
+            </group>
+
+          </group>
+
+          <notebook>
+            <page string="Crew Member" name="crew_page">
+              <field name="crew_ids" force_save="1">
+                <tree>
+                  <field name="name" />
+                  <field name="ek_crew_member_hierarchy_id" string="Hierarchy" />
+                  <field name="nationality_id"/>
+                  <field name="l10n_ec_birthdate"/>
+                  <field name="vat" string="ID"/>
+                </tree>
+              </field>
+            </page>
+
+            <!-- Nueva pestaña de Reembolsos -->
+            <page string="Reembolsos" name="reimbursements_page">
+              <div class="row">
+                <div class="col-12">
+                  <div class="alert alert-info" role="alert" invisible="reimbursement_tracking_count > 0">
+                    <strong>Sin reembolsos registrados</strong>
+                    <br/>
+                    Los reembolsos se crean automáticamente cuando se procesan solicitudes con productos de reembolso.
+                  </div>
+                </div>
+              </div>
+
+              <group invisible="reimbursement_tracking_count == 0">
+                <group>
+                  <div class="oe_button_box">
+                    <button class="oe_stat_button" type="object" name="action_view_reimbursement_tracking" icon="fa-list-alt">
+                      <field string="Total Reembolsos" name="reimbursement_tracking_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button" type="object" name="action_view_pending_reimbursements" icon="fa-clock-o">
+                      <field string="Pendientes" name="pending_reimbursements_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button" type="object" name="action_view_recovered_reimbursements" icon="fa-check-circle">
+                      <field string="Recuperados" name="recovered_reimbursements_count" widget="statinfo"/>
+                    </button>
+                  </div>
+                </group>
+                <group>
+                  <field name="total_reimbursement_amount" widget="monetary"/>
+                  <field name="pending_reimbursement_amount" widget="monetary"/>
+                  <field name="recovered_reimbursement_amount" widget="monetary"/>
+                </group>
+              </group>
+
+              <field name="reimbursement_tracking_ids" nolabel="1">
+                <tree decoration-success="ignored or state == 'recovered'" decoration-warning="days_pending > 5 and days_pending &lt;= 15 and not ignored and state not in ['recovered', 'cancelled']" decoration-danger="days_pending > 15 and not ignored and state not in ['recovered', 'cancelled']" decoration-muted="state == 'cancelled'" editable="bottom">
+                  <field name="sequence" widget="handle"/>
+                  <field name="request_id" readonly="1"/>
+                  <field name="product_default_name"/>
+                  <field name="supplier_id" options="{'no_edit': True, 'no_create': True}"/>
+                  <field name="amount" sum="Total"/>
+                  <field name="currency_id" optional="hide"/>
+                  <field name="state" widget="badge" readonly="1" decoration-success="state == 'recovered'" decoration-warning="state in ['purchase_pending', 'invoice_pending', 'client_invoice_pending']" decoration-info="state in ['purchase_confirmed', 'invoice_received', 'client_invoice_sent']"/>
+                  <field name="days_pending" readonly="1"/>
+                  <field name="ignored" widget="boolean_toggle"/>
+                  <field name="reason_ignored" optional="hide"/>
+                  <field name="responsible_user_id" widget="many2one_avatar_user"/>
+                  <field name="date_expected_invoice"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter" name="oe_chatter">
+          <field name="message_follower_ids" />
+          <field name="message_ids" />
+          <field name="activity_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_boats_information_tree" model="ir.ui.view">
+    <field name="name">ek.boats.information.tree</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <tree create="true" edit="true" expand="true" multi_edit="1" sample="1" js_class="hr_employee_list">
+        <field name="name" />
+        <field name="ship_name_id"/>
+        <field name="bussiness_name_id" string="Shipbuilder"/>
+        <field name="capital_name_id" string="Ship owner"/>
+        <field name="state"/>
+      </tree>
+    </field>
+  </record>
+  <record id="ek_boats_information_search" model="ir.ui.view">
+    <field name="name">ek.boats.information.search</field>
+    <field name="model">ek.boats.information</field>
+    <field name="arch" type="xml">
+      <search>
+        <searchpanel>
+          <field name="ship_name_id" icon="fa-ship" enable_counters="1"/>
+        </searchpanel>
+      </search>
+
+    </field>
+  </record>
+  <record model="ir.actions.act_window" id="ek_boats_information_act_window">
+    <field name="name">Travels</field>
+    <field name="res_model">ek.boats.information</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="ek_boats_information_search"/>
+    <field name="domain">[("assigned_regimen_70","=",False)]</field>
+  </record>
+
+  <record id="menu_boat" model="ir.ui.menu">
+    <field name="action" ref="ek_boats_information_act_window"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Travel</field>
+    <field name="parent_id" ref="menu_boat_information_principal"/>
+    <field name="sequence">3</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+
+</odoo>

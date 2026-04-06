@@ -1,0 +1,1188 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ek_l10n_shipping_operations_charging_regimes
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-21 19:35+0000\n"
+"PO-Revision-Date: 2024-10-21 15:17-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__bl_number
+msgid "# AWB O BL"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__related_document
+msgid "# Related Document"
+msgstr "# Documento relacionado"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "#Doc Internal"
+msgstr "#Doc Interno"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__regime__21
+msgid "21"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__regime__60
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_wizard_charging_data__regimen__60
+msgid "60"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__regime__61
+msgid "61"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__regime__70
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_wizard_charging_data__regimen__70
+msgid "70"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "<u>Datos</u>"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_boats_information__type_move_container__aerial
+msgid "Aerial"
+msgstr "Aéreo"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Agent"
+msgstr "Agente"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__arribo
+msgid "Arribo"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__anotification
+msgid "Arrival Notification"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Arrival of Date"
+msgstr "Fecha de Arrivo"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Assign a User"
+msgstr "Asignar un usuario"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Authorized Pourtario Operators"
+msgstr "Operadores autorizados de Pourtario"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__change_state_travel_after_confirm
+msgid "Auto Change State"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_bl_import_export
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__name
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "BL"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__bl_import_export_id
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "BL Export"
+msgstr "BL Exportación"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__bl_import_export_id2
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "BL Import"
+msgstr "BL Importación"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_boats_information.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_boats_information.py:0
+#, python-format
+msgid "CONTAINER #"
+msgstr "CONTENEDOR #"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Calculation data in days or hours"
+msgstr "Calculo de Dia u Horas"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_wizard_filter_regimen_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Cancelled"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Cargo Operator"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Charge"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__id_hs_copmt_cd
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__id_hs_copmt_cd
+msgid "Complementary Code"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Contacts"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__container_id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__ek_boats_information_id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__ek_container_ids
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__ek_product_packagens_goods_id
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Container"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__container_number
+msgid "Container Number"
+msgstr "Numero de Contenedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_ship_registration.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_ship_registration.py:0
+#: model:ir.actions.act_window,name:ek_l10n_shipping_operations_charging_regimes.ek_boats_container_information_act
+#: model:ir.ui.menu,name:ek_l10n_shipping_operations_charging_regimes.menu_boat
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_ship_registration_form
+#, python-format
+msgid "Containers"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_operation_request
+msgid "Create Operations Request"
+msgstr "Solicitudes"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_l10n_type_model_mixin
+msgid "Create Type Request"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_ship_registration
+msgid "Create ship registration"
+msgstr "Crear registro de barco"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_boats_information
+msgid "Create shipping boats information"
+msgstr "Crear información de barcos "
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__create_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__create_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__create_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__create_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__create_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__create_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__create_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__create_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Crew Pay"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__custom_agent
+msgid "Custom Agent"
+msgstr "Agente Aduanero"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__customs_document
+msgid "Customs Document"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "Código complementario"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Data"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Data Cargo"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Data Required for National and International cargo"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Data Zarpe"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Date"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Date Arribo"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Date Destination"
+msgstr "Fecha de Destino"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Date Origin"
+msgstr "Fecha de Origen"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__date_request
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__date_request
+msgid "Date Request"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Date Zarpe"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.table_regimen_60_tree
+msgid "Delete"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__delivery_product
+msgid "Delivery Product"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Departure Port Of Origin"
+msgstr "Fecha de Zarpe"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__desconsolidation
+msgid "Desconsolidation"
+msgstr "Desconsolidación"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Desconsolidation Date"
+msgstr "Fecha de Desconsolidación "
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__name
+msgid "Description"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Description..."
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Detail"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Discharge"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__display_name
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__display_name
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__display_name
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__display_name
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Dock #1"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Dock #2"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Dock Space Expansion"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Documentos"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__domain_bl_import_export
+msgid "Domain Bl Import Export"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "E.T.A."
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "E.T.D."
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Edit"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:res.groups,name:ek_l10n_shipping_operations_charging_regimes.group_operaction_readonly
+msgid "Edit Request"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Ej. 123-456-7890"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Embark"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "En Proceso"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__bl_import_export__type__export
+msgid "Export"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_wizard_filter_regimen_form
+msgid "Filter"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Finalized"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__fob
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__fob
+msgid "Fob"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Fondeo"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Fuel"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Gasoline"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_wizard_filter_regimen_form
+msgid "Generate"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Generate Export"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Generate Import"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Generate Manual Trade Number"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__gross_weight
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Gross Weight"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Guia"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H02. Subpartida"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H04. Codigo suplementario"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H06. Descripcion"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H10. Peso neto"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H18. Cantidad de unidades fisicas"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H19. Tipo de unidad comercial"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H26. FOB unitario"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H34. Numero de factura"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "H35. Nombre/razon social del proveedor"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__has_bl_export
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__has_bl_export
+msgid "Has BL Export"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__has_bl_import
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__has_bl_import
+msgid "Has BL Import"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__has_process_travel
+msgid "Has Process Travel"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__id
+msgid "ID"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__id_bl
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__id_bl
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__ek_id_bls
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__name
+msgid "ID BL"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__id_bl_70_ids
+msgid "ID BL  70"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__id_bl_70
+msgid "ID BL 70"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "ID or Passport"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__bl_import_export__type__import
+msgid "Import"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Import Documents"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__inspection
+msgid "Inspection/Capacity"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Invoice"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__invoice_number
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__invoice_number
+msgid "Invoice Number"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__ek_requerid_burden_inter_nac_id
+msgid "Items"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Items in Containers"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__journey_crew_id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__journey_crew_id
+msgid "Journey Crew"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "Kardex"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_boats_information__type_move_container__land
+msgid "Land"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__write_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__write_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__write_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__write_uid
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__write_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__write_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__write_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_id_bl_70__write_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "List"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__load_number
+msgid "Load Number"
+msgstr "Numero de Carga"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "MRN"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "MRN EXP:"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "MRN IMP:"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Maintenance"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Marginal Dock"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_boats_information__type_move_container__maritime
+msgid "Maritime"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__max_regime_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__max_regime_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__max_regime_date
+msgid "Max Regime Date"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__movement_date
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__movement_date
+msgid "Movement Date"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_boats_information_tree_reguimen
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Name"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Net Weight"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__notes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Notes"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__number_dai
+msgid "Number Dai"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.module.category,name:ek_l10n_shipping_operations_charging_regimes.categoria_modulo_operaciones
+msgid "Operaciones"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__ek_operation_request_id
+msgid "Operation Request"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Operator"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Origin Destination"
+msgstr "Puerto Destino"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Origin Location"
+msgstr "Puerto de Origen"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Others"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Packages and Goods"
+msgstr "Paquetes y mercancías"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Passenger"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Plaza"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Pourtario Access"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__product_description
+msgid "Product Description"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_product_packagens_goods
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__ek_produc_packages_goods_ids
+msgid "Product Packagens Goods"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Provision"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Purchase Order"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__quantity_hand
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__quantity_hand
+msgid "Quantity Hand"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#, python-format
+msgid "Quantity can not be less than quantity hand for %s"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Realizado"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Ref."
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__ref_container
+msgid "Ref. Container"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Refresh"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Refunf"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__regimen
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_filter_regimen__ek_regimen_table_id
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_boats_information_search_regimen
+msgid "Regimen"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__ek_table_regimen_60_ids
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Regimen 60"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Related Rervice Operator"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.actions.act_window,name:ek_l10n_shipping_operations_charging_regimes.action_ek_wizard_filter_regimen
+#: model:ir.ui.menu,name:ek_l10n_shipping_operations_charging_regimes.ek_wizard_filter_regimen_form_menu
+msgid "Report Kardex"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Report for Captaincy"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.actions.report,name:ek_l10n_shipping_operations_charging_regimes.report_action_kardex_container
+msgid "Reporte Kardex container"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Request"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__return
+msgid "Return Container"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__rcd
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Return Container Date"
+msgstr "Fecha de retorno de Contenedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__regime
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__regime
+msgid "Régimen"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Sale Order"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Search"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__sequence_bl_export
+msgid "Sequence Export"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__sequence_bl_import
+msgid "Sequence Import"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Service"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Service or Maneuver Data"
+msgstr "Datos de servicio o maniobra"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__ek_ship_registration_id
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__ship_registration_id
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Ship"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__ship_name_id
+msgid "Ship Name"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__shipper_id
+msgid "Shipper "
+msgstr "Armador"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__shipping_company
+msgid "Shipping Company"
+msgstr "Empresa de transporte"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__id_hs_spmt_cd
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__id_hs_spmt_cd
+msgid "Supplementary Code"
+msgstr "Código suplementario"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__supplier
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__supplier
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__supplier_ids
+msgid "Suppliers"
+msgstr "Proveedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__supplies_detail
+msgid "Supplies Detail"
+msgstr "Detalle Proveedores"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Table Pay"
+msgstr "Tabla de Pago"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_table_regimen_60
+msgid "Table Regimen 60"
+msgstr "Tabla Régimen 60"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__tariff_item
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__tariff_item
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__tariff_item
+msgid "Tariff Item"
+msgstr "Partida arancelaria"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "This description is to provide details of the request"
+msgstr "Esta descripción debe proporcionar detalles de la solicitud"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid ""
+"This request has a practical mode ship, verify and validate the TRB Y TRN before\n"
+"                    CONFIRMING the request"
+msgstr ""
+"Esta solicitud tiene un  práctico enviar, verificar y validar el TRB Y TRN antes de\n"
+"                    CONFIRMAR la solicitud"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Title"
+msgstr "Título"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "To Remove all the Product at hand"
+msgstr "Para retirar todo el producto a mano"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "Total"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__total_cost
+msgid "Total Cost"
+msgstr "Total Costo"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__total_fob
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__total_fob
+msgid "Total Fob"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container
+msgid "Total de FOB"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Trade Number"
+msgstr "Numero de Oficio"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields.selection,name:ek_l10n_shipping_operations_charging_regimes.selection__ek_l10n_type_model_mixin__change_state_travel_after_confirm__transfer
+msgid "Transfer"
+msgstr "Transferencia"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+msgid "Transfer Date"
+msgstr "Fecha de transferencia"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__boats_information_id
+msgid "Travel"
+msgstr "Viaje"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__type_container_id
+msgid "Type Container"
+msgstr "Tipo Contenedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__type_move_container
+msgid "Type of Transport"
+msgstr "Tipo de transporte"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__unds
+msgid "UNDS"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_wizard_charging_data__unit_cost
+msgid "Unit Cost"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_product_packagens_goods__uom_id
+msgid "Uom"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_bl_import_export__in_use
+msgid "Use"
+msgstr "Uso"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_l10n_type_model_mixin__use_in_regimen_60
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_operation_request__use_in_regimen_60
+msgid "Use in Regimen 60"
+msgstr "Uso en Régimen 60"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_ek_boats_information__value_of_container
+msgid "Value of Container"
+msgstr "Valor del contenedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Water"
+msgstr "Agua"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model.fields,field_description:ek_l10n_shipping_operations_charging_regimes.field_table_regimen_60__product_weight_in_lbs
+msgid "Weight unit of measure"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_wizard_charging_data
+msgid "Wizard: Charging Data"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_ek_wizard_filter_regimen
+msgid "Wizard: Filter Regimen"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Work Area"
+msgstr "Área de trabajo"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+msgid "Yard"
+msgstr "Patio"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#, python-format
+msgid "You can't use this type of operation with this container."
+msgstr "No puede utilizar este tipo de operación con este contenedor."
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/wizard/ek_wizard_filter_regimen.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/wizard/ek_wizard_filter_regimen.py:0
+#, python-format
+msgid "You must select a regimen"
+msgstr "Debe seleccionar un régimen"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/wizard/ek_wizard_filter_regimen.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/wizard/ek_wizard_filter_regimen.py:0
+#, python-format
+msgid "You must select at least one container"
+msgstr "Debe seleccionar al menos un contenedor"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model:ir.model,name:ek_l10n_shipping_operations_charging_regimes.model_id_bl_70
+msgid "id bl"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#, python-format
+msgid "leave the field without data to generate the sequence"
+msgstr "Dejar el campo sin datos para generar la secuencia"
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.ek_operation_request_form_reandoly
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form
+#: model_terms:ir.ui.view,arch_db:ek_l10n_shipping_operations_charging_regimes.view_ek_operation_request_form_inherit
+msgid "total"
+msgstr ""
+
+#. module: ek_l10n_shipping_operations_charging_regimes
+#. odoo-python
+#: code:addons/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#: code:addons/partner_customizations/ek_l10n_shipping_operations_charging_regimes/models/ek_operation_request.py:0
+#, python-format
+msgid "upload file before continuing."
+msgstr "Subir el archivo antes de continuar."

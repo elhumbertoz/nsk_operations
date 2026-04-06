@@ -1,0 +1,362 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * ek_l10n_ec
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-30 00:47+0000\n"
+"PO-Revision-Date: 2017-05-30 00:47+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Spanish (Ecuador) (https://www.transifex.com/oca/teams/23907/"
+"es_EC/)\n"
+"Language: es_EC\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.update_journal_lock_dates_wizard_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_journal
+msgid "Journal"
+msgstr "Libro diario"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_journal__fiscalyear_lock_date
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__fiscalyear_lock_date
+msgid "Lock Date"
+msgstr "Fecha de bloqueo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_journal__period_lock_date
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_update_journal_lock_dates_wizard__period_lock_date
+msgid "Lock Date for Non-Advisers"
+msgstr "Fecha de bloqueo para no asesores"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_update_journal_lock_dates_wizard
+msgid "Mass Update Journal Lock Dates Wizard"
+msgstr "Asistente para la actualización masiva de fechas de bloqueo"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_journal__fiscalyear_lock_date
+msgid ""
+"No users, including Advisers, can edit accounts prior to and inclusive of "
+"this date for this journal. Use it for fiscal year locking for this journal, "
+"for example."
+msgstr ""
+"Ningún usuario, incluyendo Asesores, pueden editar cuentas antes de y en "
+"esta fecha para este diario. Utilícela, por ejemplo, para bloquear un año "
+"fiscal para este Diario."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_journal__period_lock_date
+msgid ""
+"Only users with the 'Adviser' role can edit accounts prior to and inclusive "
+"of this date for this journal. Use it for period locking inside an open "
+"fiscal year for this journal, for example."
+msgstr ""
+"Sólo los usuarios con el rol 'Asesor' pueden editar cuentas antes de y en "
+"esta fecha para este Diario. Utilícelo para bloquear un período dentro de un "
+"año fiscal abierto para este diario, por ejemplo."
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.update_journal_lock_dates_wizard_view_form
+msgid "Update"
+msgstr "Actualizar"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.update_journal_lock_dates_wizard_action
+msgid "Update journals lock dates"
+msgstr "Actualizar fechas de bloqueo"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/wizards/update_journal_lock_dates.py:0
+#, python-format
+msgid "You are not allowed to execute this action."
+msgstr "No está autorizado a realizar esta acción."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot add/modify entries for the journal '%(journal)s' prior to and "
+"inclusive of the lock date %(journal_date)s"
+msgstr ""
+"No puede añadir/modificar asientos para el diario '%(journal)s' con "
+"anterioridad y hasta la fecha de bloqueo %(journal_date)s"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot add/modify entries for the journal '%(journal)s' prior to and "
+"inclusive of the lock date %(journal_date)s. Check the Journal settings or "
+"ask someone with the 'Adviser' role"
+msgstr ""
+"No puede añadir/modificar asientos para el Diario '%(journal)s' con "
+"anterioridad y hasta la fecha de bloqueo %(journal_date)s. Compruebe la "
+"configuración del Diario o pregunte a alguien con el grupo de acceso 'Asesor'"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_account
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__always
+msgid "Always"
+msgstr "Siempre"
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Always' with account '%(account)s' but the "
+"analytic account is missing in the account move line with label '%(move)s'."
+msgstr ""
+"La política analítica está configurada como \"Siempre\" para la cuenta "
+"'%(account)s' pero falta la cuenta analítica en la línea de movimiento de la "
+"cuenta con la etiqueta '%(move)s'."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Never' with account '%(account)s' but the account "
+"move line with label '%(move)s' has an analytic account "
+"'%(analytic_account)s'."
+msgstr ""
+"La política analítica está configurada como \"Nunca\" para la cuenta "
+"'%(account)s', pero la línea de movimiento de la cuenta con la etiqueta "
+"'%(move)s' tiene una cuenta analítica '%(analytic_account)s'."
+
+#. module: ek_l10n_ec
+#. odoo-python
+#: code:addons/ek_l10n_ec/models/account.py:0
+#, python-format
+msgid ""
+"Analytic policy is set to 'Posted moves' with account '%(account)s' but the "
+"analytic account is missing in the account move line with label '%(move)s'."
+msgstr ""
+"La política analítica está configurada como \"Movimientos publicados\" para "
+"la cuenta '%(account)s' pero falta la cuenta analítica en la línea de "
+"movimiento de la cuenta con la etiqueta '%(move)s'."
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move
+msgid "Journal Entry"
+msgstr "Apuntes contables"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__never
+msgid "Never"
+msgstr "Nunca"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__optional
+msgid "Optional"
+msgstr "Opcional"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_account_account__analytic_policy
+msgid "Policy for analytic account"
+msgstr "Política para la cuenta analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields.selection,name:ek_l10n_ec.selection__account_account__analytic_policy__posted
+msgid "Posted moves"
+msgstr "Movimientos publicados"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,help:ek_l10n_ec.field_account_account__analytic_policy
+msgid ""
+"Sets the policy for analytic accounts.\n"
+"If you select:\n"
+"- Optional: The accountant is free to put an analytic account on an account "
+"move line with this type of account.\n"
+"- Always: The accountant will get an error message if there is no analytic "
+"account.\n"
+"- Posted moves: The accountant will get an error message if no analytic "
+"account is defined when the move is posted.\n"
+"- Never: The accountant will get an error message if an analytic account is "
+"present.\n"
+"\n"
+"This field is company dependent."
+msgstr ""
+"Establece la política para las cuentas analíticas. Si se selecciona: \n"
+"- 'Opcional', el contable es libre de poner una cuenta analítica en una "
+"línea de movimiento de una cuenta con este tipo de cuenta.\n"
+"- 'Siempre', el contable recibirá un mensaje de error si no hay una cuenta "
+"analítica.\n"
+"- 'Movimientos publicados', el contable recibirá un mensaje de error si no "
+"se define una cuenta analítica cuando se publica el movimiento.\n"
+"- 'Nunca', el contable recibirá un mensaje de error si hay una cuenta "
+"analítica presente.\n"
+"\n"
+"Este campo depende de la compañía."
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__account_id
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: ek_l10n_ec
+#: model:ir.model,name:ek_l10n_ec.model_ek_l10n_ec_wizard
+msgid "Account Move Update Analytic Account Wizard"
+msgstr "Asistente de actualización de movimiento de cuentas analíticas"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__analytic_precision
+msgid "Analytic Precision"
+msgstr "Precisión Analítica"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__current_analytic_distribution
+msgid "Current Analytic Distribution"
+msgstr "Distribución analítica actual"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__line_id
+msgid "Invoice line"
+msgstr "Línea de factura"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__analytic_distribution
+msgid "New Analytic Distribution"
+msgstr "Nueva distribución analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: ek_l10n_ec
+#: model:ir.model.fields,field_description:ek_l10n_ec.field_ek_l10n_ec_wizard__move_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_move_form_view
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.account_move_line_tree_view
+msgid "Update Analytic"
+msgstr "Actualización Analítica"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Update Analytic Distribution"
+msgstr "Actualizar distribución analítica"
+
+#. module: ek_l10n_ec
+#: model:ir.actions.act_window,name:ek_l10n_ec.action_view_ek_l10n_ec
+msgid "Update Analytic for selected Account Moves"
+msgstr "Actualización analítica para los movimientos de cuenta seleccionados"
+
+#. module: ek_l10n_ec
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec.view_ek_l10n_ec_account
+msgid "Update analytic lines"
+msgstr "Actualización de las líneas analíticas"
+"Por favor, agregue impuestos a todas las líneas de la factura antes de confirmar."

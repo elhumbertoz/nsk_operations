@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Wizard Form View -->
+  <record id="ek_customs_import_wizard_form" model="ir.ui.view">
+    <field name="name">ek.customs.import.wizard.form</field>
+    <field name="model">ek.customs.import.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Importar Datos de Aduanas">
+        <group col="2">
+          <group>
+            <field name="filename" invisible="1"/>
+            <field name="excel_file" filename="filename" string="Archivo de Excel"/>
+          </group>
+        </group>
+        <group string="Estadísticas de Importación" invisible="total_lines == 0">
+          <group>
+            <field name="total_lines"/>
+            <field name="imported_lines"/>
+            <field name="error_lines"/>
+          </group>
+          <group>
+            <field name="import_log" widget="text" readonly="1" invisible="not import_log"/>
+          </group>
+        </group>
+        <footer>
+          <button name="import_excel_data" type="object" string="Importar" class="btn-primary" invisible="total_lines > 0"/>
+          <button string="Cerrar" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Action -->
+  <record id="action_ek_customs_import_wizard" model="ir.actions.act_window">
+    <field name="name">Importar Datos de Aduanas</field>
+    <field name="res_model">ek.customs.import.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{'default_operation_request_id': active_id}</field>
+  </record>
+</odoo> 

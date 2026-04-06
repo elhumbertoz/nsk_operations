@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ec_aged_payable_report_nske" model="account.report">
+        <field name="name">Cuentas por cobrar Naviera</field>
+        <field name="filter_date_range" eval="False" />
+        <field name="filter_unfold_all" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="root_report_id" ref="account_reports.aged_receivable_report" />
+        <field name="country_id" ref="base.ec" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="filter_account_type" />
+        <field name="filter_hierarchy">never</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">today</field>
+        <field name="custom_handler_model_id"
+            ref="model_account_aged_nsk_receivable_balance_l10n_ec_report_handler" />
+        <field name="column_ids">
+            <record id="aged_receivable_report_ship_id_nsk" model="account.report.column">
+                <field name="name">Barco</field>
+                <field name="expression_label">ship_name</field>
+                <field name="sequence" eval="1" />
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_journey_crew_id_nsk" model="account.report.column">
+                <field name="name">Viaje</field>
+                <field name="expression_label">journey_crew</field>
+                <field name="sequence" eval="1" />
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_ata_nsk" model="account.report.column">
+                <field name="name">ATA</field>
+                <field name="expression_label">ata</field>
+                <field name="sequence" eval="1" />
+                <field name="figure_type">datetime</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_atd_date_nsk" model="account.report.column">
+                <field name="name">ATD</field>
+                <field name="expression_label">atd</field>
+                <field name="sequence" eval="1" />
+                <field name="figure_type">datetime</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_due_date_nsk" model="account.report.column">
+                <field name="name">Fecha de Vencimiento</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="sequence" eval="1" />
+                <field name="figure_type">date</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_due_days_nsk" model="account.report.column">
+                <field name="name">Días Vencido</field>
+                <field name="sequence" eval="2" />
+                <field name="expression_label">due_days</field>
+                <field name="sortable" eval="True" />
+                <field name="figure_type">integer</field>
+            </record>
+            <record id="aged_receivable_report_account_name_nsk" model="account.report.column">
+                <field name="name">Cuenta</field>
+                <field name="sequence" eval="3" />
+                <field name="expression_label">account_name</field>
+                <!-- TODO: Ya no existe el tipo none, en su lugar he dejado string -->
+                <!-- <field name="figure_type">none</field>-->
+                <field name="figure_type">string</field>
+            </record>
+            <record id="aged_receivable_report_expected_date_nsk" model="account.report.column">
+                <field name="name">Fecha Prevista</field>
+                <field name="sequence" eval="4" />
+                <field name="expression_label">expected_date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="aged_receivable_report_period0_nsk" model="account.report.column">
+                <field name="name">En Fecha</field>
+                <field name="sequence" eval="5" />
+                <field name="expression_label">period0</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_period1_nsk" model="account.report.column">
+                <field name="name">Vence (1-30)</field>
+                <field name="sequence" eval="6" />
+                <field name="expression_label">period1</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_period2_nsk" model="account.report.column">
+                <field name="name">Vence (31-60)</field>
+                <field name="sequence" eval="7" />
+                <field name="expression_label">period2</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_period3_nsk" model="account.report.column">
+                <field name="name">Vence (61-90)</field>
+                <field name="sequence" eval="8" />
+                <field name="expression_label">period3</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_period4_nsk" model="account.report.column">
+                <field name="name">Vence (91-120)</field>
+                <field name="sequence" eval="9" />
+                <field name="expression_label">period4</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_period5_nsk" model="account.report.column">
+                <field name="name">Más antiguos</field>
+                <field name="sequence" eval="10" />
+                <field name="expression_label">period5</field>
+                <field name="sortable" eval="True" />
+            </record>
+            <record id="aged_receivable_report_total_nsk" model="account.report.column">
+                <field name="name">Total</field>
+                <field name="sequence" eval="11" />
+                <field name="expression_label">total</field>
+                <field name="sortable" eval="True" />
+            </record>
+
+        </field>
+
+        <field name="line_ids">
+            <record id="aged_receivable_line_nsk" model="account.report.line">
+                <field name="name">Cuentas por Cobrar</field>
+                <field name="groupby">ship_name_id,partner_id,id</field>
+                <field name="expression_ids">
+
+                    <record id="aged_receivable_line_journey_crew_id_nsk" model="account.report.expression">
+                        <field name="label">journey_crew</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">journey_crew</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+
+                    <record id="aged_receivable_line_ship_id_nsk" model="account.report.expression">
+                        <field name="label">ship_name</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">ship_name</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+      
+                    <record id="aged_receivable_line_ata_nsk" model="account.report.expression">
+                        <field name="label">ata</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">ata</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_atd_nsk" model="account.report.expression">
+                        <field name="label">atd</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">atd</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_due_date_nsk" model="account.report.expression">
+                        <field name="label">invoice_date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">invoice_date</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_amount_currency_nsk"
+                        model="account.report.expression">
+                        <field name="label">amount_currency</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">amount_currency</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_amount_currency_forced_currency_nsk"
+                        model="account.report.expression">
+                        <field name="label">_currency_amount_currency</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">currency_id</field>
+                    </record>
+                    <record id="aged_receivable_line_currency_nsk" model="account.report.expression">
+                        <field name="label">currency</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">currency</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_account_name_nsk"
+                        model="account.report.expression">
+                        <field name="label">account_name</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">account_name</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_expected_date_nsk"
+                        model="account.report.expression">
+                        <field name="label">expected_date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">expected_date</field>
+                        <field name="auditable" eval="False" />
+                    </record>
+                    <record id="aged_receivable_line_period0_nsk" model="account.report.expression">
+                        <field name="label">period0</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period0</field>
+                    </record>
+                    <record id="aged_receivable_line_period1_nsk" model="account.report.expression">
+                        <field name="label">period1</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period1</field>
+                    </record>
+                    <record id="aged_receivable_line_due_days_nsk" model="account.report.expression">
+                        <field name="label">due_days</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">due_days</field>
+                    </record>
+                    <record id="aged_receivable_line_period2_nsk" model="account.report.expression">
+                        <field name="label">period2</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period2</field>
+                    </record>
+                    <record id="aged_receivable_line_period3_nsk" model="account.report.expression">
+                        <field name="label">period3</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period3</field>
+                    </record>
+                    <record id="aged_receivable_line_period4_nsk" model="account.report.expression">
+                        <field name="label">period4</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period4</field>
+                    </record>
+                    <record id="aged_receivable_line_period5_nsk" model="account.report.expression">
+                        <field name="label">period5</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">period5</field>
+                    </record>
+                    <record id="aged_receivable_line_total_nsk" model="account.report.expression">
+                        <field name="label">total</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">total</field>
+                    </record>
+                    <record id="ship_name_id_nsk" model="account.report.expression">
+                        <field name="label">ship_name_id</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_l10n_ec_aged_receivable_nsk</field>
+                        <field name="subformula">ship_name_id</field>
+                        <field name="auditable" eval="False" />
+
+                    </record>
+                </field>
+            </record>
+        </field>
+
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+  <record id="res_company_ship_form" model="ir.ui.view">
+    <field name="name">res.company.ship.form</field>
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='branches']" position="after">
+        <page string="Header Report">
+          <group>
+            <group>
+              <field name="image_1_header_report" widget="image" options="{'size':[0,90]}"/>
+            </group>
+            <group>
+              <field name="image_2_header_report" widget="image" options="{'size':[0,90]}"/>
+
+            </group>
+          </group>
+
+        </page>
+        <page name="sequences" string="Sequences">
+          <group name="gtrade_sequence_id" col="2">
+            <field name="trade_sequence_id"/>
+          </group>
+        </page>
+        <page name="reimbursements" string="Configuración de Reembolsos">
+          <group string="Valores por Defecto para Facturas de Reembolso">
+            <group>
+              <field name="reimbursement_journal_id"/>
+              <field name="reimbursement_document_type_id"/>
+            </group>
+            <group>
+              <field name="reimbursement_document_sustento"/>
+              <field name="reimbursement_payment_method_id"/>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

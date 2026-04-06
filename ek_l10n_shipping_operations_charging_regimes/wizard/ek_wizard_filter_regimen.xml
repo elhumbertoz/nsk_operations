@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ek_wizard_filter_regimen_form" model="ir.ui.view">
+        <field name="name">ek.wizard.filter.regimen.form</field>
+        <field name="model">ek.wizard.filter.regimen</field>
+        <field name="arch" type="xml">
+            <form string="Filter">
+                <group>
+                    <group>
+                        <field name="ek_regimen_table_id"/>
+                        <field name="ek_container_ids" widget="many2many_tags" />
+                        <field name="ek_id_bls" widget="many2many_tags"/>
+                    </group>
+                    <group>
+
+                    </group>   
+                </group>
+                <footer>
+                    <button
+                        name="create_wizard_charging"
+                        string="Generate"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_ek_wizard_filter_regimen" model="ir.actions.act_window">
+        <field name="name">Report Kardex</field>
+        <field name="res_model">ek.wizard.filter.regimen</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="ek_wizard_filter_regimen_form_menu"
+        parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+        action="action_ek_wizard_filter_regimen" />
+
+</odoo>

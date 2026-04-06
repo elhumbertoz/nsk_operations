@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dinardap_supercias_wizard_view_form" model="ir.ui.view">
+        <field name="name">dinardap.supercias.wizard.view.form</field>
+        <field name="model">dinardap.supercias.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <h5>
+                        <b>SE EXPORTARÁ LA INFORMACIÓN DE LA EMPRESA A LA QUE PERTENECE EL USUARIO ACTUAL</b>
+                    </h5>
+                </header>
+                <sheet>
+                    <group invisible="show_file == True">
+                        <group>
+                            <field name="show_file" invisible="1"/>
+                            <field name="type" invisible="show_file == True"/>
+                            <field name="start_date" invisible="type == 'cut_off_date' or show_file == True" required="type == 'date_range'"/>
+                            <field name="end_date"  invisible="show_file == True"/>
+                        </group>
+                        <group>
+                            <field name="company_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"  invisible="show_file == True"/>
+                        </group>
+                    </group>
+                    <group invisible="show_file == False">
+                        <separator string="Archivo generado correctamente, guárdelo en su ubicación de preferencia." colspan="4"/>
+                        <field name="fcname" invisible="1"/>
+                        <field name="data" filename="fcname" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_xlsx_report" string="Exportar informe en XLSX" type="object" class="btn-primary"
+                            icon="fa-download" data-hotkey="s"  invisible="show_file == True"
+                    />
+                    <button name="action_print_txt_report" string="Exportar informe en TXT" type="object" class="btn-primary"
+                            icon="fa-download" data-hotkey="t"  invisible="show_file == True"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z"  invisible="show_file == True"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dinardap_supercias_wizard_action" model="ir.actions.act_window">
+        <field name="name">Informe de Dinardap y SuperCias</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dinardap.supercias.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dinardap_supercias_wizard_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+            id="dinardap_supercias_report_menu"
+            name="Dinardap y SuperCias"
+            parent="ek_l10n_ec.menu_sri_reporting_annexes"
+            action="ek_l10n_ec.dinardap_supercias_wizard_action"
+            sequence="20"
+    />
+
+    <record id="dinardap_supercias_xlsx" model="ir.actions.report">
+        <field name="name">Informe de Dinardap y SuperCias</field>
+        <field name="model">dinardap.supercias.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ek_l10n_ec.dinardap_supercias</field>
+        <field name="report_file">ek_l10n_ec.dinardap_supercias</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

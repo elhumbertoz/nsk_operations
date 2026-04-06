@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- View account.reimbursement.document form -->
+  <record id="view_account_reimbursement_document_form" model="ir.ui.view">
+    <field name="name">view.account.reimbursement.document.form</field>
+    <field name="model">account.reimbursement.document</field>
+    <field name="inherit_id" ref="ek_l10n_ec.view_reimbursement_invoice"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='document_type_id']" position="after">
+        <field name="purchase_order_id" readonly="1" invisible="not purchase_order_id"/>
+        <field name="link_move_id" readonly="1" invisible="not link_move_id"/>
+      </xpath>
+
+      <xpath expr="//field[@name='document_type_id']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='partner_id']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='fechaEmisionReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='serie_entidad']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='serie_emision']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='num_secuencial']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='autorizacionReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='tax_id']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='baseImpGravReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='baseNoGraIvaReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='baseImpExeReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='montoIceRemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+
+      <xpath expr="//field[@name='montoIvaRemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+      <xpath expr="//field[@name='baseImponibleReemb']" position="attributes">
+        <attribute name="readonly">purchase_order_id or link_move_id</attribute>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Vista de árbol personalizada para documentos de reembolso -->
+  <record id="view_account_reimbursement_document_tree" model="ir.ui.view">
+    <field name="name">account.reimbursement.document.tree</field>
+    <field name="model">account.reimbursement.document</field>
+    <field name="arch" type="xml">
+      <tree string="Documentos de Reembolso">
+        <field name="document_type_id"/>
+        <field name="partner_id"/>
+        <field name="serie_entidad" string="Establecimiento"/>
+        <field name="serie_emision" string="Emisión"/>
+        <field name="num_secuencial"/>
+        <field name="fechaEmisionReemb" string="Fecha"/>
+        <field name="baseImponibleReemb" sum="Total" string="Tarifa IVA 0%"/>
+        <field name="baseImpGravReemb" sum="Total" string="IVA Diferente 0%"/>
+        <field name="baseNoGraIvaReemb" sum="Total" string="No grava IVA"/>
+        <field name="baseImpExeReemb" sum="Total" string="Tarifa Exento"/>
+        <field name="montoIceRemb" sum="Total ICE"/>
+        <field name="montoIvaRemb" sum="Total IVA"/>
+        <field name="total_amount" sum="Total General" string="Total"/>
+      </tree>
+    </field>
+  </record>
+
+</odoo>

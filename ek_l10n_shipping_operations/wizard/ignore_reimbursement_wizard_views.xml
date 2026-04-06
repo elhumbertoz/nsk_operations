@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Vista del wizard para ignorar productos de reembolso -->
+  <record id="view_ignore_reimbursement_wizard_form" model="ir.ui.view">
+    <field name="name">ignore.reimbursement.wizard.form</field>
+    <field name="model">ignore.reimbursement.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Razón para Ignorar Producto de Reembolso">
+        <!-- que ocupe todo el ancho de la pantalla -->
+        <group>
+          <field name="tracking_id" invisible="1"/>
+          <field name="reason_ignored" placeholder="Explique detalladamente por qué no se cobrará este reembolso al cliente..." nolabel="1" required="1" colspan="2"/>
+        </group>
+
+        <footer>
+          <button name="action_ignore" string="Ignorar Producto" type="object" class="btn-warning" icon="fa-ban"/>
+          <button string="Cancelar" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Acción del wizard -->
+  <record id="action_ignore_reimbursement_wizard" model="ir.actions.act_window">
+    <field name="name">Ignorar Producto de Reembolso</field>
+    <field name="res_model">ignore.reimbursement.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="view_id" ref="view_ignore_reimbursement_wizard_form"/>
+  </record>
+</odoo>

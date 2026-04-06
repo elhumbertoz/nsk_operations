@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="paperformat_kardex_shipping" model="report.paperformat">
+        <field name="name">A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">11</field>
+        <field name="margin_right">11</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+    <record id="report_action_kardex_container" model="ir.actions.report">
+        <field name="name">Reporte Kardex container</field>
+
+        <field name="model">ek.boats.information</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_template_kardex_container</field>
+        <field name="paperformat_id" ref="ek_l10n_shipping_operations_charging_regimes.paperformat_kardex_shipping"/>
+    </record>
+
+
+    <template id="report_template_kardex_container">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <h1 class="text-center">
+                            <strong>Kardex
+                                <span t-field="o.name"/>
+                            </strong>
+                        </h1>
+                    </div>
+                    <div>
+                        <h5 class="text-left">
+                            <u>Datos</u>
+                        </h5>
+                    </div>
+
+                    <br/>
+                    <div class="container-fluid">
+                        <table class="table-bordered" order="1" style="float: left;" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">H02. Subpartida</th>
+                                    <th class="text-center">Código complementario</th>
+                                    <th class="text-center">H04. Codigo suplementario</th>
+                                    <th class="text-center">H06. Descripcion</th>
+                                    <th class="text-center">H10. Peso neto</th>
+                                    <th class="text-center">H18. Cantidad de unidades fisicas</th>
+                                    <th class="text-center">H19. Tipo de unidad comercial</th>
+                                    <th class="text-center">H26. FOB unitario</th>
+                                    <th class="text-center">Total de FOB</th>
+                                    <th class="text-center">H34. Numero de factura</th>
+                                    <th class="text-center">H35. Nombre/razon social del proveedor</th>
+                                    <th class="text-center">BL</th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="l">
+                                    <t>
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-field="l.tariff_item"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.id_hs_copmt_cd"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.id_hs_spmt_cd"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.ek_requerid_burden_inter_nac_id.name"/>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <span t-field="l.gross_weight"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.quantity"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.uom_id.name"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.fob"/>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <span t-field="l.total_fob"/>
+                                            </td>
+
+
+                                            <td class="text-center">
+                                                <span t-field="l.invoice_number"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.supplier"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.id_bl.name"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

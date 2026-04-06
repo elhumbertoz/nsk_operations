@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[
+                           ('module', 'in', ('l10n_ec','l10n_latam_base')),
+                           ('name', 'in', ('ec_ruc','ec_dni','ec_passport','it_pass','it_vat','it_fid'))
+                           ]"
+                />
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <record id="l10n_ec.ec_ruc" model="l10n_latam.identification.type">
+            <field name="code_ats_sales">04</field>
+            <field name="code_ats_purchase">01</field>
+        </record>
+
+        <record id="l10n_ec.ec_dni" model="l10n_latam.identification.type">
+            <field name="code_ats_sales">05</field>
+            <field name="code_ats_purchase">02</field>
+        </record>
+
+        <record id="l10n_latam_base.it_pass" model="l10n_latam.identification.type">
+            <field name="code_ats_sales">06</field>
+            <field name="code_ats_purchase">03</field>
+        </record>
+
+        <record id="l10n_latam_base.it_vat" model="l10n_latam.identification.type">
+            <field name="code_ats_sales">06</field>
+            <field name="code_ats_purchase">03</field>
+        </record>
+
+        <record id="l10n_latam_base.it_fid" model="l10n_latam.identification.type">
+            <field name="code_ats_sales">06</field>
+            <field name="code_ats_purchase">03</field>
+        </record>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[
+                           ('module', 'in', ('l10n_ec','l10n_latam_base')),
+                           ('name', 'in', ('ec_ruc','ec_dni','ec_passport','it_pass','it_vat','it_fid'))
+                           ]"
+                />
+            </function>
+            <value eval="{'noupdate': True}"/>
+        </function>
+    </data>
+</odoo>
+

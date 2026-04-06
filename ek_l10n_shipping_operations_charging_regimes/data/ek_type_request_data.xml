@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+        <!-- Add you code here -->
+        <record id="type_request_01" model="ek.l10n.type.model.mixin">
+            <field name="name">EMISION DE BL EXPORTACION</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="code">001</field>
+        </record>
+        <record id="type_request_02" model="ek.l10n.type.model.mixin">
+            <field name="name">EMISION DE BL IMPORTACION - PESCA</field>
+            <field name="code">002</field>  
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>          
+        </record>
+        <record id="type_request_03" model="ek.l10n.type.model.mixin">
+            <field name="name">CORRECCION DE BL IMPORTACION - PESCA</field>   
+            <field name="code">003</field>   
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>      
+        </record>
+        <record id="type_request_04" model="ek.l10n.type.model.mixin">
+            <field name="name">RETIRO DE DESECHOS</field>   
+            <field name="code">004</field>      
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>   
+        </record>
+        <record id="type_request_05" model="ek.l10n.type.model.mixin">
+            <field name="name">RETIRO DE BIENES</field>
+            <field name="code">005</field>    
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>        
+        </record>
+        <record id="type_request_06" model="ek.l10n.type.model.mixin">
+            <field name="name">RÉGIMEN 70</field>      
+            <field name="use_in_regimen_70" eval="True"/>
+            <field name="change_state_travel_after_confirm">anotification</field> 
+            <field name="code">0070</field> 
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>         
+        </record>
+        <record id="type_request_12" model="ek.l10n.type.model.mixin">
+            <field name="name">SALIDA A RÉGIMEN 60</field>      
+            <field name="code">060</field> 
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>     
+        </record>
+        <record id="type_request_13" model="ek.l10n.type.model.mixin">
+            <field name="name">SALIDA RÉGIMEN 61 (REEXPORTACIÓN)</field> 
+            <field name="code">061</field>  
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>         
+        </record>
+        <record id="type_request_14" model="ek.l10n.type.model.mixin">
+            <field name="name">EMISIÓN DE GARANTÍA ADUANERA</field>          
+            <field name="code">006</field>  
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        </record>
+        <record id="type_request_15" model="ek.l10n.type.model.mixin">
+            <field name="name">SOLICITUD CREACIÓN DE BOOKING</field>  
+            <field name="code">007</field> 
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>           
+        </record>
+        <record id="type_request_16" model="ek.l10n.type.model.mixin">
+            <field name="name">SOLICITUD DE PROCESO - MUE CARGA EMERGENTE</field> 
+            <field name="code">008</field>   
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>        
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- View account.move form -->
+  <record id="view_account_move_form" model="ir.ui.view">
+    <field name="name">view.account.move.form</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="ek_l10n_ec.account_move_reimbursement_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='is_reimbursement_invoice']" position="after">
+        <div class="d-flex" style="gap: 5px;">
+          <!-- <div style="width: 130px; display: flex;">
+            <button name="%(action_ek_account_move_reimbursement_wizard)d" string="Reembolsos" type="action" class="btn-primary flex-fill" icon="fa-book" context="{'default_invoice_id': id}" invisible="state != 'draft'" help="Abre el cuadro de diálogo para agregar reembolsos disponibles del viaje"/>
+          </div> -->
+          <!-- <div style="width: 130px; display: flex;">
+            <button name="%(action_ek_purchase_reimbursement_wizard)d" string="Compras" type="action" class="btn-secondary flex-fill" icon="fa-money" context="{'default_invoice_id': id}" invisible="state != 'draft'"/>
+          </div> -->
+          <button name="action_sync_reimbursement_products" type="object" icon="fa-refresh" class="btn-secondary" invisible="not is_reimbursement_invoice or state != 'draft' or not reimbursement_ids" help="Elimina todas las líneas de productos y las vuelve a cargar desde los documentos a reembolsar"/>
+          <button name="%(action_ek_account_move_reimbursement_wizard)d" string="Facturas Relacionadas" type="action" class="btn-primary" icon="fa-money" context="{'default_invoice_id': id}" invisible="state != 'draft'" help="Abre el cuadro de diálogo para agregar reembolsos disponibles del viaje"/>
+          <button name="clear_reimbursement_records" type="object" class="btn-warning" icon="fa-trash" invisible="state != 'draft' or not reimbursement_ids" help="Elimina todos los registros de reembolso"/>
+        </div>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_account_invoice_reimbursed_filter" model="ir.ui.view">
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//filter[@name='to_check']" position="after">
+        <separator/>
+        <filter string="Por Reembolsar" name="to_be_reimbursed" domain="[('l10n_ec_to_be_reimbursed', '=', True),('reimbursed_move_id', '=', False)]"/>
+        <filter string="Reembolso en Proceso" name="proccess_reimbursed" domain="[('l10n_ec_to_be_reimbursed', '=', True),('reimbursed_move_id', '!=', False),('reimbursed_move_id.state', '=', 'draft')]"/>
+        <filter string="Reembolsados" name="has_reimbursed" domain="[('l10n_ec_to_be_reimbursed', '=', True),('reimbursed_move_id', '!=', False),('reimbursed_move_id.state', '=', 'posted')]"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_account_msg_move_form" model="ir.ui.view">
+    <field name="name">view.account.move.form</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//header" position="after">
+        <field name="reimbursed_move_id" invisible="1"/>
+        <div class="alert alert-info" role="alert" invisible="not reimbursed_move_id">
+                  Documento de reembolso vinculado: 
+          <field name="reimbursed_move_id" readonly="1"/>
+        </div>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_move_form_inherit_purchase_reimbursement" model="ir.ui.view">
+    <field name="name">account.move.form.inherit.purchase.reimbursement</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="ek_l10n_ec.account_move_reimbursement_form"/>
+    <field name="arch" type="xml">
+      <!-- Banner informativo de productos pendientes -->
+      <xpath expr="//field[@name='is_reimbursement_invoice']" position="after">
+        <field name="pending_products_info" invisible="not pending_products_info" nolabel="1"/>
+      </xpath>
+
+      <!-- Agregar columna de total en la lista de documentos -->
+      <xpath expr="//field[@name='reimbursement_ids']/tree/field[@name='fechaEmisionReemb']" position="after">
+        <field name="total_amount" string="Total"/>
+      </xpath>
+
+      <!-- Mover y dar formato al campo de total -->
+      <xpath expr="//field[@name='reimbursement_ids']" position="after">
+        <div class="oe_right">
+          <group class="oe_subtotal_footer oe_subtotal_footer_separator" name="reimbursement_total_group" invisible="not is_reimbursement_invoice" style="padding-top: 5px; width: 190px;">
+            <label for="reimbursement_total" string="Total"/>
+            <h3>
+              <field name="reimbursement_total" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </h3>
+          </group>
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>

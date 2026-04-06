@@ -1,0 +1,1049 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="table_regimen_60_search" model="ir.ui.view">
+    <field name="name">table.regimen.60.search</field>
+    <field name="model">table.regimen.60</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="ek_requerid_burden_inter_nac_id" />
+        <field name="tariff_item" />
+        <field name="invoice_number" />
+        <field name="supplier" />
+      </search>
+    </field>
+  </record>
+
+  <record id="table_regimen_60_tree" model="ir.ui.view">
+    <field name="name">table.regimen.60.tree</field>
+    <field name="model">table.regimen.60</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <header>
+          <button name="delete_table_60" type="object" string="Delete" class="btn-link mb-1 px-0" icon="fa-refresh" />
+        </header>
+        <field name="ek_operation_request_id" column_invisible="1" />
+        <field name="ek_product_packagens_goods_id" column_invisible="1" />
+        <field name="tariff_item" decoration-danger="quantity_hand == 0" />
+        <field name="name" column_invisible="1" decoration-danger="quantity_hand == 0" widget="text" />
+        <field name="id_hs_copmt_cd" column_invisible="1" />
+        <field name="id_hs_spmt_cd" column_invisible="1" />
+        <field name="ek_requerid_burden_inter_nac_id" decoration-danger="quantity_hand == 0" />
+        <field name="quantity" decoration-danger="quantity_hand == 0" />
+        <field name="gross_weight" decoration-danger="quantity_hand == 0" />
+        <field name="product_weight_in_lbs" decoration-danger="quantity_hand == 0" />
+        <field name="quantity_hand" decoration-danger="quantity_hand == 0" />
+      </tree>
+    </field>
+  </record>
+
+
+  <record id="view_ek_operation_request_form_inherit" model="ir.ui.view">
+    <field name="name">ek.operation.request.inherit</field>
+    <field name="model">ek.operation.request</field>
+    <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_operation_request_form" />
+    <field name="arch" type="xml">
+
+      <xpath expr="//field[@name='ek_group_mail_template_id']" position="after">
+        <field name="id_bl_70_ids" widget="many2many_tags" invisible="1" force_save="1" />
+        <label for="container_id" string="Container" invisible="not use_in_regimen_60" readonly="fold or confirm_stage or canceled_stage or readonly_mass" />
+        <div>
+          <field name="container_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" context="{'form_view_ref': 'ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form'}" readonly="fold or confirm_stage or canceled_stage or readonly_mass" invisible="not use_in_regimen_60" required="use_in_regimen_60" domain="[('assigned_regimen_70', '=', True), ('value_of_container', '>', 0)]" />
+          <field name="id_bl_70" invisible="not use_in_regimen_60" class="oe_inline" readonly="has_confirmed_type" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="use_in_regimen_60" />
+          <button name="onchange_type_id_regimen_60" type="object" string="Data" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="not use_in_regimen_60 or has_confirmed_type" />
+        </div>
+      </xpath>
+
+      <xpath expr="//field[@name='check_default']" position="before">
+        <field name="domain_bl_import_export" invisible="1" />
+        <field name="has_bl_import" invisible="1" />
+        <field name="has_bl_export" invisible="1" />
+        <br/>
+        <label for="bl_import_export_id" string="BL Export" invisible="not has_bl_export"/>
+        <div>
+          <field name="bl_import_export_id" class="oe_inline" invisible="not has_bl_export" readonly="fold or confirm_stage or canceled_stage or has_confirmed_type or validate_correction_request" domain="domain_bl_import_export" colspan="4" force_save="1" nolabel="1" options="{'no_edit': True, 'no_open': True}" context="{'default_ship_name_id': ek_ship_registration_id,'default_journey_crew_id': journey_crew_id ,'default_type': 'export'}" />
+          <button name="generate_sequence_bl_export" type="object" string="Generate Export" class="btn-link mb-1 px-0 oe_inline" icon="fa-refresh" invisible="not has_bl_export or fold or confirm_stage or canceled_stage or validate_correction_request" />
+        </div>
+        <br/>
+        <label for="bl_import_export_id2" string="BL Import" invisible="not has_bl_import"/>
+        <div>
+          <field name="bl_import_export_id2" class="oe_inline" domain="domain_bl_import_export" invisible="not has_bl_import" readonly="fold or confirm_stage or canceled_stage or has_confirmed_type or validate_correction_request" colspan="4" force_save="1" nolabel="1" options="{'no_edit': True, 'no_open': True}" context="{'default_ship_name_id': ek_ship_registration_id,'default_journey_crew_id': journey_crew_id,'default_type': 'import'}" />
+
+          <button name="generate_sequence_bl_import" type="object" string="Generate Import" class="btn-link mb-1 px-0 oe_inline" icon="fa-refresh" invisible="not has_bl_import or fold or confirm_stage or canceled_stage or validate_correction_request" />
+        </div>
+      </xpath>
+
+      <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+        <page string="Regimen 60" invisible="not use_in_regimen_60">
+          <field name="use_in_regimen_60" invisible="1" />
+          <field name="regime" invisible="1" />
+          <button name="action_fill_everything" type="object" string="To Remove all the Product at hand" class="btn btn-link p-0" icon="fa-hand-o-up" invisible="has_confirmed_type" />
+          <button name="refresh_regimen_60" type="object" string="Refresh" class="btn btn-link p-0" invisible="has_confirmed_type" icon="fa-refresh" />
+          <button name="open_search_modal_60" type="object" string="Search" class="btn btn-link p-0" invisible="has_confirmed_type" icon="fa-search" />
+          <field name="ek_table_regimen_60_ids" invisible="not use_in_regimen_60" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+            <tree editable="bottom">
+              <field name="ek_operation_request_id" column_invisible="1" />
+              <field name="ek_product_packagens_goods_id" column_invisible="1" />
+              <field name="tariff_item" decoration-danger="quantity_hand == 0" />
+              <field name="id_hs_copmt_cd" optional="hide" />
+              <field name="id_hs_spmt_cd" optional="hide" />
+              <field name="name" column_invisible="1" decoration-danger="quantity_hand == 0" widget="text" />
+              <field name="ek_requerid_burden_inter_nac_id" decoration-danger="quantity_hand == 0" />
+              <field name="quantity" decoration-danger="quantity_hand == 0" sum="total" />
+              <field name="gross_weight" decoration-danger="quantity_hand == 0" sum="total" />
+              <field name="product_weight_in_lbs" decoration-danger="quantity_hand == 0" />
+              <field name="fob" />
+              <field name="total_fob" />
+              <field name="invoice_number" optional="hide" />
+              <field name="supplier" optional="hide" />
+              <field name="quantity_hand" decoration-danger="quantity_hand == 0" />
+            </tree>
+          </field>
+        </page>
+
+        <page string="Paquetes y Mercancías" invisible="not regime in ['21','70','61']">
+          <div class="d-flex w-100 pb-2 gap-2 pb-0 col-6">
+            <group class="oe_inline flex-grow-1 mb-0 col-6">
+              <field name="id_bl" readonly="has_confirmed_type" />
+            </group>
+            <button name="action_open_wizard_export" type="object" class="btn btn-primary oe_inline justify-self-end" icon="fa-upload" invisible="ek_produc_packages_goods_ids" height="33px" />
+            <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
+          </div>
+          <!-- estadísticos de los paquetes y mercancías -->
+          <group col="1" class="d-flex" invisible="not ek_produc_packages_goods_ids">
+            <div class="row border border-secondary" style="border-radius: 3px; margin-right: 20px; margin-left: 0px; width: 100%; padding-top: 4px;">
+              <div class="oe_inline d-flex" style="gap: 5px;">
+                <span class="oe_inline text-muted">Líneas:</span>
+                <strong class="oe_inline">
+                  <field name="total_lines" />
+                </strong>
+              </div>
+              <div class="oe_inline d-flex" style="gap: 5px;">
+                <span class="oe_inline text-muted">Cantidades:</span>
+                <strong class="oe_inline">
+                  <field name="total_quantity" />
+                </strong>
+              </div>
+              <div class="oe_inline d-flex" style="gap: 5px;">
+                <span class="oe_inline text-muted">Peso Bruto:</span>
+                <strong class="oe_inline">
+                  <field name="total_gross_weight" />
+                </strong>
+              </div>
+              <div class="oe_inline d-flex" style="gap: 5px;">
+                <span class="oe_inline text-muted">FOB:</span>
+                <strong class="oe_inline">
+                  <field name="total_fob" />
+                </strong>
+              </div>
+              <div class="oe_inline d-flex" style="gap: 5px;">
+                <span class="oe_inline text-muted">Total FOB:</span>
+                <strong class="oe_inline">
+                  <field name="total_total_fob" />
+                </strong>
+              </div>
+            </div>
+          </group>
+
+          <field name="assigned_regimen_70" invisible="1" force_save="1" />
+          <field name="ek_produc_packages_goods_ids" invisible="not regime in ['21','70','61']" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+            <tree editable="bottom">
+              <field name="tariff_item" />
+              <field name="id_hs_copmt_cd" />
+              <field name="id_hs_spmt_cd" />
+              <field name="ek_requerid_burden_inter_nac_id" />
+              <field name="name" widget="text" />
+              <field name="quantity" sum="Total" />
+              <field name="gross_weight" sum="Total" />
+              <field name="product_weight_in_lbs" />
+              <field name="fob" sum="Total" />
+              <field name="total_fob" sum="Total" />
+              <field name="invoice_number" />
+              <field name="supplier" />
+            </tree>
+          </field>
+        </page>
+
+        <page string="Mapeo de Facturas" invisible="not regime in ['70']">
+          <div style="width: 100%; height: 1px;" invisible="not customs_agent_data_ids"></div>
+          <field name="invoice_ship_map_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+            <tree editable="bottom">
+              <field name="invoice_number"/>
+              <field name="supplier"/>
+              <field name="ship_id"/>
+            </tree>
+          </field>
+        </page>
+
+        <page string="Sincronizar productos" invisible="not regime in ['70']">
+          <!-- Importar acrchivo Excel -->
+          <div class="d-flex gap-1" style="width: 100%;">
+            <div class="d-flex gap-1">
+              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;">
+                <button name="%(action_ek_customs_import_wizard)d" type="action" class="btn-primary" icon="fa-upload"/>
+              </div>
+              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;" invisible="not customs_agent_data_ids">
+                <button name="action_clear_customs_data" type="object" class="btn-warning" icon="fa-trash" />
+              </div>
+              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;" invisible="not customs_agent_data_ids">
+                <button name="action_clear_customs_data" type="object" class="btn-secondary" icon="fa-download" />
+              </div>
+            </div>
+            <div id="customs_stats_alert" class="alert alert-info alert-dismissible oe-inline pe-2 mb-0" role="alert" style="width: 100%; height: 33px; min-width: 570px; padding-block: 6px;" invisible="not customs_agent_data_ids">
+              <div class="d-inline-block justify-content-between align-items-center m-0 gap-1" style="width: calc(100% - 20px);">
+                <div class="d-flex flex-fill align-items-center px-2 gap-4">
+                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
+                    <span class="oe_inline text-muted">Líneas:</span>
+                    <strong class="oe_inline">
+                      <field name="total_lines" />
+                      <span> líneas</span>
+                    </strong>
+                  </div>
+                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
+                    <span class="oe_inline text-muted">Coincidencias exactas:</span>
+                    <strong class="oe_inline">
+                      <field name="total_lines" />
+                    </strong>
+                  </div>
+                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
+                    <span class="oe_inline text-muted">Tolerantes:</span>
+                    <strong class="oe_inline">
+                      <field name="total_lines" />
+                    </strong>
+                  </div>
+                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
+                    <span class="oe_inline text-muted">Sin match:</span>
+                    <strong class="oe_inline">
+                      <field name="total_lines" />
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <a href="#" class="close d-inline-flex align-items-center" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none'; return false;">
+                <span aria-hidden="true">&#215;</span>
+              </a>
+            </div>
+          </div>
+          <div style="width: 100%; height: 10px;" invisible="not customs_agent_data_ids"></div>
+          <!-- Lista de datos importados -->
+          <field name="customs_agent_data_ids" nolabel="1">
+            <tree editable="bottom" decoration-success="match_status == 'exact'" decoration-warning="match_status == 'fuzzy'" decoration-danger="match_status == 'no_match'">
+              <field name="icl_pvdr_nm_01" string="Proveedor"/>
+              <field name="icl_item_inv_no" string="Factura"/>
+              <field name="icl_hs_part_cd" string="Subpartida"/>
+              <field name="icl_gds_desc_cn" string="Descripción"/>
+              <field name="icl_item_fobv_pr" string="FOB"/>
+              <field name="icl_phsc_pck_ut_co" string="Cantidad"/>
+              <field name="match_status" string="Estado"/>
+              <field name="match_percentage" string="% Similitud"/>
+              <field name="matched_product_id" string="Producto Matched"/>
+            </tree>
+          </field>
+        </page>
+
+        <page string="Acceso Portuario" invisible="not has_access_port">
+          <group string="Work Area" colspan="4" col="4" invisible="type_document_access in ['2']">
+          </group>
+          <group colspan="5" col="5" invisible="type_document_access in ['2']">
+            <group col="1">
+              <label for="has_pier_one" string="Dock #1" />
+              <div>
+                <field name="has_pier_one" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group col="1">
+              <label for="has_pier_two" string="Dock #2" />
+              <div>
+                <field name="has_pier_two" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group col="1">
+              <label for="has_yard" string="Yard" />
+              <div>
+                <field name="has_yard" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group col="1">
+              <label for="has_ship" string="Ship" />
+              <div>
+                <field name="has_ship" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group col="1" invisible="not is_marginal_dock_setting">
+              <label for="has_marginal_dock" string="Marginal Dock" />
+              <div>
+                <field name="has_marginal_dock" nolabel="1" widget="boolean_toggle" class="oe_inline" invisible="not is_marginal_dock_setting" readonly="0" />
+              </div>
+            </group>
+          </group>
+
+          <group>
+            <group>
+              <field name="char_name_buquer" readonly="0" />
+            </group>
+            <group>
+              <field name="reason_report" readonly="0" />
+            </group>
+          </group>
+          <group invisible="type_document_access in ['1']">
+            <group>
+              <field name="blue_tip_dock" widget="boolean_toggle" readonly="0" />
+            </group>
+            <group>
+              <field name="maintenance_area_report" widget="boolean_toggle" readonly="0" />
+            </group>
+          </group>
+
+          <group>
+            <group>
+              <field name="permanence_period" readonly="0" />
+            </group>
+            <group>
+              <field name="end_period" readonly="0" />
+              <field name="estimated_actual_date" readonly="0" />
+              <field name="duration" readonly="0" />
+            </group>
+          </group>
+
+          <field name="ek_acces_port_table_float_ids" readonly="0">
+            <tree editable="bottom">
+              <field name="name" force_save="1" column_invisible="1" />
+              <field name="res_partner_id" force_save="1" required="1" />
+              <field name="dni_passport" force_save="1" />
+              <field name="function" force_save="1" />
+              <field name="fleet_vehicle_ids" widget="many2many_tags" />
+            </tree>
+          </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="ek_operation_request_form_reandoly" model="ir.ui.view">
+    <field name="name">ek.operation.request.form</field>
+    <field name="model">ek.operation.request</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <field name="stage_id" widget="statusbar_duration" options="{'clickable': false, 'fold_field': 'fold'}" />
+        </header>
+        <div class="alert alert-warning" role="alert" invisible="not messege_war_doc">
+          This request has a practical mode ship, verify and validate the TRB Y TRN before
+          CONFIRMING the request
+        </div>
+        <sheet>
+          <widget name="web_ribbon" title="En Proceso" bg_color="bg-danger" invisible="not processing_status == 'developing'" />
+          <widget name="web_ribbon" title="Realizado" bg_color="bg-warning" invisible="not processing_status == 'done'" />
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="#Doc Internal" readonly="1" />
+            </h1>
+          </div>
+          <!-- INICIO INVISIBLE -->
+          <field name="crew_pay" force_save="1" invisible="1" />
+          <field name="is_analytic_account" force_save="1" invisible="1" />
+          <field name="is_agent_naviero" force_save="1" invisible="1" />
+          <field name="is_obligator_document" force_save="1" invisible="1" />
+          <field name="is_service_request" force_save="1" invisible="1" />
+          <field name="amount" force_save="1" invisible="1" />
+          <field name="ek_template_py3o_ids" invisible="1" force_save="1" />
+          <field name="ek_report_stages_mixin_ids" force_save="1" invisible="1" />
+          <field name="send_to_sign_report" invisible="1" force_save="1" />
+          <field name="download_report" invisible="1" force_save="1" />
+          <field name="show_button_copy" invisible="1" force_save="1" />
+          <field name="is_service_refunf" invisible="1" force_save="1" />
+          <field name="is_request_assignable" invisible="1" force_save="1" />
+          <field name="type_event_boot" invisible="1" force_save="1" />
+          <field name="type_event" invisible="1" force_save="1" />
+          <field name="is_separate" invisible="1" force_save="1" />
+          <field name="has_crew" invisible="1" force_save="1" />
+          <field name="has_service_maneuver" invisible="1" force_save="1" />
+          <field name="has_data_requeried_n_i" invisible="1" force_save="1" />
+          <field name="has_operator" invisible="1" force_save="1" />
+          <field name="has_data_zarpe" invisible="1" force_save="1" />
+          <field name="has_data_cargo" invisible="1" force_save="1" />
+          <field name="is_marginal_dock_setting" invisible="1" force_save="1" />
+          <field name="has_access_port" invisible="1" force_save="1" />
+          <field name="type_document_access" invisible="1" force_save="1" />
+          <field name="calculation_day_or_hours" invisible="1" force_save="1" />
+          <field name="search_by_authorization" invisible="1" force_save="1" />
+          <field name="has_notification" invisible="1" force_save="1" />
+          <field name="has_documents_notification" invisible="1" force_save="1" />
+          <field name="has_report_capitana" invisible="1" force_save="1" />
+          <field name="processing_status" required="1" invisible="1" force_save="1" />
+          <field name="send_email" invisible="1" force_save="1" />
+          <field name="commission" invisible="1" force_save="1" />
+          <field name="has_commission" invisible="1" force_save="1" />
+          <field name="is_capital_port" invisible="1" force_save="1" />
+          <field name="not_controlling_weight" widget="boolean_toggle" invisible="1" force_save="1" />
+          <field name="has_mrn_number" invisible="1" force_save="1" />
+          <field name="messege_war_doc" invisible="1" force_save="1" />
+          <field name="assigned_regimen_70" invisible="1" force_save="1" />
+          <field name="has_detail_items" widget="boolean_toggle" force_save="1" invisible="1" />
+          <field name="total_fuel" invisible="1" />
+          <field name="total_gasoline" invisible="1" />
+          <field name="total_water" invisible="1" />
+          <field name="block_user_asig" invisible="1" force_save="1" />
+          <field name="ek_user_groups_reminder_ids" invisible="1" force_save="1" />
+          <field name="processo_notification" invisible="1" force_save="1" />
+          <field name="is_dock_space_expansion" invisible="1" force_save="1" />
+          <field name="has_passanger" invisible="1" force_save="1" />
+          <field name="ek_res_partner_id_certificate_ids" invisible="1" force_save="1" />
+          <field name="display_dinamic_field" invisible="1" force_save="1" />
+          <field name="has_trade_numeber" invisible="1" force_save="1" />
+          <field name="has_confirmed_type" invisible="1" force_save="1" />
+          <field name="readonly_mass" invisible="1" />
+          <!-- FIN INVISIBLE -->
+          <group>
+            <group>
+              <field name="stage_id" invisible="1" />
+              <field name="fold" invisible="1" />
+              <field name="confirm_stage" invisible="1" />
+              <field name="canceled_stage" invisible="1" />
+              <field name="ek_ship_registration_id" required="1" readonly="0" options="{'no_edit': True, 'no_create': True, 'no_open': True}" domain="[]" />
+              <field name="res_partner_id" required="1" readonly="0" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+              <field name="journey_crew_id" required="1" readonly="0" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+              <!-- <field name="ek_type_request_id" force_save="1" readonly="0" domain="[('use_in_regimen_70','=',assigned_regimen_70)]" /> -->
+              <field name="type_id" force_save="1" required="1" readonly="block_type" domain="[('use_in_regimen_70','=',assigned_regimen_70),('ir_form_view','!=',False),'|',('ship_ids','in',ek_ship_registration_id),('ship_ids','=',False)]" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+              <field name="fold" invisible="1" />
+              <field name="block_type" invisible="1" />
+              <field name="parent_id" invisible="not parent_id" readonly="1" />
+              <field name="report_tr_n_n" invisible="not messege_war_doc" readonly="0" />
+              <field name="supplier_id" force_save="1" readonly="0" invisible="not is_capital_port" required="is_capital_port" />
+              <!-- nuevo -->
+              <!-- aduana inicio -->
+              <label for="ek_manifest_record_id" string="MRN" invisible="not has_mrn_number" required="has_mrn_number" readonly="0" />
+              <div invisible="not has_mrn_number">
+                <field name="ek_manifest_record_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" invisible="0" string="MRN" readonly="ek_manifest_record_id or  0" context="{'default_ek_ship_registration_id': ek_ship_registration_id,'default_journey_crew_id': journey_crew_id }" />
+                <button name="generate_sequence_manifest" type="object" string="Generate" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="ek_manifest_record_id" />
+              </div>
+              <label for="ek_manifest_record_id" string="MRN" invisible="not has_mrn_number" required="has_mrn_number" readonly="0" />
+              <!-- aduana fin -->
+              <field name="ek_group_mail_template_id" invisible="not send_email" />
+              <field name="id_bl_70_ids" widget="many2many_tags" invisible="1" force_save="1" />
+              <label for="container_id" string="Container" invisible="not use_in_regimen_60" readonly="fold or confirm_stage or canceled_stage" />
+              <div>
+                <field name="container_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" context="{'form_view_ref': 'ek_l10n_shipping_operations_charging_regimes.view_ek_boats_information_regimens_form'}" readonly="fold or confirm_stage or canceled_stage or has_confirmed_type" invisible="not use_in_regimen_60" required="use_in_regimen_60" domain="[('assigned_regimen_70', '=', True), ('value_of_container', '>', 0)]" />
+                <field name="id_bl_70" invisible="not use_in_regimen_60" class="oe_inline" readonly="has_confirmed_type" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="use_in_regimen_60" />
+                <button name="onchange_type_id_regimen_60" type="object" string="Data" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="not use_in_regimen_60 or has_confirmed_type" />
+              </div>
+            </group>
+            <group>
+              <field name="create_date" readonly="1" />
+              <field name="city_id" required="1" readonly="0" />
+              <field name="ek_template_py3o_id" readonly="0" invisible="not (send_to_sign_report or download_report)" />
+              <label for="agent_user_id" string="Agent" invisible="not is_agent_naviero" readonly="0" />
+              <div>
+                <field name="agent_user_id" class="oe_inline" colspan="4" force_save="1" nolabel="1" options="{'no_create':True,'no_open':True}" readonly="0" invisible="not is_agent_naviero" />
+                <button name="ek_assignable_user_request" type="object" string="Assign a User" class="btn-link mb-1 px-0" icon="fa-refresh" invisible="not is_agent_naviero" />
+              </div>
+              <field name="company_id" groups="base.group_multi_company" />
+              <field name="check_default" invisible="True" />
+            </group>
+          </group>
+
+          <group string="Calculation data in days or hours" invisible="not calculation_day_or_hours">
+            <group>
+              <field name="start_date_calculate" readonly="0" />
+              <field name="end_date_calculate" readonly="0" />
+              <field name="next_extended_date" readonly="0" />
+            </group>
+            <group>
+              <field name="calcule_days" readonly="0" />
+              <field name="calcule_hours" widget="float_time" readonly="0" />
+              <field name="extended_hours" widget="float_time" readonly="0" />
+              <field name="total_hours_used" widget="float_time" readonly="0" />
+            </group>
+          </group>
+          <group>
+            <group string="Crew Pay" invisible="not crew_pay">
+              <group>
+                <field name="value_receive" readonly="0" />
+                <field name="quantity_bonus" invisible="not value_receive > 0" readonly="0" />
+                <field name="fishing_balance" invisible="not value_receive > 0" readonly="0" />
+              </group>
+              <field name="notes_pay_crew" invisible="not value_receive > 0" readonly="0" placeholder="Detail" />
+
+            </group>
+            <group string="Date Arribo" invisible="not eta or not type_event_boot">
+              <field name="eta" readonly="0" />
+              <field name="ata" readonly="0" />
+              <label for="fuel" string="Fuel" readonly="0" />
+              <div>
+                <field name="fuel" force_save="1" class="oe_inline" readonly="0" />
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+              <label for="gasoline" string="Gasoline" />
+              <div>
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="0" />
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+              <label for="water" string="Water" />
+              <div>
+                <field name="water" force_save="1" class="oe_inline" readonly="0" />
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group string="Date Zarpe" invisible="not etd or not type_event_boot">
+              <field name="etd" readonly="0" />
+              <field name="atd" readonly="0" />
+              <label for="fuel" string="Fuel" readonly="0" />
+              <div>
+                <field name="fuel" force_save="1" class="oe_inline" readonly="0" />
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+              <label for="gasoline" string="Gasoline" />
+              <div>
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="0" />
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+
+              <label for="water" string="Water" />
+              <div>
+                <field name="water" force_save="1" class="oe_inline" readonly="0" />
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+          </group>
+
+          <group>
+            <group invisible="not type_event_boot in ['zarpe'] ">
+              <separator string="Fuel" colspan="2" />
+              <field name="ek_table_fuel_ids" nolabel="1" readonly="0" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+              <separator string="Gasoline" colspan="2" />
+              <field name="ek_table_gasoline_ids" nolabel="1" readonly="0" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+              <separator string="Water" colspan="2" />
+              <field name="ek_table_water_ids" nolabel="1" readonly="0" colspan="2">
+                <tree editable="bottom">
+                  <field name="name" string="Guia" required="1" />
+                  <field name="date" />
+                  <field name="quantity" sum="Total" />
+                </tree>
+              </field>
+            </group>
+            <group string="Authorized Pourtario Operators" invisible="not display_dinamic_field or not display_dinamic_field.get('show_ek_authorized_pourtario_operators_table_ids',False)">
+              <field name="ek_authorized_pourtario_operators_table_ids" nolabel="1" readonly="0" colspan="2">
+                <tree editable="bottom">
+                  <field name="res_partner_id" required="1" />
+                  <field name="ek_type_service_boat_ids" widget="many2many_tags" required="1" />
+                </tree>
+              </field>
+            </group>
+          </group>
+          <group name="dinamic_view" col="2">
+            <!-- Dinamic view display, don't not delete -->
+          </group>
+          <notebook>
+            <page string="Service" invisible="not stage_id in stage_service_ids">
+              <field name="stage_service_ids" invisible="1" />
+              <field name="ek_service_request_line_ids">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" colspan="2" />
+                  <field name="product_qty" force_save="1" optional="hide" colspan="1"/>
+                  <field name="price_unit" optional="hide" colspan="1" force_save="1" />
+                  <field name="edit_price" column_invisible="1" force_save="1" />
+                  <field name="product_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" optional="hide" force_save="1" colspan="2" />
+                </tree>
+              </field>
+            </page>
+            <page string="Refunf" invisible="not stage_id in stage_refund_ids">
+              <field name="stage_refund_ids" invisible="1" />
+              <field name="product_ids">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" colspan="2" />
+                  <field name="product_qty" colspan="1" optional="hide" force_save="1" />
+                  <field name="price_unit" colspan="1" force_save="1" />
+                  <field name="supplier_id" force_save="1" optional="hide" colspan="2"/>
+                  <field name="edit_price" column_invisible="1" force_save="1" />
+                  <field name="product_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" force_save="1" colspan="2" optional="hide" />
+                </tree>
+              </field>
+            </page>
+            <page string="List" invisible="not has_crew">
+              <field name="crew_ids" readonly="0">
+                <tree string="Contacts" sample="1" multi_edit="1" editable="bottom">
+                  <field name="name" string="Name" force_save="1" readonly="name" required="1" />
+                  <field name="vat" string="ID or Passport" force_save="1" readonly="1" />
+                  <field name="ek_crew_member_hierarchy_title_id" readonly="1" force_save="1" string="Title" />
+                  <field name="ek_crew_member_hierarchy_id" force_save="1" string="Plaza" />
+                  <field name="nationality_id" force_save="1" />
+                  <field name="used_crew_member_ids" column_invisible="1" force_save="1" />
+                  <field name="ek_academic_courses_ids" column_invisible="1" force_save="1" />
+                </tree>
+              </field>
+            </page>
+            <page string="Service or Maneuver Data" invisible="not has_service_maneuver">
+              <group string="" colspan="4" col="4">
+                <field name="day_hour_eta" readonly="0" />
+              </group>
+              <group colspan="4" col="4">
+                <group col="1">
+                  <label for="eta_maneuvers" string="E.T.A." />
+                  <div>
+                    <field name="eta_maneuvers" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="etd_maneuvers" string="E.T.D." />
+                  <div>
+                    <field name="etd_maneuvers" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="mrn_imp" string="MRN IMP:" />
+                  <div>
+                    <field name="mrn_imp" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="mrn_imp" string="MRN EXP:" />
+                  <div>
+                    <field name="mrn_exp" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+              </group>
+              <group string="" colspan="4" col="4">
+              </group>
+              <group colspan="6" col="6">
+                <group col="1">
+                  <label for="has_embark" string="Embark" />
+                  <div>
+                    <field name="has_embark" nolabel="1" widget="boolean_toggle" readonly="0" class="oe_inline" />
+                    <field name="day_embark" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_discharge" string="Discharge" />
+                  <div>
+                    <field name="has_discharge" nolabel="1" readonly="0" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_discharge" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_maintenance" string="Maintenance" />
+                  <div>
+                    <field name="has_maintenance" nolabel="1" readonly="0" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_maintenance" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_provision" string="Provision" />
+                  <div>
+                    <field name="has_provision" nolabel="1" readonly="0" widget="boolean_toggle" class="oe_inline" />
+                    <field name="day_provision" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_fondeo" string="Fondeo" />
+                  <div>
+                    <field name="has_fondeo" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                    <field name="day_fondeo" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="others_services" string="Others" />
+                  <div>
+                    <field name="others_services" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                    <field name="day_others" nolabel="1" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+              </group>
+            </page>
+            <page string="Data Required for National and International cargo" invisible="not has_data_requeried_n_i">
+              <field name="ek_requerid_burden_n_i_ids" readonly="0">
+                <tree editable="bottom">
+                  <field name="product_id" required="1" />
+                  <field name="customer_consignment" />
+                  <field name="tm" />
+                  <field name="n_bl" />
+                  <field name="senae_authorization" />
+                  <field name="dae_authorization" />
+                </tree>
+              </field>
+            </page>
+            <page string="Operator" invisible="not has_operator">
+              <group string="" colspan="4" col="4">
+              </group>
+              <group>
+                <group string=" ">
+                  <field string="Cargo Operator" name="cargo_operator1" widget="many2many_tags" readonly="0" />
+                </group>
+                <group string=" ">
+                  <field string=" " name="cargo_operator2" widget="many2many_tags" readonly="0" />
+                </group>
+              </group>
+              <group string="Related Rervice Operator" colspan="4" col="4">
+              </group>
+              <group>
+                <group>
+                  <field name="validity_and_physical_security" widget="many2many_tags" readonly="0" />
+                  <field name="solid_waste_management" widget="many2many_tags" readonly="0" />
+                  <field name="fumigation" widget="many2many_tags" readonly="0" />
+                  <field name="water_supply" widget="many2many_tags" readonly="0" />
+                  <field name="approve_fuel_per_tank_car" widget="many2many_tags" readonly="0" />
+                  <field name="Approve_Provisions" widget="many2many_tags" readonly="0" />
+                  <field name="provision_equipment_spare_parts" readonly="0" widget="many2many_tags" />
+                </group>
+                <group>
+                  <field name="supply_provision" widget="many2many_tags" readonly="0" />
+                  <field name="equipment_inspection" widget="many2many_tags" readonly="0" />
+                  <field name="recharge_against_fire" widget="many2many_tags" readonly="0" />
+                  <field name="recharge_maintain_against_fire" widget="many2many_tags" />
+                  <field name="repair_maintain_nets_fishing" widget="many2many_tags" readonly="0" />
+                  <field name="life_raft_service" widget="many2many_tags" readonly="0" />
+                  <field name="salt" widget="many2many_tags" readonly="0" />
+                  <field name="others_operators" widget="many2many_tags" readonly="0" />
+                </group>
+              </group>
+            </page>
+            <page string="Data Zarpe" invisible="not has_data_zarpe">
+              <group>
+                <group>
+                  <field name="datatime_request_practical" readonly="0" />
+                  <field name="name_capital_practico" readonly="0" />
+                </group>
+                <group>
+                  <field name="datatime_real_dear" readonly="0" />
+                </group>
+              </group>
+            </page>
+            <page string="Data Cargo" invisible="not has_data_cargo">
+              <group>
+                <group>
+                  <field name="mrn_exit" readonly="0" />
+                  <field name="mrn_arribal" readonly="0" />
+                  <field name="code_operator_ship" readonly="0" />
+                </group>
+                <group />
+              </group>
+            </page>
+            <page string="Paquetes y Mercancías" invisible="not has_access_port">
+              <group string="Work Area" colspan="4" col="4" invisible="type_document_access in ['2']">
+              </group>
+              <group colspan="5" col="5" invisible="type_document_access in ['2']">
+                <group col="1">
+                  <label for="has_pier_one" string="Dock #1" />
+                  <div>
+                    <field name="has_pier_one" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_pier_two" string="Dock #2" />
+                  <div>
+                    <field name="has_pier_two" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_yard" string="Yard" />
+                  <div>
+                    <field name="has_yard" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1">
+                  <label for="has_ship" string="Ship" />
+                  <div>
+                    <field name="has_ship" nolabel="1" widget="boolean_toggle" class="oe_inline" readonly="0" />
+                  </div>
+                </group>
+                <group col="1" invisible="not is_marginal_dock_setting">
+                  <label for="has_marginal_dock" string="Marginal Dock" />
+                  <div>
+                    <field name="has_marginal_dock" nolabel="1" widget="boolean_toggle" class="oe_inline" invisible="not is_marginal_dock_setting" readonly="0" />
+                  </div>
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="char_name_buquer" readonly="0" />
+                </group>
+                <group>
+                  <field name="reason_report" readonly="0" />
+                </group>
+              </group>
+              <group invisible="type_document_access in ['1']">
+                <group>
+                  <field name="blue_tip_dock" widget="boolean_toggle" readonly="0" />
+                </group>
+                <group>
+                  <field name="maintenance_area_report" widget="boolean_toggle" readonly="0" />
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="permanence_period" readonly="0" />
+                </group>
+                <group>
+                  <field name="end_period" readonly="0" />
+                  <field name="estimated_actual_date" readonly="0" />
+                  <field name="duration" readonly="0" />
+                </group>
+              </group>
+              <field name="ek_acces_port_table_float_ids" readonly="0">
+                <tree editable="bottom">
+                  <field name="name" force_save="1" column_invisible="1" />
+                  <field name="res_partner_id" force_save="1" required="1" />
+                  <field name="dni_passport" force_save="1" />
+                  <field name="function" force_save="1" />
+                  <field name="fleet_vehicle_ids" widget="many2many_tags" />
+                </tree>
+              </field>
+            </page>
+            <page string="Dock Space Expansion" invisible="not is_dock_space_expansion">
+              <group>
+                <group>
+                  <field name="has_availability" widget="boolean_toggle" readonly="0" />
+                  <field name="permanence_period" readonly="0" />
+                </group>
+                <group>
+                  <field name="has_extension" widget="boolean_toggle" readonly="0" />
+                  <field name="end_period" readonly="0" />
+                  <field name="estimated_actual_date" readonly="0" />
+                  <field name="duration" readonly="0" />
+                  <field name="ek_assignment_number_rp" readonly="0" />
+                </group>
+              </group>
+              <group>
+                <group>
+                  <field name="ek_res_partner_id_certificate_id" readonly="0" />
+                </group>
+                <group>
+                  <field name="responsible_people_id" readonly="0" />
+                  <field name="financial_chief" readonly="0" />
+                </group>
+              </group>
+              <field name="ek_authorized_pourtario_operators_table_ids" readonly="0">
+                <tree editable="bottom">
+                  <field name="res_partner_id" required="1" />
+                  <field name="ek_type_service_boat_ids" widget="many2many_tags" />
+                  <field name="ek_type_boat_operators_ids" widget="many2many_tags" />
+                  <field name="registration_number_opc" />
+                </tree>
+              </field>
+            </page>
+            <page string="Documentos" invisible="not has_documents_notification">
+              <field name="ek_management_document_ids" invisible="not has_documents_notification" readonly="0">
+                <tree editable="bottom">
+                  <field name="name" required="1" />
+                  <field name="date_start" required="1" />
+                  <field name="date_end" required="1" />
+                  <field name="document_status" force_save="1" required="1" />
+                  <field name="has_requires_reminder" widget="boolean_toggle" />
+                </tree>
+              </field>
+            </page>
+            <page string="Passenger" invisible="not has_passanger">
+              <field name="ship_passenger" readonly="0">
+                <tree>
+                  <field name="name" required="1" />
+                  <field name="l10n_ec_birthdate" />
+                  <field name="nationality_id" />
+                  <field name="l10n_latam_identification_type_id" />
+                  <field name="vat" />
+                </tree>
+              </field>
+            </page>
+            <page string="Report for Captaincy" invisible="not has_report_capitana">
+              <field name="ek_service_request_report_line_ids" readonly="0">
+                <tree editable="bottom">
+                  <field name="name" />
+                </tree>
+              </field>
+            </page>
+            <page string="Table Pay" invisible="not crew_pay">
+              <field name="ek_table_pay_crew_ids" force_save="1" readonly="0">
+                <tree editable="bottom">
+                  <field name="name" required="1" readonly="name" force_save="1" />
+                  <field name="beneficiary" force_save="1" />
+                  <field name="vat" readonly="vat" force_save="1" />
+                  <field name="ek_crew_member_hierarchy_title_id" force_save="1" readonly="ek_crew_member_hierarchy_title_id" />
+                  <field name="ek_crew_member_hierarchy_id" force_save="1" />
+                  <field name="nationality_id" readonly="nationality_id" force_save="1" />
+                  <field name="v_unitary" force_save="1" />
+                  <field name="amount" force_save="1" />
+                  <field name="gross_total" force_save="1" sum="Total" />
+                  <field name="discount" force_save="1" sum="Total" />
+                  <field name="total_liquidation" force_save="1" sum="Total" />
+                  <field name="date" force_save="1" />
+                  <field name="document" force_save="1" />
+                  <field name="detail" force_save="1" />
+                  <field name="used_crew_ids" column_invisible="1" force_save="1" />
+                </tree>
+              </field>
+            </page>
+            <page string="Charge" invisible="not not_controlling_weight">
+              <field name="ek_produc_packages_goods_ids" readonly="0">
+                <tree editable="bottom">
+                  <field name="ek_requerid_burden_inter_nac_id" required="1" />
+                  <field name="name" widget="text" />
+                  <field name="quantity" />
+                </tree>
+              </field>
+            </page>
+            <page string="Trade Number" invisible="not has_trade_numeber">
+              <button name="generate_manual_trade_number" invisible="fold" string="Generate Manual Trade Number" type="object" icon="fa-file-text-o" />
+              <field name="shipping_trade_numbers_ids">
+                <tree>
+                  <field name="name" />
+                  <field name="ship_registration_id" optional="hide" />
+                  <field name="boats_information_id" optional="hide" />
+                  <field name="request_id" />
+                  <field name="type_id" optional="hide" />
+                  <field name="stage_id" optional="hide" />
+                  <field name="user_id" />
+                  <field name="date" />
+                  <field name="note" optional="hide" />
+                </tree>
+              </field>
+            </page>
+            <page string="Regimen 60" invisible="not use_in_regimen_60">
+              <field name="use_in_regimen_60" invisible="1" />
+              <field name="regime" invisible="1" />
+              <button name="action_fill_everything" type="object" string="To Remove all the Product at hand" class="btn btn-link p-0" icon="fa-hand-o-up" invisible="has_confirmed_type" />
+              <button name="refresh_regimen_60" type="object" string="Refresh" class="btn btn-link p-0" invisible="has_confirmed_type" icon="fa-refresh" />
+              <button name="open_search_modal_60" type="object" string="Search" class="btn btn-link p-0" invisible="has_confirmed_type" icon="fa-search" />
+              <field name="ek_table_regimen_60_ids" invisible="not use_in_regimen_60" readonly="fold or confirm_stage  or canceled_stage">
+                <tree editable="bottom">
+                  <field name="ek_operation_request_id" column_invisible="1" />
+                  <field name="ek_product_packagens_goods_id" column_invisible="1" />
+                  <field name="tariff_item" decoration-danger="quantity_hand == 0" />
+                  <field name="id_hs_copmt_cd" optional="hide" />
+                  <field name="id_hs_spmt_cd" optional="hide" />
+
+                  <field name="name" column_invisible="1" decoration-danger="quantity_hand == 0" widget="text" />
+                  <field name="ek_requerid_burden_inter_nac_id" decoration-danger="quantity_hand == 0" />
+                  <field name="quantity" decoration-danger="quantity_hand == 0" sum="total" />
+                  <field name="gross_weight" decoration-danger="quantity_hand == 0" sum="total" />
+                  <field name="product_weight_in_lbs" decoration-danger="quantity_hand == 0" />
+                  <field name="fob" />
+                  <field name="total_fob" />
+                  <field name="invoice_number" optional="hide" />
+                  <field name="supplier" optional="hide" />
+                  <field name="quantity_hand" decoration-danger="quantity_hand == 0" />
+                </tree>
+              </field>
+            </page>
+
+            <page string="Paquetes y Mercancías" invisible="not regime in ['21','70','61']">
+              <group>
+                <group>
+                  <button name="action_open_wizard_export" type="object" string="Import Documents" class="btn btn-link p-0" icon="fa-file-excel-o" invisible="not regime in ['21','70','61'] or ek_produc_packages_goods_ids" />
+                </group>
+                <group>
+                  <field name="id_bl" readonly="has_confirmed_type" invisible="not assigned_regimen_70" />
+                </group>
+              </group>
+              <field name="assigned_regimen_70" invisible="1" force_save="1" />
+
+
+
+              <field name="ek_produc_packages_goods_ids" invisible="not regime in ['21','70','61']" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
+                <tree editable="bottom">
+                  <field name="tariff_item" />
+                  <field name="id_hs_copmt_cd" />
+                  <field name="id_hs_spmt_cd" />
+                  <field name="ek_requerid_burden_inter_nac_id" />
+                  <field name="name" widget="text" />
+                  <field name="quantity" sum="Total" />
+                  <field name="gross_weight" sum="Total" />
+                  <field name="product_weight_in_lbs" />
+                  <field name="fob" sum="Total" />
+                  <field name="total_fob" sum="Total" />
+                  <field name="invoice_number" />
+                  <field name="supplier" />
+                </tree>
+              </field>
+              <!-- Totales de la tabla de paquetes y mercancías -->
+              <group name="packages_goods_totals" col="6" class="mt-2 mt-md-0" invisible="not regime in ['21','70','61'] or not ek_produc_packages_goods_ids">
+                <group colspan="4">
+                </group>
+                <group class="oe_subtotal_footer" colspan="2" name="packages_goods_total">
+                  <label for="total_lines" string="Líneas" />
+                  <div class="text-right">
+                    <field name="total_lines" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+
+                  <label for="total_quantity" string="Cantidades" />
+                  <div class="text-right">
+                    <field name="total_quantity" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+
+                  <label for="total_gross_weight" string="Peso Bruto" />
+                  <div class="text-right">
+                    <field name="total_gross_weight" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+
+                  <label for="total_fob" string="FOB" />
+                  <div class="text-right">
+                    <field name="total_fob" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+
+                  <label for="total_total_fob" string="Total FOB" />
+                  <div class="text-right">
+                    <field name="total_total_fob" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+                </group>
+                <div class="clearfix" />
+              </group>
+            </page>
+
+            <page string="Paquetes y Mercancías" invisible="not has_detail_items">
+              <field name="ek_produc_packages_goods_ids" invisible="not has_detail_items" readonly="fold or confirm_stage  or canceled_stage">
+                <tree editable="bottom">
+                  <field name="marks" />
+                  <field name="ek_requerid_burden_inter_nac_id" />
+                  <field name="name" widget="text" />
+                  <field name="quantity" />
+                  <field name="gross_weight" sum="Total" />
+                  <field name="product_weight_in_lbs" />
+                  <field name="volume" sum="Total" />
+                  <field name="product_volume_volume_in_cubic_feet" />
+                </tree>
+              </field>
+              <group name="note_group" col="6" class="mt-2 mt-md-0" invisible="not has_detail_items">
+                <group colspan="4">
+                </group>
+                <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                  <field name="lumps" colspan="2" readonly="0" />
+                  <label for="gross_weight" string="Peso Bruto" />
+                  <div class="text-rigth">
+                    <field name="gross_weight" force_save="1" class="oe_inline" readonly="1" />
+                    <field name="product_weight_in_lbs" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+                  <label for="net_weight" string="Peso Neto" />
+                  <div>
+                    <field name="net_weight" force_save="1" class="oe_inline" readonly="0" />
+                    <field name="product_weight_in_lbs" force_save="1" class="oe_inline" readonly="1" />
+                  </div>
+                  <field name="type_dae_das" force_save="1" class="oe_inline text-rigth" readonly="0" nolabel="1" />
+                  :
+                  <div>
+                    <field name="das" force_save="1" class="oe_inline" readonly="0" placeholder="Ej. 123-456-7890" />
+                  </div>
+                  <field name="freight_regimen" colspan="2" readonly="0" />
+                </group>
+                <div class="clearfix" />
+              </group>
+            </page>
+          </notebook>
+
+          <group>
+            <field name="informe_work" col="2" required="display_dinamic_field and display_dinamic_field.get('required_informe_work',False)" invisible="not display_dinamic_field or not display_dinamic_field.get('show_informe_work',False)" />
+            <field name="description_name" string="Description..." placeholder="This description is to provide details of the request" />
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

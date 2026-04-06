@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="ek_type_request_form" model="ir.ui.view">
+    <field name="name">ek_type_request_form</field>
+    <field name="model">ek.l10n.type.model.mixin</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_create_view" string="Activate Type" class="oe_highlight" type="object" data-hotkey="q" invisible="ir_form_view or not active" />
+          <button name="action_delete_view" string="Desactivate Type" class="oe_highlight" type="object" data-hotkey="w" invisible="not ir_form_view or not active" />
+        </header>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="view_objects" type="object" class="oe_stat_button" icon="fa-share-square-o" invisible="count_used_types == 0">
+              <div class="o_stat_info">
+                <field name="count_used_types" widget="statinfo" string="Request"/>
+              </div>
+            </button>
+          </div>
+          <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" invisible="ir_form_view" />
+          <widget name="web_ribbon" title="Active" bg_color="text-bg-success" invisible="not ir_form_view  or not active" />
+          <div class="oe_title">
+            <h1>
+              <field name="code" style="width: 25%" placeholder="Code..." force_save="1" readonly="ir_form_view"/>
+            </h1>
+            <h1>
+              <field name="name" placeholder="Name..." force_save="1" readonly="ir_form_view"/>
+            </h1>
+          </div>
+          <group name="config">
+            <group name="grp_2">
+              <field name="active" invisible="True"/>
+              <field name="model_id" required="1" readonly="ir_form_view or fields_ids" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+            </group>
+            <group name="grp_1">
+              <field name="group_id"/>
+              <field name="resource_calendar_id" required="1" readonly="ir_form_view" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+            </group>
+          </group>
+          <group>
+            <group string="Notices">
+              <field name="has_service_maneuver" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="has_data_requeried_n_i" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="has_operator" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="has_data_zarpe" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="has_data_cargo" widget="boolean_toggle" readonly="ir_form_view"/>
+              <separator string="Pourtario Access" colspan="2" />
+              <field name="has_credentials" help="Uso Solicitud de Credenciales u Otros" readonly="ir_form_view"/>
+              <field name="table_aditional" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="has_access_port" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="is_marginal_dock_setting" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="type_document_access" readonly="ir_form_view"/>
+              <separator string="Asignacion o Ampliación de Muelle" colspan="2" />
+              <field name="calculation_day_or_hours" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="search_by_authorization" string="Data Search" widget="boolean_toggle" readonly="ir_form_view"/>
+              <separator string="Dock Space Expansion" colspan="2" readonly="ir_form_view"/>
+              <field name="is_dock_space_expansion" widget="boolean_toggle" readonly="ir_form_view"/>
+              <separator string="Capitania" colspan="2" />
+              <field name="has_delivery_reception" string="Acta de Entrega/Receptión" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="has_documents_notification" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="has_notification" widget="boolean_toggle" readonly="ir_form_view" invisible="not has_documents_notification"/>
+              <field name="ek_user_groups_reminder_ids" readonly="ir_form_view" required="has_notification" invisible="not has_notification"/>
+              <field name="has_passanger" widget="boolean_toggle" readonly="ir_form_view"/>
+              <separator string="Captaincy Service for Reporting" colspan="2" invisible="not has_report_capitana" />
+              <field name="has_report_capitana" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="ek_service_request_report_line_ids" nolabel="1" readonly="ir_form_view" colspan="2" invisible="not has_report_capitana">
+                <tree>
+                  <field name="name" />
+                </tree>
+              </field>
+            </group>
+
+            <group string="Process Configuration">
+              <field name="has_commission" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="commission" invisible="not has_commission" readonly="ir_form_view"/>
+              <field name="has_crew" widget="boolean_toggle" string="Is Crew or List" readonly="ir_form_view" />
+              <field name="is_obligator_document" widget="boolean_toggle" readonly="ir_form_view" invisible="1" />
+              <field name="state_boats" invisible="1" />
+              <field name="is_capital_port" widget="boolean_toggle" readonly="ir_form_view" string="is Supplier" />
+              <field name="supplier_id" invisible="not is_capital_port" readonly="ir_form_view"/>
+              <field name="is_analytic_account" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="is_agent_naviero" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="is_request_assignable" widget="boolean_toggle" readonly="ir_form_view" invisible="not is_agent_naviero" />
+              <field name="type_event_boot" readonly="ir_form_view"/>
+              <field name="type_event" readonly="ir_form_view"/>
+              <separator string="Service" colspan="2" invisible="not is_service_request" readonly="ir_form_view"/>
+              <field name="is_service_request" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="stage_service_ids" widget="many2many_tags" string="Status to show" readonly="ir_form_view" />
+              <field name="ek_product_request_service_order_ids" nolabel="1" force_save="1" invisible="not is_service_request" readonly="ir_form_view" colspan="2">
+                <tree editable="bottom">
+                  <field name="product_id" />
+                  <field name="name" />
+                  <field name="price_unit" />
+                  <field name="product_qty" />
+                  <field name="edit_price" string="Edit" widget="boolean_toggle" force_save="1" />
+                  <field name="stage_ids" widget="many2many_tags" force_save="1" required="True"/>
+                  <field name="ek_type_request" column_invisible="True" force_save="1"/>
+                </tree>
+              </field>
+
+              <separator string="Refunf" colspan="2" invisible="not is_service_refunf" />
+              <field name="is_service_refunf" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="stage_refund_ids" widget="many2many_tags" readonly="ir_form_view" string="Status to show"/>
+              <field name="is_separate" widget="boolean_toggle" readonly="ir_form_view" invisible="not is_service_refunf" />
+              <field name="ek_product_request_service_purchase_ids" nolabel="1" readonly="ir_form_view" force_save="1" colspan="2" context="{'default_is_separate': is_separate}" invisible="not is_service_refunf">
+                <tree editable="bottom">
+                  <field name="product_id" />
+                  <field name="name" />
+                  <field name="price_unit" />
+                  <field name="product_qty" />
+                  <field name="supplier_id" readonly="not is_separate" force_save="1" />
+                  <field name="is_separate" column_invisible="True" />
+                  <field name="ek_type_request" column_invisible="True" />
+                  <field name="edit_price" string="Edit" widget="boolean_toggle" force_save="1"/>
+                  <field name="stage_ids" widget="many2many_tags" force_save="1" required="True"/>
+                  <field name="ek_type_request" column_invisible="True" force_save="1"/>
+                </tree>
+              </field>
+              <separator string="Payment to Crew" colspan="2" invisible="not crew_pay" />
+              <field name="crew_pay" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="ek_product_service_crew_primes_ids" readonly="ir_form_view" nolabel="1" colspan="2" invisible="not crew_pay">
+                <tree editable="bottom">
+                  <field name="product_id" />
+                  <field name="name" />
+                </tree>
+              </field>
+              <field name="ek_product_reimbursement_expenses_ids" />
+            </group>
+          </group>
+
+          <group>
+            <group string="Send Email">
+              <field name="send_email" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="ek_group_mail_template_id" readonly="ir_form_view"/>
+            </group>
+            <group string="Template">
+              <field name="send_to_sign_report" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="download_report" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="has_signature" string="Show Insert Signature Button" widget="boolean_toggle" readonly="ir_form_view"/>
+            </group>
+          </group>
+
+          <group string="Customs">
+            <group>
+              <field name="has_internal_sequence" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="internal_sequence" required="has_internal_sequence" readonly="ir_form_view" invisible="not has_internal_sequence" />
+              <field name="has_mrn_number" widget="boolean_toggle" readonly="ir_form_view"/>
+              <field name="use_in_regimen_70" widget="boolean_toggle" invisible="1" readonly="ir_form_view"/>
+              <field name="use_in_regimen_61" widget="boolean_toggle" invisible="1" readonly="ir_form_view"/>
+
+            </group>
+            <group>
+              <field name="has_detail_items" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="show_button_copy" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="generate_for_stage" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="not_controlling_weight" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="is_correction_request" widget="boolean_toggle" string="Is Generate Related Request" readonly="ir_form_view" />
+              <field name="has_trade_numeber" widget="boolean_toggle" readonly="ir_form_view" />
+              <field name="select_type_trade_number" invisible="not has_trade_numeber" required="has_trade_numeber" readonly="ir_form_view" />
+              <field name="stage_trade_ids" widget="many2many_tags" invisible="not select_type_trade_number == '1'" readonly="ir_form_view" />
+            </group>
+          </group>
+
+          <notebook>
+            <page string="Fields Flow" name="fields">
+              <field name="fields_ids" nolabel="1" col="2" readonly="ir_form_view or not model_id">
+              </field>
+            </page>
+            <page name="stages_page" string="Stages Flow">
+              <field name="stage_ids" widget="many2many_tags" readonly="ir_form_view"/>
+            </page>
+            <page name="member_page" string="Members Flow">
+              <field name="member_ids" context="{'default_type_id': id}" nolabel="1" />
+            </page>
+            <page name="notify_stage" string="Activity Notify Flow">
+              <field name="notify_stage_ids" nolabel="1">
+                <tree string="" editable="bottom">
+                  <field name="stage_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="activity_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="user_ids" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags"/>
+                  <field name="delay_count"/>
+                  <field name="note"/>
+                  <field name="type_id" column_invisible="True"/>
+                  <field name="member_ids" column_invisible="True"/>
+                </tree>
+              </field>
+            </page>
+            <page name="aditional_config" string="Aditional Config Flow">
+              <group name="aconfig" string="Configurations">
+                <group name="left_config">
+                  <field name="report_id" invisible="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="next_stage_parent_id" invisible="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="company_id" groups="base.group_multi_company" force_save="1" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="ir_form_view" invisible="not ir_form_view" readonly="ir_form_view" />
+                </group>
+                <group name="right_config">
+                  <field name="has_internal_sequence" readonly="ir_form_view" />
+                  <field name="internal_sequence" invisible="not has_internal_sequence" required="has_internal_sequence" readonly="ir_form_view" />
+                </group>
+              </group>
+            </page>
+            <page name="sequence_page" string="Sequence" nolabel="1" col="2" invisible="not generate_for_stage">
+              <field name="sequence_ids" nolabel="1" col="2" readonly="ir_form_view">
+                <tree editable="bottom">
+                  <field name="order" widget="handle"/>
+                  <field name="auto_generate"/>
+                  <field name="generate_new_number" readonly="not auto_generate"/>
+                  <field name="type_id" column_invisible="True"/>
+                  <field name="type_request_generate_id" domain="[('id','!=',type_id)]"/>
+                </tree>
+              </field>
+            </page>
+
+            <page name="ship" string="Ship">
+              <field name="ship_ids" widget="many2many_tags" readonly="ir_form_view" />
+            </page>
+            <page string="Reports" invisible="not (send_to_sign_report or download_report)">
+              <field name="ek_report_stages_mixin_ids" readonly="ir_form_view">
+                <tree editable="bottom">
+                  <field name="ek_template_py3o_ids" options='{"no_open": False, "no_create": True, "no_edit": True}' widget="many2many_tags" />
+                  <field name="stage_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="type_id" column_invisible="True"/>
+                  <field name="stage_ids" column_invisible="True"/>
+                </tree>
+              </field>
+            </page>
+
+            <page string="Mail">
+              <field name="ek_template_mail_stage_id_request_ids" readonly="ir_form_view">
+                <tree editable="bottom">
+                  <field name="template_ids" widget="many2many_tags" options='{"no_open": False, "no_create": True, "no_edit": True}' context="{'default_model': 'ek.l10n.model.mixin'}"/>
+                  <field name="stage_id" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                  <field name="type_id" column_invisible="True"/>
+                  <field name="stage_ids" column_invisible="True"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Fields Search">
+              <field name="ek_l10n_search_fields_mixin_ids" readonly="ir_form_view">
+                <tree editable="bottom">
+                  <field name="field_id"/>
+                  <field name="fields_relation_id"/>
+                  <field name="fields_change_id" domain="domain"/>
+                  <field name="domain" column_invisible="1"/>
+                  <field name="object_model_id" column_invisible="1"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Notes">
+              <group>
+                <field name="field_concant_template_ids" readonly="ir_form_view" widget="many2many_tags"/>
+              </group>
+              <field name="field_concant_text_template" readonly="ir_form_view" force_save="1"/>
+              <div style="margin-top: 10px;"></div>
+              <separator string="Guía para formato del texto" colspan="2" />
+              <!-- Documentación Formato de Texto Enriquecido -->
+              <div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-body">
+                        <h6>Ejemplos de texto</h6>
+                        <ul>
+                          <li>
+                            <code>**texto**</code> →                            <span >Negrita</span> →                            <strong>texto</strong>
+                          </li>
+                          <li>
+                            <code>__texto__</code> →                            <span >Subrayado</span> →                            <u>texto</u>
+                          </li>
+                          <li>
+                            <code>##texto##</code> →                            <span >Resaltado amarillo</span> →                            <span class="text-white" style="background-color: yellow; color: black !important;">texto</span>
+                          </li>
+                          <li>
+                            <code>&amp;&amp;texto&amp;&amp;</code> →                            <span >Resaltado verde</span> →                            <span class="text-white" style="background-color: #c3e6cb;">texto</span>
+                          </li>
+                          <li>
+                            <code>^^texto^^</code> →                            <span >Resaltado azul</span> →                            <span class="text-white" style="background-color: lightblue;">texto</span>
+                          </li>
+                          <li>
+                            <code>!!texto!!</code> →                            <span >Texto rojo</span> →                            <span style="color: red;">texto</span>
+                          </li>
+                          <li>
+                            <code>$$texto$$</code> →                            <span >Texto verde</span> →                            <span style="color: green;">texto</span>
+                          </li>
+                          <li>
+                            <code>%%texto%%</code> →                            <span >Texto azul</span> →                            <span style="color: blue;">texto</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-body">
+                        <h6>Ejemplos de campos</h6>
+                        <ul>
+                          <li>
+                            <code>{{**type_id.name**}}</code> →                            <strong>campo en negrita</strong>
+                          </li>
+                          <li>
+                            <code>{{##ek_ship_registration_id.name##}}</code> →                            <span class="text-white" style="background-color: yellow; color: black !important;">campo resaltado</span>
+                          </li>
+                          <li>
+                            <code>{{__date_start__}}</code> →                            <u>campo subrayado</u>
+                          </li>
+                          <li>
+                            <code>{{@@date_start@@}}</code> →                            <span>fecha formateada</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <br/>
+                    <div class="card">
+                      <div class="card-body">
+                        <h6>Estilos anidados</h6>
+                        <ul>
+                          <li>
+                            <code>##Resaltado con **negrita**##</code>
+                          </li>
+                          <li>
+                            <code>**Negrita con __subrayado__ dentro**</code>
+                          </li>
+                          <li>
+                            <code>&amp;&amp;Verde con !!rojo!! y **negrita**&amp;&amp;</code>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_type_request_tree" model="ir.ui.view">
+    <field name="name">ek_type_request_tree</field>
+    <field name="model">ek.l10n.type.model.mixin</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="code"/>
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_type_shipp_tree" model="ir.ui.view">
+    <field name="name">ek_type_shipp_tree</field>
+    <field name="model">ek.type.shipp</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+  <record id="ek_type_fondeo_tree" model="ir.ui.view">
+    <field name="name">ek_type_fondeo_tree</field>
+    <field name="model">ek.type.fondeo</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_type_request_action" model="ir.actions.act_window">
+    <field name="name">Type Request</field>
+    <field name="res_model">ek.l10n.type.model.mixin</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="ek_type_request_menu" parent="menu_setting_request_requests" action="ek_type_request_action" />
+  <record id="ek_type_shipp_action" model="ir.actions.act_window">
+    <field name="name">Type Shipp</field>
+    <field name="res_model">ek.type.shipp</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_type_shipp_menu" parent="menu_setting_request_requests" action="ek_type_shipp_action" />
+  <record id="ek_type_fondeo_action" model="ir.actions.act_window">
+    <field name="name">Type Fondeo</field>
+    <field name="res_model">ek.type.fondeo</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <!-- definicion de configuracion  -->
+  <record id="ek_boat_sequence_tree" model="ir.ui.view">
+    <field name="name">ek_boat_sequence_tree</field>
+    <field name="model">ek.boat.sequence</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+        <field name="prefix" />
+        <field name="sequence" />
+        <field name="ek_ship_registration_id" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_boat_sequence_action" model="ir.actions.act_window">
+    <field name="name">Type Sequence Boat</field>
+    <field name="res_model">ek.boat.sequence</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_boat_sequence_menu" parent="menu_setting_request_requests" action="ek_boat_sequence_action" />
+  <record id="ek_boat_location_tree" model="ir.ui.view">
+    <field name="name">ek_boat_location_tree</field>
+    <field name="model">ek.boat.location</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_boat_location_action" model="ir.actions.act_window">
+    <field name="name">Type Location Boat</field>
+    <field name="res_model">ek.boat.location</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_boat_location_menu" parent="menu_setting_request_requests" action="ek_boat_location_action" />
+  <record id="ek_crew_member_hierarchy_tree" model="ir.ui.view">
+    <field name="name">ek_crew_member_hierarchy_tree</field>
+    <field name="model">ek.crew.member.hierarchy</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_crew_member_hierarchy_action" model="ir.actions.act_window">
+    <field name="name">Hierarchy Crew</field>
+    <field name="res_model">ek.crew.member.hierarchy</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_crew_member_hierarchy_menu" parent="menu_setting_request_requests" action="ek_crew_member_hierarchy_action" />
+  <record id="reason_arrival_tree" model="ir.ui.view">
+    <field name="name">reason_arrival_tree</field>
+    <field name="model">reason.arrival</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="reason_arrival_action" model="ir.actions.act_window">
+    <field name="name">Reason Arrival</field>
+    <field name="res_model">reason.arrival</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="reason_arrival_menu" parent="menu_setting_request_requests" action="reason_arrival_action" />
+  <record id="ek_group_mail_template_form" model="ir.ui.view">
+    <field name="name">ek_group_mail_template_form</field>
+    <field name="model">ek.group.mail.template</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Name" required="1" />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="partner_id"/>
+            </group>
+            <group>
+              <field name="res_partner_id" widget="many2many_tags" />
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_group_mail_template_tree" model="ir.ui.view">
+    <field name="name">ek_group_mail_template_tree</field>
+    <field name="model">ek.group.mail.template</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_group_mail_template_action" model="ir.actions.act_window">
+    <field name="name">Group Template Mail</field>
+    <field name="res_model">ek.group.mail.template</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="ek_group_mail_template_menu" parent="menu_setting_request_requests" action="ek_group_mail_template_action" />
+  <record id="type_service_boat_tree" model="ir.ui.view">
+    <field name="name">type_service_boat_tree</field>
+    <field name="model">type.service.boat</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="type_service_boat_action" model="ir.actions.act_window">
+    <field name="name">Type Service</field>
+    <field name="res_model">type.service.boat</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="type_service_boat_menu" parent="menu_setting_request_requests" action="type_service_boat_action" />
+  <record id="type_boat_operators_tree" model="ir.ui.view">
+    <field name="name">type_boat_operators_tree</field>
+    <field name="model">type.boat.operators</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="type_boat_operators_action" model="ir.actions.act_window">
+    <field name="name">Type Operators</field>
+    <field name="res_model">type.boat.operators</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="type_boat_operators_menu" parent="menu_setting_request_requests" action="type_boat_operators_action" />
+  <record id="ek_requerid_burden_inter_nac_tree" model="ir.ui.view">
+    <field name="name">ek_requerid_burden_inter_nac_tree</field>
+    <field name="model">ek.requerid.burden.inter.nac</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+        <field name="group_cargo"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_requerid_burden_inter_nac_action_search" model="ir.ui.view">
+    <field name="name">Shipping Charges</field>
+    <field name="model">ek.requerid.burden.inter.nac</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" string="Name" />
+        <field name="group_cargo" string="Group" />
+        <group expand="1" string="Group By" colspan="12" col="10">
+          <filter name="group_by_group_cargo" string="Group" context="{'group_by':'group_cargo'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+  <record id="ek_requerid_burden_inter_nac_action" model="ir.actions.act_window">
+    <field name="name">Shipping Charges</field>
+    <field name="res_model">ek.requerid.burden.inter.nac</field>
+    <field name="view_mode">tree</field>
+    <field name="context">{'search_default_group_by_group_cargo':1,}</field>
+  </record>
+
+  <menuitem id="type_boat_operators_menu" parent="menu_setting_request_requests" action="ek_requerid_burden_inter_nac_action" />
+  <record id="ek_user_groups_reminder_form" model="ir.ui.view">
+    <field name="name">ek_user_groups_reminder_form</field>
+    <field name="model">ek.user.groups.reminder</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Name" required="1" />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="user_ids" widget="many2many_tags" />
+            </group>
+            <group />
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_user_groups_reminder_tree" model="ir.ui.view">
+    <field name="name">ek_user_groups_reminder_tree</field>
+    <field name="model">ek.user.groups.reminder</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_user_groups_reminder_action" model="ir.actions.act_window">
+    <field name="name">Reminder Groups</field>
+    <field name="res_model">ek.user.groups.reminder</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="ek_user_groups_reminder_menu" parent="menu_setting_request_requests" action="ek_user_groups_reminder_action" />
+  <record id="ek_management_document_tree" model="ir.ui.view">
+    <field name="name">ek_setting_send_notice_tree</field>
+    <field name="model">ek.management.document</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+        <field name="ek_ship_registration_id" />
+        <field name="journey_crew_id" />
+        <field name="ek_operation_request_id" />
+        <field name="date_start" />
+        <field name="date_end" />
+        <field name="days" />
+        <field name="document_status" />
+        <field name="date_today" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_ek_management_document_search" model="ir.ui.view">
+    <field name="name">ek.management.document.search</field>
+    <field name="model">ek.management.document</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="document_status" />
+        <field name="ek_ship_registration_id" />
+        <field name="journey_crew_id" />
+        <field name="ek_operation_request_id" />
+        <group expand="1" string="Group By" colspan="12" col="10">
+          <filter name="group_by_document_status" string="Document Status" context="{'group_by':'document_status'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="ek_management_document_action" model="ir.actions.act_window">
+    <field name="name">Expiring Document Report</field>
+    <field name="res_model">ek.management.document</field>
+    <field name="view_mode">tree</field>
+    <field name="context">{'search_default_group_by_document_status':1,}</field>
+  </record>
+
+  <record id="ek_ship_document_type_tree" model="ir.ui.view">
+    <field name="name">ek_ship_document_type_tree</field>
+    <field name="model">ek.ship.document.type</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_ship_document_type_action" model="ir.actions.act_window">
+    <field name="name">Ship Document Type</field>
+    <field name="res_model">ek.ship.document.type</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_ship_document_type_menu" parent="menu_setting_request_requests" action="ek_ship_document_type_action" />
+
+  <record id="ek_type_document_crew_member_tree" model="ir.ui.view">
+    <field name="name">ek_type_document_crew_member_tree</field>
+    <field name="model">ek.type.document.crew.member</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_type_document_crew_member_action" model="ir.actions.act_window">
+    <field name="name">Type Document Crew Member</field>
+    <field name="res_model">ek.type.document.crew.member</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_type_document_crew_member_menu" parent="menu_setting_request_requests" action="ek_type_document_crew_member_action" />
+  <record id="ek_type_courses_crew_member_tree" model="ir.ui.view">
+    <field name="name">ek_type_courses_crew_member_tree</field>
+    <field name="model">ek.type.courses.crew.member</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_type_courses_crew_member_action" model="ir.actions.act_window">
+    <field name="name">Type Courses or Doc. Crew Member</field>
+    <field name="res_model">ek.type.courses.crew.member</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_type_courses_crew_member_menu" parent="menu_setting_request_requests" action="ek_type_courses_crew_member_action" />
+  <menuitem id="ek_setting_send_notice_menu_one" parent="menu_setting_request_requests" name="Reminder Sending Settings" />
+  <record id="ek_setting_send_notice_tree" model="ir.ui.view">
+    <field name="name">ek_setting_send_notice_tree</field>
+    <field name="model">ek.setting.send.notice</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="document_status" />
+        <field name="days" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_setting_send_notice_action" model="ir.actions.act_window">
+    <field name="name">Requests</field>
+    <field name="res_model">ek.setting.send.notice</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_setting_send_notice_menu" parent="ek_setting_send_notice_menu_one" action="ek_setting_send_notice_action" />
+  <record id="ek_setting_send_boat_tree" model="ir.ui.view">
+    <field name="name">ek_setting_send_boat_tree</field>
+    <field name="model">ek.setting.send.boat</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="document_status" />
+        <field name="days" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_setting_send_boat_action" model="ir.actions.act_window">
+    <field name="name">Boats</field>
+    <field name="res_model">ek.setting.send.boat</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_setting_send_boat_menu" parent="ek_setting_send_notice_menu_one" action="ek_setting_send_boat_action" />
+  <record id="ek_setting_send_crew_member_tree" model="ir.ui.view">
+    <field name="name">ek_setting_send_crew_member_tree</field>
+    <field name="model">ek.setting.send.crew.member</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="document_status" />
+        <field name="days" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_setting_send_crew_member_action" model="ir.actions.act_window">
+    <field name="name">Crew Member</field>
+    <field name="res_model">ek.setting.send.crew.member</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_setting_send_crew_member_menu" parent="ek_setting_send_notice_menu_one" action="ek_setting_send_crew_member_action" />
+  <record id="ek_setting_send_reminder_passport_tree" model="ir.ui.view">
+    <field name="name">ek_setting_send_reminder_passport_tree</field>
+    <field name="model">ek.setting.send.reminder.passport</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="document_status" />
+        <field name="days" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_setting_send_reminder_passport_action" model="ir.actions.act_window">
+    <field name="name">Crew Member Passport</field>
+    <field name="res_model">ek.setting.send.reminder.passport</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_setting_send_reminder_passport_menu" parent="ek_setting_send_notice_menu_one" action="ek_setting_send_reminder_passport_action" />
+  <record id="menu_setting_request_reports" model="ir.ui.menu">
+    <field name="action" eval="False"/>
+    <field name="active" eval="True"/>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="name">Reports</field>
+    <field name="parent_id" eval="menu_boat_information"/>
+    <field name="sequence">4</field>
+    <field name="web_icon" eval="False"/>
+  </record>
+
+  <menuitem id="ek_management_document_menu" parent="menu_setting_request_reports" action="ek_management_document_action" />
+  <record id="trip_details_days_action" model="ir.actions.act_window">
+    <field name="name">Travel Details</field>
+    <field name="res_model">trip.details.days</field>
+    <field name="view_mode">tree</field>
+    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+  </record>
+
+  <menuitem id="trip_details_days_menu" parent="menu_setting_request_reports" action="trip_details_days_action" />
+  <record id="ek_request_report_detail_action" model="ir.actions.act_window">
+    <field name="name">Details Requets Users</field>
+    <field name="res_model">ek.request.report.detail</field>
+    <field name="view_mode">tree</field>
+    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+  </record>
+
+  <menuitem id="ek_request_report_detail_menu" parent="menu_setting_request_reports" action="ek_request_report_detail_action" />
+  <menuitem id="menu_operation_request" parent="menu_setting_request_reports" action="ek_operation_request_act_window" />
+  <menuitem id="ek_setting_customs_menu" parent="menu_setting_request_requests" name="Customs" />
+
+  <record id="ek_regimen_table_tree" model="ir.ui.view">
+    <field name="name">ek_regimen_table_tree</field>
+    <field name="model">ek.regimen.table</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree >
+        <field name="name" />
+        <field name="code" />
+        <field name="description"/>
+        <field name="ek_regimen_table_ids" widget="many2many_tags" string="Regimen Relational"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_regimen_table_form" model="ir.ui.view">
+    <field name="name">ek_regimen_table_form</field>
+    <field name="model">ek.regimen.table</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form >
+        <div class="oe_title">
+          <h1>
+            <field name="name" placeholder="Name" />
+          </h1>
+        </div>
+        <group>
+          <group>
+            <field name="code"/>
+          </group>
+          <group>
+            <field name="description"/>
+          </group>
+          <field name="ek_regimen_table_ids">
+            <tree>
+              <field name="name"/>
+              <field name="code"/>
+              <field name="description"/>
+            </tree>
+          </field>
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_regimen_table_action" model="ir.actions.act_window">
+    <field name="name">Regimen</field>
+    <field name="res_model">ek.regimen.table</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="ek_regimen_table_menus" parent="ek_setting_customs_menu" action="ek_regimen_table_action" />
+  <record id="ek_type_container_tree" model="ir.ui.view">
+    <field name="name">ek_type_container_tree</field>
+    <field name="model">ek.type.container</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="name" />
+
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_type_container_action" model="ir.actions.act_window">
+    <field name="name">Type Container</field>
+    <field name="res_model">ek.type.container</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="ek_type_container_menu" parent="ek_setting_customs_menu" action="ek_type_container_action" />
+  <!-- model.name inherit form view -->
+  <record id="view_ek_l10n_type_field_mixin_inherit" model="ir.ui.view">
+    <field name="name">ek.l10n.type.field.mixin.inherit</field>
+    <field name="model">ek.l10n.type.field.mixin</field>
+    <field name="inherit_id" ref="ek_base_type_object.view_ek_l10n_type_field_mixin_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='ttype']" position="after">
+        <field name="fields_relation_id" force_save="1" invisible="ttype in ('many2many','one2many')" />
+        <field name="fields_change_id" required="fields_relation_id" invisible="not fields_relation_id" domain="domain" force_save="1"/>
+        <field name="stage_id" invisible="not fields_relation_id" required="fields_change_id" force_save="1" widget="many2many_tags"/>
+        <field name="domain" force_save="1" invisible="1" />
+      </xpath>
+    </field>
+  </record>
+
+  <record id="ek_l10n_stages_mixin_inherit" model="ir.ui.view">
+    <field name="name">ek.l10n.stages.mixi.inherit.form</field>
+    <field name="model">ek.l10n.stages.mixin</field>
+    <field name="inherit_id" ref="ek_base_type_object.ek_l10n_stages_mixin_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='sequence']" position="after">
+        <field name="readonly_mass"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

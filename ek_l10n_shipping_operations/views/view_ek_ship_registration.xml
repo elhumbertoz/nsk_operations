@@ -1,0 +1,733 @@
+<odoo>
+
+
+
+  <record id="ek_ship_registration_form" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <field name="state_boats" widget="statusbar" options="{'clickable':1}" />
+        </header>
+        <div class="alert alert-warning" role="alert" invisible="not ship_document_certificate_count_expired !=  0">
+                    THE BOAT REGISTERS DOCUMENTATION EXPIRING OR EXPIRED PLEASE VERIFY AND UPDATE
+        </div>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="action_open_documents_travel" type="object" icon="fa-suitcase">
+              <field string="Travel" name="travel_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_request" type="object" icon="fa-share-square-o">
+              <field string="Request" name="request_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_enhanced_requests" type="object" icon="fa-list-alt">
+              <field string="Enhanced Requests" name="request_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_documents_trip_details_days" type="object" icon="fa-file-text-o">
+              <field string="Trip Details Days" name="trip_details_days_count" widget="statinfo" />
+            </button>
+            <button class="oe_stat_button" name="action_open_ship_document_certificate_count" type="object" icon="fa-file-text-o">
+              <field string="Ship Document Certificate" name="ship_document_certificate_count" widget="statinfo" />
+            </button>
+          </div>
+          <!-- <widget name="web_ribbon" title="Navegando" invisible="state_boats == 'port'" />
+          <widget name="web_ribbon" title="En Puerto" bg_color="bg-info" invisible="state_boats == 'sailing'" /> -->
+          <field name="image" widget="image" class="oe_avatar" options="{'size':[150,150]}" invisible="type_photo in ['helmet','starboard','bow','popa']" />
+          <field name="image_1" widget="image" class="oe_avatar" options="{'size':[150,150]}" invisible="type_photo in ['port','starboard','bow','popa']" />
+          <field name="image_2" widget="image" class="oe_avatar" options="{'size':[150,150]}" invisible="type_photo in ['port','bow','helmet','popa']" />
+          <field name="image_3" widget="image" class="oe_avatar" options="{'size':[150,150]}" invisible="type_photo in ['port','helmet','starboard','popa']" />
+          <field name="image_4" widget="image" class="oe_avatar" options="{'size':[150,150]}" invisible="type_photo in ['port','helmet','starboard','bow']" />
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Nombre de Buque" required="1"/>
+            </h1>
+          </div>
+          <div class="oe_title">
+            <h2>
+              <field name="ek_boat_location_id" style="width: 100%" force_save="1" readonly="0" placeholder="Ubicacion actual del barco"/>
+            </h2>
+          </div>
+          <group>
+            <group>
+              <field name="ship_document_certificate_count_expired" invisible="1" />
+              <field name="state_boats" invisible="1" force_save="1" />
+              <field name="type_photo" required="1" widget="radio" />
+              <field name="image_copy" widget="image" invisible="1" force_save="1" />
+              <field name="bussiness_name_id" required="1" force_save="1" string="Armador " />
+              <field name="capital_name_id" required="1" force_save="1" />
+              <field name="boat_color" force_save="1" />
+              <field name="ship_flag_id" required="1" force_save="1" />
+              <field name="company_id" required="1" groups="base.group_multi_company" />
+              <field name="analytic_account_id" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+              <field name="sequence_id" required="1" domain="[('code','=','BUQUE')]"/>
+              <field name="send_notificacion_user_ek" widget="boolean_toggle" />
+              <field name="ek_user_groups_reminder_id" invisible="not send_notificacion_user_ek" />
+              <!-- Campo removido para ponerlo en el notebook: <field name="ek_ship_document_certificate_ids" invisible="1" /> -->
+              <field name="is_practic" widget="boolean_toggle" invisible="assigned_regimen_70" />
+              <field name="assigned_regimen_70" widget="boolean_toggle" />
+              <label for="fuel" string="Fuel" invisible="assigned_regimen_70" />
+              <div invisible="assigned_regimen_70">
+                <field name="fuel" force_save="1" class="oe_inline" readonly="0" />
+                <field name="fuel_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+
+              <label for="gasoline" string="Gasoline" invisible="assigned_regimen_70" />
+              <div invisible="assigned_regimen_70">
+                <field name="gasoline" force_save="1" class="oe_inline" readonly="0" />
+                <field name="gasoline_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+
+              <label for="water" string="Water" invisible="assigned_regimen_70" />
+              <div invisible="assigned_regimen_70">
+                <field name="water" force_save="1" class="oe_inline" readonly="0" />
+                <field name="water_uom" force_save="1" class="oe_inline" readonly="0" />
+              </div>
+            </group>
+            <group>
+              <button name="action_open_boat_characteristics" type="object" string="Record" class="btn btn-link p-0" icon="fa-bars" invisible="assigned_regimen_70" />
+              <button name="action_open_boat_arching" type="object" string="Arching" class="btn btn-link p-0" icon="fa-folder-open" invisible="assigned_regimen_70" />
+              <button name="action_open_boat_loading_lines" type="object" string="Loading Lines" class="btn btn-link p-0" icon="fa-cart-arrow-down" invisible="assigned_regimen_70" />
+              <button name="action_open_boat_security_equipments" type="object" string="Security Equipments" class="btn btn-link p-0" icon="fa-lock" invisible="assigned_regimen_70" />
+              <button name="action_open_gmdss" type="object" string="GMDSS" class="btn btn-link p-0" icon="fa-file-o" invisible="assigned_regimen_70" />
+              <button name="action_open_fuel_control" type="object" string="Fuel Control" class="btn btn-link p-0" icon="fa-fire-extinguisher" invisible="assigned_regimen_70" />
+              <button name="action_open_boat_contamination" type="object" string="Contamination" class="btn btn-link p-0" icon="fa-globe" invisible="assigned_regimen_70" />
+            </group>
+          </group>
+          <notebook>
+            <page string="Minimum Endowment" invisible="assigned_regimen_70">
+              <field name="ek_crew_member_hierarchy_number_ids">
+                <tree editable="bottom">
+                  <field name="name" colspan="6" string="Number" />
+                  <field name="ek_crew_member_hierarchy_id" colspan="6" />
+                </tree>
+              </field>
+            </page>
+            <page string="Crew Member" invisible="assigned_regimen_70">
+              <field name="crew_ids" force_save="1">
+                <tree>
+                  <field name="name" />
+                  <field name="ek_crew_member_hierarchy_id" string="Hierarchy" />
+                  <field name="nationality_id"/>
+                  <field name="l10n_ec_birthdate"/>
+                  <field name="vat" string="ID"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Certificados e Inspecciones">
+              <field name="ek_ship_document_certificate_ids" context="{'default_ship_name_id': id}">
+                <tree decoration-danger="document_status == 'expired'" decoration-warning="document_status == 'to_wi'">
+                  <field name="name" />
+                  <field name="date_issue" string="Emitido" />
+                  <field name="expiration_date" string="Vencimiento" />
+                  <field name="range_from_date" string="Rango Desde" optional="show" />
+                  <field name="range_to_date" string="Rango Hasta" optional="show" />
+                  <field name="alert_time" string="Notificar Antes" optional="show" />
+                  <field name="alert_time_type" string="Unidad" optional="show" />
+                  <field name="next_alert_date" string="Próxima Alerta" optional="show" decoration-info="True" />
+                  <field name="contact_ids" string="Notificar a" widget="many2many_tags" optional="show" />
+                  <field name="document_status" widget="badge" decoration-danger="document_status == 'expired'" decoration-warning="document_status == 'to_wi'" decoration-success="document_status == 'current'" string="Status" />
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter" name="oe_chatter">
+          <field name="message_follower_ids" />
+          <field name="message_ids" />
+          <field name="activity_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_form_boat_registre" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <field name="call_sign" />
+            <field name="mm_yes" />
+            <field name="ship_flag_id" />
+            <field name="boat_registration" />
+            <field name="builder" />
+            <field name="propulsion" string="Type of Propulsion" />
+            <field name="construction_site" />
+            <field name="keel_laying_date" />
+            <field name="plan_approval_date" />
+            <field name="registration_date" />
+          </group>
+          <group>
+            <field name="omi" />
+            <field name="registration_port" />
+            <field name="type_trafic" />
+
+            <field name="helmet_material" />
+            <field name="origin" />
+            <field name="contract_signing_date" />
+            <field name="cover_numbera" />
+          </group>
+        </group>
+        <group string="Cove Place">
+          <group>
+            <field name="province_id" />
+            <field name="caleta" />
+          </group>
+          <group>
+            <field name="canton" />
+            <field name="guild" />
+          </group>
+        </group>
+        <group string="Harmonization Information">
+          <group>
+            <field name="harmonized_to" />
+            <field name="building_date" />
+            <field name="harmonization_date" />
+          </group>
+          <group>
+            <field name="class_date" />
+          </group>
+        </group>
+      </form>
+    </field>
+  </record>
+  <record id="ek_ship_registration_form_contamination" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <field name="type_casco" />
+            <field name="protection_casco" />
+            <label for="lubricating_capacity" string="Lubricating Capacity"/>
+            <div>
+              <field name="lubricating_capacity" force_save="1" class="oe_inline" nolabel="1" />
+              <field name="lubricament_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="sludge_capacity" string="Sludge Capacity"/>
+            <div>
+              <field name="sludge_capacity" force_save="1" class="oe_inline" nolabel="1" />
+              <field name="sludge_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="black_water_capacity" string="Black Water Capacity"/>
+            <div>
+              <field name="black_water_capacity" force_save="1" class="oe_inline" nolabel="1" />
+              <field name="black_water_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <field name="antifouling_manufacturer_name" />
+
+            <label for="autonomy" string="Autonomy"/>
+            <div>
+              <field name="autonomy" force_save="1" class="oe_inline" nolabel="1"/>
+              <field name="autonomy_uom" force_save="1" class="oe_inline" />
+            </div>
+          </group>
+          <group>
+            <field name="ballast_tank" />
+            <field name="cathodic_ballast"/>
+            <label for="capacity_oily_water" string="Capacity Oily Water"/>
+            <div>
+              <field name="capacity_oily_water" force_save="1" class="oe_inline" nolabel="1" />
+              <field name="capacity_oily_water_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="capacity_oily_water" string="Capacity Oily Water"/>
+            <div>
+              <field name="capacity_oily_water" force_save="1" class="oe_inline" nolabel="1"/>
+              <field name="capacity_oily_water_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="waste_capacity" string="Waste Capacity"/>
+            <div>
+              <field name="waste_capacity" force_save="1" class="oe_inline" nolabel="1" />
+              <field name="waste_capacity_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="bilge_water_capacity" string="Bilge Water Capacity"/>
+            <div>
+              <field name="bilge_water_capacity" force_save="1" class="oe_inline" />
+              <field name="bilge_water_capacity_uom" force_save="1" class="oe_inline" />
+            </div>
+            <field name="antifouling_application_date" />
+            <field name="antifouling_name" />
+            <label for="speed" string="Speed"/>
+            <div>
+              <field name="speed" force_save="1" class="oe_inline" />
+              <field name="speed_uom" force_save="1" class="oe_inline" />
+            </div>
+          </group>
+        </group>
+      </form>
+    </field>
+  </record>
+
+
+  <record id="ek_ship_registration_form_boat_arching" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <label for="length" string="Eslora"/>
+            <div>
+              <field name="length" force_save="1" class="oe_inline" />
+              <field name="length_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="length_between_perpendiculars" string="Length Between Perpendiculars"/>
+            <div>
+              <field name="length_between_perpendiculars" force_save="1" class="oe_inline" />
+              <field name="length_between_perpendiculars_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="strut" string="Strut"/>
+            <div>
+              <field name="strut" force_save="1" class="oe_inline" />
+              <field name="strut_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="trb" string="T.R.B."/>
+            <div>
+              <field name="trb" force_save="1" class="oe_inline" />
+              <field name="trb_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="trn" string="T.R.N."/>
+            <div>
+              <field name="trn" force_save="1" class="oe_inline" />
+              <field name="trn_uom" force_save="1" class="oe_inline" />
+            </div>
+            <field name="crew_capacity" />
+            <field name="minimum_endowment" />
+            <field name="dead_weight" />
+            <field name="type_trafic" />
+            <field name="propulsion_type" />
+            <field name="rating_society" />
+          </group>
+          <group>
+            <label for="sleeve" string="Manga"/>
+            <div>
+              <field name="sleeve" force_save="1" class="oe_inline" />
+              <field name="sleeve_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="agreement_length" string="Agreement Length"/>
+            <div>
+              <field name="agreement_length" force_save="1" class="oe_inline" />
+              <field name="agreement_length_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="calado" string="Calado"/>
+            <div>
+              <field name="calado" force_save="1" class="oe_inline" />
+              <field name="calado_uom" force_save="1" class="oe_inline" />
+            </div>
+
+            <label for="calado_aereo" string="Calado Aereo"/>
+            <div>
+              <field name="calado_aereo" force_save="1" class="oe_inline" />
+              <field name="calado_aereo_uom" force_save="1" class="oe_inline" />
+            </div>
+
+
+            <label for="calado_proa" string="Calado Proa"/>
+            <div>
+              <field name="calado_proa" force_save="1" class="oe_inline" />
+              <field name="calado_proa_uom" force_save="1" class="oe_inline" />
+            </div>
+
+
+            <label for="calado_popa" string="Calado Popa"/>
+            <div>
+              <field name="calado_popa" force_save="1" class="oe_inline" />
+              <field name="calado_popa_uom" force_save="1" class="oe_inline" />
+            </div>
+            <field name="enabled_capacity" />
+            <field name="passenger_capacity" />
+            <field name="displacement_ballast" />
+            <field name="service" />
+            <field name="use" />
+          </group>
+        </group>
+        <label for="cellar" string="Store[Number,Ability,Unit]" />
+        <div>
+          <field name="cellar" class="oe_inline" />
+          <span> X </span>
+          <field name="capacity" class="oe_inline" />
+          <field name="warehouse_capacity" class="oe_inline" />
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_form_loading_lines" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <field name="tropical_free_board" />
+            <field name="free_board_summer" />
+            <field name="free_board_winter" />
+            <field name="free_board_fresh_water_summer" />
+            <field name="free_board_north_atlantic_winter" />
+          </group>
+          <group>
+            <field name="frank_bordering_tropical_wood" />
+            <field name="frank_edge_wood_summer" />
+            <field name="free_board_way_winter" />
+            <field name="free_board_fresh_water_wood" />
+            <field name="covered_reference_line" />
+          </group>
+        </group>
+
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_form_security_equipments" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <field name="authorized_maritime_zone" />
+            <field name="number_of_fire_bombs" />
+            <field name="ship_state" />
+            <field name="observation" />
+          </group>
+          <group>
+            <field name="fire_pump_type" />
+            <field name="non_operational_date" />
+          </group>
+        </group>
+
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_gmdss_equipments" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group>
+            <field name="inmarsat_a" />
+            <field name="inmarsat_b" />
+            <field name="inmarsat_c" />
+            <field name="frequency" />
+          </group>
+          <group>
+          </group>
+        </group>
+        <field name="ek_table_gmdss_ship_ids">
+          <tree editable="bottom">
+            <field name="name" />
+            <field name="brand" />
+            <field name="model" />
+            <field name="series" />
+          </tree>
+        </field>
+
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_control_fuel" model="ir.ui.view">
+    <field name="name">ek.ship.registration.form</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <group string="Number of">
+            <field name="fuel_tank_cons" />
+            <field name="fish_long_tank" />
+            <field name="fuel_loading_declared" />
+            <field name="fuel_tank_market" />
+          </group>
+          <group string="Fuel capacity for">
+            <field name="diesel_consump_accord" />
+            <field name="other_spaces_ciba" />
+            <field name="gasoline_fibre_ship" />
+            <field name="marketing_tank" />
+            <field name="avgas" />
+            <field name="calculated_fuel_receive" />
+          </group>
+        </group>
+        <group>
+          <field name="maximun_autonomy" />
+          <field name="average_consumtion" />
+          <field name="average_daily_opera" />
+          <field name="total_fuel_capacity_diesel" />
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_tree" model="ir.ui.view">
+    <field name="name">ek.ship.registration.tree</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name" />
+        <field name="bussiness_name_id" string="Shipbuilder"/>
+        <field name="capital_name_id" string="Ship owner"/>
+        <field name="omi" string="OMI" />
+        <field name="boat_registration" string="Boat Registration"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_ship_registration_kanban" model="ir.ui.view">
+    <field name="name">ek.ship.registration.kanban</field>
+    <field name="model">ek.ship.registration</field>
+    <field name="arch" type="xml">
+      <kanban class="oe_background_grey o_kanban_dashboard ek_ship_registration_kanban" sample="1">
+        <field name="name" />
+        <field name="ship_flag_id" />
+        <field name="boat_registration" />
+        <field name="boat_color" />
+        <field name="color" />
+        <field name="image_url" />
+        <field name="image" />
+        <field name="omi"/>
+        <field name="type_trafic"/>
+        <field name="bussiness_name_id"/>
+        <field name="capital_name_id"/>
+        <field name="sale_order_count"/>
+        <field name="travel_count"/>
+        <templates>
+          <t t-name="kanban-box">
+            <style> 
+              .color_kanban_title_ek {
+                color:<t t-esc="record.boat_color" />
+;
+              }
+              .o_text_overflow .ship-info-label {
+                white-space: pre-wrap !important;
+                display: inline-block !important;
+              }
+              .ship-info-label {
+                white-space: pre-wrap !important;
+                display: inline-block !important;
+              }
+            </style>
+            <div class="oe_kanban_global_click" style="display: flex; flex-direction: row; gap: .7rem; max-height: 310px; padding: .8rem; overflow: hidden;">
+              <div class="oe_kanban_image" style="width: 80%; min-width: 100px; padding: 0;">
+                <img t-att-src="record.image.raw_value ? ('/web/image/ek.ship.registration/' + record.id.raw_value + '/image') : '/ek_l10n_shipping_operations/static/src/img/default_ship.png?v=4'" alt="Ship Image" class="o_image_64_contain" style="height: 100%; width: 100%; max-width: none; object-fit: cover; object-position: center; border-radius: 5px;" />
+              </div>
+              <div class="oe_kanban_details" style="display: flex; flex-direction: column; justify-content: unset; gap: 5px; flex-grow: 1;">
+                <!-- Título del buque -->
+                <h2>
+                  <strong>
+                    <div class="color_kanban_title_ek">
+                      <field name="name" />
+                    </div>
+                  </strong>
+                </h2>
+                <!-- Bandera del país -->
+                <div>
+                  <div class="o_kanban_image" style="padding-top: 3px;">
+                    <field name="image_url" widget="image_url" />
+                  </div>
+                </div>
+                <!-- Información del buque -->
+                <ul style="display: flex; flex-direction: column;">
+                  <li class="o_text_overflow">
+                    <strong class="ship-info-label">Armador:&#160;</strong>
+                    <field name="bussiness_name_id" />
+                  </li>
+                  <li class="o_text_overflow">
+                    <strong class="ship-info-label">Propietario:&#160;</strong>
+                    <field name="capital_name_id" />
+                  </li>
+                  <li class="o_text_overflow">
+                    <strong class="ship-info-label">OMI:&#160;</strong>
+                    <field name="omi" />
+                  </li>
+                  <li class="o_text_overflow">
+                    <strong class="ship-info-label">Matricula:&#160;</strong>
+                    <field name="boat_registration" />
+                  </li>
+                  <li class="o_text_overflow">
+                    <strong class="ship-info-label">Tipo de Tráfico:&#160;</strong>
+                    <field name="type_trafic" />
+                  </li>
+                </ul>
+                <!-- Estadísticas -->
+                <div class="o_kanban_tags_section" style="padding-bottom: .2rem; display: flex; flex-grow: 1; align-items: flex-end;">
+                  <span class="badge badge-pill" style="padding-left: 0;">
+                    <i class="fa fa-file-text" aria-hidden="true" style="margin-right: 5px; padding-right: 5px;"></i>
+                    <field name="sale_order_count" /> Ordenes
+                  </span>
+                  <span class="badge badge-pill">
+                    <i class="fa fa-suitcase" aria-hidden="true" style="margin-right: 5px;"></i>
+                    <field name="travel_count" /> Viajes
+                  </span>
+                </div>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
+  <record id="trip_details_days_tree" model="ir.ui.view">
+    <field name="name">trip_details_days_tree</field>
+    <field name="model">trip.details.days</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="ship_name_id" readonly="1" />
+        <field name="journey_crew_id" readonly="1" />
+        <field name="ek_res_world_seaports_id" readonly="1" />
+        <field name="ek_res_world_seaports_d_id" readonly="1" />
+        <field name="type_event_arribo" readonly="1" />
+        <field name="ek_boat_location_id_arribo" readonly="1" />
+        <field name="eta" readonly="1" />
+        <field name="ata" readonly="1" />
+        <field name="agent_user_id_arribo" readonly="1" />
+        <field name="type_event_zarpe" readonly="1" />
+        <field name="ek_boat_location_id_zarpe" readonly="1" />
+        <field name="etd" readonly="1" />
+        <field name="atd" readonly="1" />
+        <field name="agent_user_id_zarpe" />
+        <field name="estimate_port" readonly="1" />
+        <field name="actal_port" readonly="1" />
+        <field name="estimate_navigation" readonly="1" />
+        <field name="actal_navigation" readonly="1" />
+        <field name="calculo_journey_crew_id" column_invisible="1" readonly="1" />
+        <field name="date_today" column_invisible="1" readonly="1" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_request_report_detail_tree" model="ir.ui.view">
+    <field name="name">ek_request_report_detail_tree</field>
+    <field name="model">ek.request.report.detail</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="ship_name_id" readonly="1" />
+        <field name="state_boats" readonly="1" />
+        <field name="journey_crew_id" readonly="1" />
+        <field name="state" readonly="1" />
+        <field name="type_event_arribo" readonly="1" />
+        <field name="ek_boat_location_id_arribo" readonly="1" />
+        <field name="eta" readonly="1" />
+        <field name="ata" readonly="1" />
+        <field name="agent_user_id_arribo" readonly="1" />
+        <field name="commission_arribo" readonly="1" sum="Total" />
+        <field name="type_event_zarpe" readonly="1" />
+        <field name="ek_boat_location_id_zarpe" readonly="1" />
+        <field name="etd" readonly="1" />
+        <field name="atd" readonly="1" />
+        <field name="agent_user_id_zarpe" readonly="1" />
+        <field name="commission_zarpe" readonly="1" sum="Total" />
+        <field name="estimate_port" readonly="1" />
+        <field name="actal_port" readonly="1" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_ship_document_certificate_tree" model="ir.ui.view">
+    <field name="name">ek_ship_document_certificate_tree</field>
+    <field name="model">ek.ship.document.certificate</field>
+    <field name="arch" type="xml">
+      <tree decoration-danger="document_status == 'expired'" decoration-warning="document_status == 'to_wi'">
+        <field name="name" />
+        <field name="date_issue" string="Emitido" />
+        <field name="expiration_date" string="Vencimiento" />
+        <field name="next_endorsement_date" optional="hide" />
+        <field name="date_limit" optional="hide" />
+        <field name="code" optional="hide" />
+        <field name="range_from_date" optional="show" />
+        <field name="range_to_date" optional="show" />
+        <field name="periodicity" optional="hide" />
+        <field name="periodicity_type" optional="hide" />
+        <field name="alert_time" string="Notificar Antes" optional="show" />
+        <field name="alert_time_type" string="Unidad" optional="show" />
+        <field name="next_alert_date" string="Próxima Alerta" optional="show" decoration-info="True" />
+        <field name="contact_ids" string="Notificar a" widget="many2many_tags" optional="show" />
+        <field name="document_status" widget="badge" decoration-danger="document_status == 'expired'" decoration-warning="document_status == 'to_wi'" decoration-success="document_status == 'current'" string="Status" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="ek_ship_document_certificate_form" model="ir.ui.view">
+    <field name="name">ek_ship_document_certificate_form</field>
+    <field name="model">ek.ship.document.certificate</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <field name="document_status" widget="statusbar" options="{'clickable':1}" />
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name" placeholder="Ship Document Certificate" required="1" />
+            </h1>
+          </div>
+          <group>
+            <group string="Información Básica">
+              <field name="code" required="0" placeholder="Ej. LST-1234"/>
+              <field name="institution_id" placeholder="Ej. DIRNEA, Autoridad Portuaria..."/>
+              <field name="date_issue" />
+              <field name="expiration_date" />
+              <field name="next_endorsement_date" />
+              <field name="date_limit" />
+              <field name="date_today" invisible="1" />
+              <field name="ship_name_id" invisible="1" />
+            </group>
+            <group string="Configuración de Alertas">
+              <label for="range_from_date" string="Rango de Tolerancia" />
+              <div class="o_row">
+                <span class="oe_inline">Desde </span>
+                <field name="range_from_date" class="oe_inline" />
+                <span class="oe_inline">  Hasta </span>
+                <field name="range_to_date" class="oe_inline" />
+              </div>
+
+              <label for="alert_time" string="Notificar Antes del Vencimiento" />
+              <div class="o_row">
+                <field name="alert_time" class="oe_inline" />
+                <field name="alert_time_type" class="oe_inline" />
+                <span class="oe_inline ml-2"> a partir de las </span>
+                <field name="alert_start_time" widget="float_time" class="oe_inline" placeholder="Ej. 08:30" />
+              </div>
+
+              <label for="periodicity" string="Se Renueva Cada" />
+              <div class="o_row">
+                <field name="periodicity" class="oe_inline" />
+                <field name="periodicity_type" class="oe_inline" />
+              </div>
+
+              <field name="contact_ids" widget="many2many_tags" />
+              <field name="next_alert_date" decoration-info="True" readonly="1" />
+              <field name="last_alert_sent_date" readonly="1" string="Fecha de Última Alerta Enviada" />
+            </group>
+          </group>
+          <notebook>
+            <page string="Notas">
+              <field name="notes" placeholder="Notas detalladas para el correo de alerta... (ej. documentos requeridos, acciones para resolver)" nolabel="1" />
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter" name="oe_chatter">
+          <field name="message_follower_ids" />
+          <field name="message_ids" />
+          <field name="activity_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek.l10n.model.mixin View Tree -->
+    <record id="view_ek_l10n_model_mixin_tree" model="ir.ui.view">
+        <field name="name">view.ek.l10n.model.mixin.tree</field>
+        <field name="model">ek.l10n.model.mixin</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View ek.l10n.model.mixin form -->
+    <record id="view_ek_l10n_model_mixin_form" model="ir.ui.view">
+        <field name="name">view.ek.l10n.model.mixin.form</field>
+        <field name="model">ek.l10n.model.mixin</field>
+        <field name="arch" type="xml">
+            <form string="ek.l10n.model.mixin">
+                <header>
+                    <field name="stage_id" widget="statusbar_duration" options="{'clickable': false, 'fold_field': 'fold'}"/>
+                    <button name="action_prev_stage" type="object" class="oe_highlight" invisible="not show_back_button or fold">
+                        <field readonly="1" name="prev_stage_label" options='{"no_open": True}'></field>
+                    </button>
+                    <button name="action_next_stage" type="object" class="oe_highlight" invisible="not show_button_next_stage  or show_button_close or fold">
+                        <field readonly="1" name="next_stage_label" options='{"no_open": True}'></field>
+                    </button>
+                    <button string="Print" name="action_print" type="object" class="oe_highlight"  invisible="not show_print_button"/>
+                    <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="not show_button_cancel or fold"/>
+                    <button string="Close" name="action_close" type="object" class="oe_highlight" invisible="not show_button_close or fold"/>
+                    <field name="show_print_button" invisible="1"/>
+                    <field name="fold" invisible="1"/>
+                    <field name="show_button_next_stage" invisible="1"/>
+                    <field name="show_button_cancel" invisible="1"/>
+                    <field name="show_button_close" invisible="1"/>
+                    <field name="show_button_prev_stage" invisible="1"/>
+                    <field name="show_back_button" invisible="1"/>
+                    <field name="block_type" invisible="1"/>
+                    
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="type_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" invisible="not name or name == '/'" class="oe_inline" readonly="True"/><span invisible="not name or name == '/'">-</span><field name="type_id" class="oe_inline" placeholder="Type..." readonly="block_type" options='{"no_open": False, "no_create": True, "no_edit": True}'/>
+                        </h1>
+                    </div>
+                    <group name="group_dinamic_type">
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action ek.l10n.model.mixin -->
+    <record id="action_ek_l10n_model_mixin" model="ir.actions.act_window">
+        <field name="name">Lab Form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.l10n.model.mixin</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

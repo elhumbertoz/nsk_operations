@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_provision_document">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <br/>
+                    <div class="row mt32 mb32">
+                        <div class="col-6" t-if="o.invoice_date">
+                            <strong>Fecha de emisión:</strong>
+                            <span t-field="o.invoice_date"/>
+                        </div>
+                        <div class="col-6" t-if="o.invoice_date_due">
+                            <strong>Fecha de vencimiento:</strong>
+                            <span t-field="o.invoice_date_due"/>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-6">
+                            <strong>Documento:</strong>
+                            <span t-field="o.l10n_latam_document_type_id"/>
+                        </div>
+                        <div class="col-6">
+                            <strong>No:</strong>
+                            <span t-field="o.l10n_latam_document_number"/>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-6" t-if="o.l10n_ec_authorization_number">
+                            <strong>Autorización:</strong>
+                            <span t-field="o.l10n_ec_authorization_number"/>
+                        </div>
+                        <div class="col-6" t-if="o.state">
+                            <strong>Estado:</strong>
+                            <span t-field="o.state"/>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-12" t-if="o.partner_id.name">
+                            <strong t-if="o.move_type == 'out_invoice' or o.move_type == 'out_refund'">Cliente:</strong>
+                            <strong t-if="o.move_type != 'out_invoice' and o.move_type != 'out_refund'">Proveedor:</strong>
+                            <span t-field="o.partner_id.name"/>
+                            -
+                            <strong>Identificación:</strong>
+                            <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </div>
+                    <hr/>
+                    <h5>Detalles</h5>
+                    <table class="table table-sm  o_main_table small">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-end">Descuento (%)</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                <td>
+                                    <span t-field="l.product_id.default_code"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.quantity"/>
+                                    <span t-field="l.product_uom_id" groups="uom.group_uom"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="l.price_unit"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="l.discount"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="l.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <t t-foreach="o.l10n_ec_withhold_ids" t-as="withhold_id">
+                        <hr/>
+                        <h5>Retención</h5>
+                        <div class="row mt32 mb32">
+                            <div class="col-3" t-if="withhold_id.l10n_ec_withhold_date">
+                                <strong>Fecha de emisión:</strong>
+                                <span t-field="withhold_id.l10n_ec_withhold_date"/>
+                            </div>
+                            <div class="col-3" t-if="withhold_id.name">
+                                <strong>Documento:</strong>
+                                <span t-field="withhold_id.name"/>
+                            </div>
+                            <div class="col-3" t-if="withhold_id.name">
+                                <strong>Total:</strong>
+                                <span t-field="withhold_id.amount_total"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm  o_main_table small">
+                            <thead>
+                                <tr>
+                                    <th>Retención</th>
+                                    <th class="text-end">Base</th>
+                                    <th class="text-end">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <t t-if="withhold_id.l10n_ec_withhold_line_ids">
+                                    <tr t-foreach="withhold_id.l10n_ec_withhold_line_ids" t-as="l">
+                                        <td>
+                                            <t t-foreach="l.tax_ids" t-as="tax">
+                                                <span t-field="tax.name"/>
+                                                <br/>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="l.balance"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="l.l10n_ec_withhold_tax_amount"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td/>
+                                    <td/>
+                                    <td class="text-end">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="withhold_id.amount_total"/>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="o.line_ids">
+                        <hr/>
+                        <h5>Asiento Contable</h5>
+                        <div class="row mt32 mb32">
+                            <div class="col-12" t-if="o.ref">
+                                <strong>Concepto:</strong>
+                                <span t-field="o.ref"/>
+                            </div>
+                        </div>
+                        <table class="table table-condensed  table-sm o_main_table small">
+                            <thead>
+                                <tr>
+                                    <th>Cuenta</th>
+                                    <th class="text-end">Debe</th>
+                                    <th class="text-end">Haber</th>
+                                </tr>
+                            </thead>
+                            <t t-set="total" t-value="0"/>
+                            <tbody class="invoice_tbody">
+                                <t t-foreach="o.line_ids" t-as="l">
+                                    <t t-if="l.balance != 0">
+                                        <tr>
+                                            <td>
+                                                <span t-field="l.account_id"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="l.debit"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="l.credit"/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="total" t-value="total + l.debit"/>
+                                    </t>
+                                </t>
+                                <tr>
+                                    <td class="text-end">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong>
+                                            <!--<span t-field="o.amount_total"/>-->
+                                            <span t-esc="total"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                            />
+                                        </strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong>
+                                            <!--<span t-field="o.amount_total"/>-->
+                                            <span t-esc="total"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                            />
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <!--<div class="row">
+                        <div class="col-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Subtotal</strong></td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Base Imponible diferente 0%</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_vat" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Base Imponible 0%</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_vat_cero" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ICE</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_ice" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Valor Impuesto</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black" t-if="o.type == 'in_invoice' or o.type == 'liq_purchase' or o.type == 'in_refund'">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-end">
+                                         <span t-field="o.amount_pay" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black" t-if="o.type == 'in_invoice' or o.type == 'liq_purchase' or o.type == 'in_refund'">
+                                    <td><strong>Retenciones</strong></td>
+                                    <td class="text-end">
+                                         <span t-field="o.amount_tax_retention" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td><strong>Total a Pagar</strong></td>
+                                    <td class="text-end">
+                                         <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>-->
+                    <p t-if="o.ref">
+                        <strong>Referencia:</strong>
+                        <span t-field="o.ref"/>
+                    </p>
+                    <p t-if="o.invoice_payment_term_id.name">
+                        <strong>Plazo de pago:</strong>
+                        <span t-field="o.invoice_payment_term_id.name"/>
+                    </p>
+                    <br/>
+                    <div class="row" style="text-align:center;">
+                        <div class="col-4">
+                            <t t-if="o.user_id">
+                                <span t-field="o.user_id"/>
+                            </t>
+                            <t t-if="not o.user_id">
+                                <strong>_______________________</strong>
+                            </t>
+                            <p/>
+                            <strong>Elaborado Por</strong>
+                        </div>
+                        <div class="col-4">
+                            <strong>_______________________</strong>
+                            <p/>
+                            <strong>Aprobado Por</strong>
+                        </div>
+                        <div class="col-4">
+                            <strong>_______________________</strong>
+                            <p/>
+                            <strong>Revisado Por</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_invoice_provision">
+            <t t-foreach="docs" t-as="o">
+
+                <t t-call="ek_l10n_ec.ek_external_layout_standard_header"/>                    
+                <t t-call="web.html_container">
+                        <t t-call="ek_l10n_ec.report_invoice_provision_document" t-lang="o.partner_id.sudo().lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

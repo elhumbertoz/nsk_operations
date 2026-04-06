@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="group_account_move_cost_security" model="res.groups">
+            <field name="name">Mostrar Costos en Factura</field>
+             <field name="comment">Permite mostrar los costos de los items en la facturación</field>
+            <field name="category_id" ref="ek_l10n_ec_ote.group_ekuasoft_base"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_admin'))]" /> -->
+        </record>
+
+        <record id="group_account_payment_advance" model="res.groups">
+            <field name="name">Permitir Anticipos Clientes/Proveedores</field>
+            <field name="comment">Permite a los usuarios que generen anticipos de clientes y/o proveedores</field>
+            <field name="category_id" ref="ek_l10n_ec_ote.group_ekuasoft_base"/>
+        </record>
+
+
+        <record id="account_payment_mode_company_rule" model="ir.rule">
+            <field name="name">Payment mode multi-company rule</field>
+            <field name="model_id" ref="model_account_payment_mode" />
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <record id="10n_ec_edi_certificate_company_rule" model="ir.rule">
+            <field name="name">Digital Certificates multi-company rule</field>
+            <field name="model_id" ref="l10n_ec_edi.model_l10n_ec_edi_certificate" />
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+    </data>
+</odoo>

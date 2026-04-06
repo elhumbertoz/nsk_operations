@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ek_template_py3o_type_rule" model="ir.rule">
+        <field name="name">ek_template_py3o Multi-Company</field>
+        <field name="model_id" ref="model_ek_template_py3o"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>
+
+

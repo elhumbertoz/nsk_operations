@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Tree view para ek.operation.request.notification -->
+  <record id="view_ek_operation_request_notification_tree" model="ir.ui.view">
+    <field name="name">ek.operation.request.notification.tree</field>
+    <field name="model">ek.operation.request.notification</field>
+    <field name="arch" type="xml">
+      <tree editable="top">
+        <field name="sequence" widget="handle" />
+        <field name="user_id" widget="many2one_avatar_user" />
+        <field name="notify" widget="boolean_toggle" />
+        <field name="create_activity" widget="boolean_toggle" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- Form view para ek.operation.request.notification -->
+  <record id="view_ek_operation_request_notification_form" model="ir.ui.view">
+    <field name="name">ek.operation.request.notification.form</field>
+    <field name="model">ek.operation.request.notification</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name" />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="user_id" widget="many2one_avatar_user" />
+              <field name="sequence" />
+            </group>
+            <group>
+              <field name="notify" />
+              <field name="create_activity" />
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

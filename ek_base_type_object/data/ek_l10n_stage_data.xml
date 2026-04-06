@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- stage "New" gets created by default with sequence 0-->
+    <record id="stage_new" model="ek.l10n.stages.mixin">
+        <field name="name">Draft</field>
+        <field name="sequence">0</field>
+        <field name="show_canceled_button" eval="True"/>
+    </record>
+    <record id="stage_in_progress" model="ek.l10n.stages.mixin">
+        <field name="name">In Progress</field>
+        <field name="sequence">1</field>
+        <field name="show_canceled_button" eval="True"/>
+        <field name="show_close_button" eval="True"/>
+        <field name="confirm_stage" eval="True"/>
+        
+    </record>
+    <record id="stage_on_hold" model="ek.l10n.stages.mixin">
+        <field name="name">On Hold</field>
+        <field name="sequence">2</field>
+        <field name="show_canceled_button" eval="True"/>
+        <field name="show_close_button" eval="True"/>
+        
+    </record>
+    <record id="stage_solved" model="ek.l10n.stages.mixin">
+        <field name="name">Done</field>
+        <field name="sequence">3</field>
+        <field name="fold" eval="True"/>
+    </record>
+    <record id="stage_cancelled" model="ek.l10n.stages.mixin">
+        <field name="name">Canceled</field>
+        <field name="sequence">4</field>
+        <field name="fold" eval="True"/>
+        <field name="canceled_stage" eval="True"/>
+    </record>
+
+</odoo>

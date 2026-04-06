@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="res_config_settings_l10n_ec_edi" model="ir.ui.view">
+    <field name="name">res.config.settings.l10n.ec.edi</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="l10n_ec_edi.res_config_settings_l10n_ec_edi"/>
+    <field name="arch" type="xml">
+      <xpath expr="//block[@id='l10n_ec_edi_settings']" position="inside">
+        <setting id="default_taxes_pending" string="Control de retenciones de clientes pendientes" help="Controlar las retenciones pendientes que tienen los clientes y enviar correos de recordatorio">
+          <div class="mt16">
+            <div>
+              <label for="l10n_ec_withhold_start_date" class="col-lg-4 o_light_label"/>
+              <field name="l10n_ec_withhold_start_date"/>
+            </div>
+            <div>
+              <label for="l10n_ec_withhold_pending_mail_send" class="col-lg-4 o_light_label"/>
+              <field name="l10n_ec_withhold_pending_mail_send"/>
+            </div>
+            <div>
+              <label for="l10n_ec_withhold_pending_mail_tempalte_id" class="col-lg-4 o_light_label"/>
+              <field name="l10n_ec_withhold_pending_mail_tempalte_id" options="{'no_create': True, 'no_open': True}"/>
+            </div>
+          </div>
+        </setting>
+        <setting id="final_consumer" string="Consumidor Final" help="Monto límite por facturación en ventas a Consumidor Final">
+          <div class="mt16">
+            <div>
+              <label string="Monto límite" for="l10n_ec_final_consumer_limit" class="col-lg-4 o_light_label"/>
+              <field name="l10n_ec_final_consumer_limit" class="o_light_label" widget="monetary"/>
+            </div>
+          </div>
+        </setting>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="ek_l10n_ec_account_advance_payment_res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">ek.l10n.ec.account.advance.payment.document.res.config.settings.inherit</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//block[@id='invoicing_settings']" position="after">
+        <block id="advance_payment_account" title="Anticipos de Clientes/Proveedor" invisible="country_code != 'EC'">
+          <setting company_dependent="1" string="Configuración de cuenta y diario para anticipos de clientes" help="Permitir que se ingresen pagos de clientes de forma anticipada usndo cuentas diferentes">
+            <field name="group_account_payment_advance"/>
+            <div class="content-group mt-2" invisible="not group_account_payment_advance">
+              <div class="row">
+                <label for="l10n_ec_advance_journal_receivable_id" class="col-lg-4 o_light_label" string="Diario de Cruce"/>
+                <field name="l10n_ec_advance_journal_receivable_id" required="group_account_payment_advance == True and country_code == 'EC'"/>
+              </div>
+              <div class="row">
+                <label for="l10n_ec_advance_account_receivable_id" class="col-lg-4 o_light_label" string="Cuenta de Anticipos (Locales)"/>
+                <field name="l10n_ec_advance_account_receivable_id" required="group_account_payment_advance == True and country_code == 'EC'" domain="[('reconcile','=',True)]"/>
+              </div>
+              <div class="row">
+                <label for="l10n_ec_advance_account_foreign_receivable_id" class="col-lg-4 o_light_label" string="Cuenta de Anticipos  (Exterior)"/>
+                <field name="l10n_ec_advance_account_foreign_receivable_id" required="group_account_payment_advance == True and country_code == 'EC'" domain="[('reconcile','=',True)]"/>
+              </div>
+            </div>
+          </setting>
+          <setting company_dependent="1" string="Configuración de cuenta y diario para anticipos a proveedores" invisible="not group_account_payment_advance" help="Permitir que se ingresen pagos de proveedores de forma anticipada usndo cuentas diferentes">
+            <field name="group_account_payment_advance"/>
+            <div class="content-group mt-2" invisible="not group_account_payment_advance">
+              <div class="row">
+                <label for="l10n_ec_advance_journal_payable_id" class="col-lg-4 o_light_label" string="Diario de Cruce"/>
+                <field name="l10n_ec_advance_journal_payable_id" required="group_account_payment_advance == True and country_code == 'EC'"/>
+              </div>
+              <div class="row">
+                <label for="l10n_ec_advance_account_payable_id" class="col-lg-4 o_light_label"/>
+                <field name="l10n_ec_advance_account_payable_id" required="group_account_payment_advance == True and country_code == 'EC'" string="Cuenta de Anticipos (Locales)" domain="[('reconcile','=',True)]"/>
+              </div>
+              <div class="row">
+                <label for="l10n_ec_advance_account_foreign_payable_id" class="col-lg-4 o_light_label" string="Cuenta de Anticipos  (Exterior)"/>
+                <field name="l10n_ec_advance_account_foreign_payable_id" required="group_account_payment_advance == True and country_code == 'EC'" domain="[('reconcile','=',True)]"/>
+              </div>
+            </div>
+          </setting>
+        </block>
+      </xpath>
+    </field>
+  </record>
+</odoo>

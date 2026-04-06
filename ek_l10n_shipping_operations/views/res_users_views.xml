@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!-- Extender vista de usuarios para agregar campo de agente naviero -->
+    <record
+        id="view_users_form_inherit_shipping_agent"
+        model="ir.ui.view">
+      <field name="name">res.users.form.inherit.shipping.agent</field>
+      <field name="model">res.users</field>
+      <field
+          name="inherit_id"
+          ref="base.view_users_form" />
+      <field
+          name="arch"
+          type="xml">
+        <xpath
+            expr="//field[@name='active']"
+            position="after">
+          <field
+              name="is_shipping_agent"
+              widget="boolean_toggle"
+              groups="ek_l10n_shipping_operations.group_shipping_agent_manager" />
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Extender vista de lista de usuarios para mostrar el campo -->
+    <record
+        id="view_users_tree_inherit_shipping_agent"
+        model="ir.ui.view">
+      <field name="name">res.users.tree.inherit.shipping.agent</field>
+      <field name="model">res.users</field>
+      <field
+          name="inherit_id"
+          ref="base.view_users_tree" />
+      <field
+          name="arch"
+          type="xml">
+        <xpath
+            expr="//field[@name='login_date']"
+            position="before">
+          <field
+              name="is_shipping_agent"
+              widget="boolean_toggle"
+              groups="ek_l10n_shipping_operations.group_shipping_agent_manager" />
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
