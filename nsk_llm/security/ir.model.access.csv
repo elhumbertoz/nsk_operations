@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_nsk_llm_provider_user,nsk.llm.provider.user,model_nsk_llm_provider,base.group_user,1,0,0,0
+access_nsk_llm_provider_admin,nsk.llm.provider.admin,model_nsk_llm_provider,base.group_system,1,1,1,1

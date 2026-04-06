@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_llm" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.llm</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Artificial Intelligence" string="Artificial Intelligence" name="nsk_llm" groups="base.group_system">
+                    <div class="app_settings_block" data-string="Artificial Intelligence" string="Artificial Intelligence" data-key="nsk_llm">
+                        <h2>Language Models</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <icon class="fa fa-robot"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="nsk_default_llm_provider_id" string="Default Provider"/>
+                                    <div class="text-muted">
+                                        Choose the default LLM provider to handle generic AI requests.
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="nsk_default_llm_provider_id" class="o_light_label" widget="selection"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button name="%(action_llm_provider)d" icon="fa-arrow-right" type="action" string="Manage Providers" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
