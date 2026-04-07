@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categoría para productos de Régimen 70 -->
+    <record id="product_category_regime_70" model="product.category">
+        <field name="name">Repuestos y Suministros Marítimos / Régimen 70</field>
+        <field name="parent_id" ref="product.product_category_all"/>
+        <field name="property_cost_method">fifo</field>
+        <field name="property_valuation">manual_periodic</field>
+    </record>
+
+    <!-- Tag para identificar productos de Régimen 70 -->
+    <record id="product_tag_regime_70" model="product.tag">
+        <field name="name">Régimen 70</field>
+        <field name="color">3</field>
+    </record>
+</odoo>

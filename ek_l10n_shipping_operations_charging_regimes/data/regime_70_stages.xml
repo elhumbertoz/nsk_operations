@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--
+            REQ-007: Configuración de 9 Etapas para Régimen 70
+
+            Flujo del proceso:
+            1. Borrador → 2. Notificación → 3. Arribo → 4. Traslado →
+            5. Ingreso a depósito → 6. Cierre → 7. Generar orden de venta →
+            8. Realizado → 9. Cancelado
+        -->
+
+        <!-- ETAPA 1: Borrador -->
+        <record id="stage_regime_70_draft" model="ek.l10n.stages.mixin">
+            <field name="name">Borrador</field>
+            <field name="sequence">10</field>
+            <field name="fold">False</field>
+            <field name="description">Solicitud en estado inicial. Captura de datos básicos.</field>
+        </record>
+
+        <!-- ETAPA 2: Notificación -->
+        <record id="stage_regime_70_notification" model="ek.l10n.stages.mixin">
+            <field name="name">Notificación</field>
+            <field name="sequence">20</field>
+            <field name="fold">False</field>
+            <field name="description">Notificar a Agente de Aduanas y Almacenera. Enviar documentación.</field>
+        </record>
+
+        <!-- ETAPA 3: Arribo -->
+        <record id="stage_regime_70_arrival" model="ek.l10n.stages.mixin">
+            <field name="name">Arribo</field>
+            <field name="sequence">30</field>
+            <field name="fold">False</field>
+            <field name="description">Contenedor arribado al puerto. Esperando autorización de traslado.</field>
+        </record>
+
+        <!-- ETAPA 4: Traslado -->
+        <record id="stage_regime_70_transfer" model="ek.l10n.stages.mixin">
+            <field name="name">Traslado</field>
+            <field name="sequence">40</field>
+            <field name="fold">False</field>
+            <field name="description">En proceso de traslado desde puerto hasta depósito temporal.</field>
+        </record>
+
+        <!-- ETAPA 5: Ingreso a Depósito -->
+        <record id="stage_regime_70_deposit" model="ek.l10n.stages.mixin">
+            <field name="name">Ingreso a Depósito</field>
+            <field name="sequence">50</field>
+            <field name="fold">False</field>
+            <field name="description">Mercancía ingresada en depósito temporal bajo control aduanero.</field>
+        </record>
+
+        <!-- ETAPA 6: Cierre -->
+        <record id="stage_regime_70_closure" model="ek.l10n.stages.mixin">
+            <field name="name">Cierre</field>
+            <field name="sequence">60</field>
+            <field name="fold">False</field>
+            <field name="description">Validación de factura vs Nota de Pedido completada. Listo para facturar.</field>
+        </record>
+
+        <!-- ETAPA 7: Generar Orden de Venta -->
+        <record id="stage_regime_70_generate_so" model="ek.l10n.stages.mixin">
+            <field name="name">Generar Orden de Venta</field>
+            <field name="sequence">70</field>
+            <field name="fold">False</field>
+            <field name="description">Crear orden de venta al cliente con los repuestos y servicios.</field>
+        </record>
+
+        <!-- ETAPA 8: Realizado -->
+        <record id="stage_regime_70_done" model="ek.l10n.stages.mixin">
+            <field name="name">Realizado</field>
+            <field name="sequence">80</field>
+            <field name="fold">True</field>
+            <field name="description">Proceso completado. Orden de venta creada y mercancía despachada.</field>
+        </record>
+
+        <!-- ETAPA 9: Cancelado -->
+        <record id="stage_regime_70_cancelled" model="ek.l10n.stages.mixin">
+            <field name="name">Cancelado</field>
+            <field name="sequence">90</field>
+            <field name="fold">True</field>
+            <field name="description">Solicitud cancelada por el usuario o por error en el proceso.</field>
+        </record>
+
+    </data>
+</odoo>

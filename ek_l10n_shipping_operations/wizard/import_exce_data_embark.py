@@ -89,6 +89,9 @@ class ImportExcelDataEmbarkWizard(models.TransientModel):
             }
           )
 
+          # NUEVO: Buscar/crear producto automáticamente
+          # El método create() del modelo ya se encarga de esto vía _find_or_create_product
+          # pero mantenemos compatibilidad
           itens = self.env['ek.product.packagens.goods'].create(vals)
           ids.append(itens.id)
         self.file = False

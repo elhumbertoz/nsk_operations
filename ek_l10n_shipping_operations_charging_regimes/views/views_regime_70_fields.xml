@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        REQ-016 a REQ-018: Vistas actualizadas para Régimen 70
+        Este archivo agrega campos y tabs específicos para Régimen 70
+    -->
+
+    <!-- Inherit form view to add Régimen 70 fields -->
+    <record id="view_ek_operation_request_regime_70_form" model="ir.ui.view">
+        <field name="name">ek.operation.request.regime.70.form</field>
+        <field name="model">ek.operation.request</field>
+        <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_operation_request_form"/>
+        <field name="arch" type="xml">
+
+            <!-- REQ-017: Cambiar label ID BL → ID CONTENEDOR -->
+            <xpath expr="//field[@name='id_bl']" position="before">
+                <label for="id_bl" string="ID CONTENEDOR" invisible="not regime in ['70']"/>
+            </xpath>
+
+            <!-- Agregar campos de Régimen 70 en grupo principal -->
+            <xpath expr="//field[@name='ek_group_mail_template_id']" position="after">
+                <!-- CAMPOS NUEVOS RÉGIMEN 70 -->
+                <field name="regime" invisible="1"/>
+
+                <field name="authorization_number"
+                       invisible="not regime in ['70']"
+                       placeholder="M-XXXX"/>
+
+                <field name="shipping_line_id"
+                       invisible="not regime in ['70']"
+                       options="{'no_create': True}"/>
+
+                <field name="client_partner_id"
+                       invisible="not regime in ['70']"
+                       options="{'no_create': True}"/>
+
+                <field name="client_vessel_name"
+                       invisible="not regime in ['70']"
+                       placeholder="Nombre del barco del cliente"/>
+            </xpath>
+
+            <!-- Agregar fechas adicionales -->
+            <xpath expr="//field[@name='create_date']" position="after">
+                <field name="transfer_date"
+                       invisible="not regime in ['70']"/>
+
+                <field name="container_return_date"
+                       invisible="not regime in ['70']"/>
+            </xpath>
+
+            <!-- Agregar tabs nuevos al notebook -->
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+
+                <!-- TAB: Información Régimen 70 -->
+                <page string="Régimen 70" invisible="not regime in ['70']">
+
+                    <!-- SECCIÓN: Extracción con IA -->
+                    <group string="🤖 Extracción Automática con IA" invisible="not regime in ['70']">
+                        <group>
+                            <field name="bl_attachment_id"
+                                   filename="bl_attachment_filename"
+                                   help="Adjunte el Bill of Lading (BL) en formato PDF"/>
+                            <button name="action_extract_bl_with_ai"
+                                    string="🤖 Extraer BL con IA"
+                                    type="object"
+                                    class="btn-primary"
+                                    icon="fa-magic"
+                                    invisible="not bl_attachment_id"/>
+                        </group>
+                        <group>
+                            <field name="invoice_attachment_ids"
+                                   widget="many2many_binary"
+                                   help="Adjunte las facturas comerciales en PDF"/>
+                            <button name="action_extract_invoices_with_ai"
+                                    string="🤖 Extraer Facturas con IA"
+                                    type="object"
+                                    class="btn-success"
+                                    icon="fa-file-pdf-o"
+                                    invisible="not invoice_attachment_ids"/>
+                        </group>
+                    </group>
+
+                    <!-- Estado de extracción IA -->
+                    <group string="Estado IA" invisible="ai_extraction_status == 'pending'">
+                        <group>
+                            <field name="ai_extraction_status" widget="badge"
+                                   decoration-success="ai_extraction_status=='completed'"
+                                   decoration-warning="ai_extraction_status=='processing'"
+                                   decoration-danger="ai_extraction_status=='error'"/>
+                            <field name="ai_confidence_score" widget="progressbar"
+                                   invisible="not ai_confidence_score"/>
+                        </group>
+                        <group>
+                            <field name="ai_extraction_log" widget="text" readonly="1"
+                                   invisible="not ai_extraction_log"/>
+                        </group>
+                    </group>
+
+                    <separator/>
+
+                    <group string="Documentación y Autorizaciones">
+                        <group>
+                            <field name="authorization_number"/>
+                            <field name="deposit_description" placeholder="MA-00"/>
+                            <field name="purchase_order_attachment_id"/>
+                            <button name="action_extract_po_and_compare"
+                                    string="🤖 Validar con IA"
+                                    type="object"
+                                    class="btn-warning"
+                                    icon="fa-check-square-o"
+                                    invisible="not purchase_order_attachment_id or not ek_produc_packages_goods_ids"
+                                    help="Extrae la Nota de Pedido y compara automáticamente con la factura usando IA"/>
+                        </group>
+                        <group>
+                            <field name="shipping_line_id"/>
+                            <field name="supplies_detail"/>
+                            <field name="invoice_validated" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <group string="Cliente y Facturación">
+                        <group>
+                            <field name="client_partner_id"/>
+                            <field name="client_vessel_name"/>
+                        </group>
+                        <group>
+                            <field name="sale_order_id" readonly="1"/>
+                            <button name="action_generate_sale_order"
+                                    string="Generar Orden de Venta"
+                                    type="object"
+                                    class="btn-primary"
+                                    icon="fa-file-text-o"
+                                    invisible="sale_order_id or not client_partner_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Fechas y Traslado">
+                        <group>
+                            <field name="transfer_date"/>
+                            <field name="container_return_date"/>
+                        </group>
+                        <group>
+                            <field name="transfer_explanation" placeholder="Datos del transportista: Chofer, Cédula, Placas, Cooperativa"/>
+                        </group>
+                    </group>
+
+                    <group string="Resumen de Bultos por Buque" invisible="not total_packages_by_vessel">
+                        <field name="total_packages_by_vessel"
+                               widget="text"
+                               readonly="1"
+                               nolabel="1"/>
+                    </group>
+                </page>
+
+                <!-- TAB: Validación de Factura -->
+                <page string="Validación Factura" invisible="not regime in ['70']">
+                    <div class="alert alert-warning" role="alert" invisible="invoice_validated">
+                        <p><i class="fa fa-warning"/> La factura aún no ha sido validada contra la Nota de Pedido del agente aduanero.</p>
+                        <p>Use el botón "Validar contra Nota de Pedido" para iniciar el proceso de validación.</p>
+                    </div>
+
+                    <div class="alert alert-success" role="alert" invisible="not invoice_validated">
+                        <p><i class="fa fa-check-circle"/> La factura ha sido validada exitosamente.</p>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="purchase_order_attachment_id"/>
+                            <field name="invoice_validated" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <button name="%(action_ek_invoice_validation_wizard)d"
+                                    string="Validar contra Nota de Pedido"
+                                    type="action"
+                                    class="btn-primary"
+                                    icon="fa-check-square-o"
+                                    invisible="not purchase_order_attachment_id"/>
+                        </group>
+                    </group>
+
+                    <!-- Líneas de productos con estado de validación -->
+                    <field name="ek_produc_packages_goods_ids"
+                           readonly="1">
+                        <tree decoration-success="is_validated and validation_status=='match'"
+                              decoration-warning="is_validated and validation_status=='manual'"
+                              decoration-danger="not is_validated"
+                              decoration-muted="is_validated and validation_status=='pending'">
+                            <field name="name" string="Descripción"/>
+                            <field name="quantity"/>
+                            <field name="ship_id" string="Buque Destino"/>
+                            <field name="packages_count" string="Bultos"/>
+                            <field name="is_validated" widget="boolean"/>
+                            <field name="validation_status"/>
+                            <field name="po_line_reference" string="# PO"/>
+                        </tree>
+                    </field>
+                </page>
+
+            </xpath>
+
+            <!-- Agregar campos nuevos a tree de productos existente -->
+            <xpath expr="//field[@name='ek_produc_packages_goods_ids']//tree[@editable='bottom']/field[@name='supplier']" position="after">
+                <field name="ship_id"
+                       string="Buque Destino"
+                       optional="show"
+                       invisible="not parent.regime in ['70']"/>
+                <field name="packages_count"
+                       string="Bultos"
+                       optional="show"
+                       invisible="not parent.regime in ['70']"/>
+                <field name="commercial_unit"
+                       optional="hide"
+                       invisible="not parent.regime in ['70']"/>
+                <field name="observation"
+                       optional="hide"
+                       invisible="not parent.regime in ['70']"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- REQ-018: Search view with filter by vessel -->
+    <record id="view_ek_operation_request_search_regime_70" model="ir.ui.view">
+        <field name="name">ek.operation.request.search.regime.70</field>
+        <field name="model">ek.operation.request</field>
+        <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_operation_request_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Régimen 70"
+                        name="filter_regime_70"
+                        domain="[('regime', '=', '70')]"/>
+
+                <filter string="Factura Validada"
+                        name="filter_invoice_validated"
+                        domain="[('invoice_validated', '=', True), ('regime', '=', '70')]"/>
+
+                <filter string="Con Orden de Venta"
+                        name="filter_with_so"
+                        domain="[('sale_order_id', '!=', False), ('regime', '=', '70')]"/>
+
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Cliente"
+                            name="group_by_client"
+                            context="{'group_by': 'client_partner_id'}"/>
+                    <filter string="Línea Naviera"
+                            name="group_by_shipping_line"
+                            context="{'group_by': 'shipping_line_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista de partner para agregar campo markup -->
+    <record id="view_res_partner_form_maritime_markup" model="ir.ui.view">
+        <field name="name">res.partner.form.maritime.markup</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="inside">
+                <group string="Servicios Marítimos" invisible="not is_company">
+                    <field name="maritime_service_markup"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

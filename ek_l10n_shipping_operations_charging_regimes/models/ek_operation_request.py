@@ -8,6 +8,49 @@ from odoo.exceptions import UserError, ValidationError
 class EkOperationRequest(models.Model):
   _inherit = 'ek.operation.request'
 
+  # AI Extraction fields (from ek.ai.extraction.mixin)
+  bl_attachment_id = fields.Many2one(
+    'ir.attachment',
+    string="Bill of Lading (PDF)",
+    help="Adjuntar BL en formato PDF para extracción automática con IA"
+  )
+
+  bl_attachment_filename = fields.Char(
+    string="Nombre del archivo BL",
+    compute='_compute_bl_attachment_filename'
+  )
+
+  invoice_attachment_ids = fields.Many2many(
+    'ir.attachment',
+    'ek_operation_invoice_attachment_rel',
+    'operation_id',
+    'attachment_id',
+    string="Facturas Comerciales (PDF)",
+    help="Adjuntar facturas comerciales en PDF para extracción con IA"
+  )
+
+  ai_extraction_status = fields.Selection([
+    ('pending', 'Pendiente'),
+    ('processing', 'Procesando'),
+    ('completed', 'Completado'),
+    ('error', 'Error')
+  ], string="Estado Extracción IA", default='pending')
+
+  ai_extraction_log = fields.Text(
+    string="Log Extracción IA",
+    help="Registro de extracciones realizadas con IA"
+  )
+
+  ai_confidence_score = fields.Float(
+    string="Confianza IA (%)",
+    help="Nivel de confianza de la última extracción"
+  )
+
+  @api.depends('bl_attachment_id')
+  def _compute_bl_attachment_filename(self):
+    for record in self:
+      record.bl_attachment_filename = record.bl_attachment_id.name if record.bl_attachment_id else False
+
   use_in_regimen_60 = fields.Boolean(
     related='type_id.use_in_regimen_60',
   )
@@ -71,6 +114,107 @@ class EkOperationRequest(models.Model):
     help='Total number of lines in packages and goods table',
   )
 
+  # ============================================================
+  # CAMPOS NUEVOS REQ-008: Régimen 70 - Contenedores
+  # ============================================================
+
+  # AUTORIZACIÓN Y DOCUMENTACIÓN
+  authorization_number = fields.Char(
+    string="# Autorización",
+    default="M-",
+    help="Solicitud previa N° otorgado por almacenera (ej: M-3711)",
+    tracking=True
+  )
+
+  shipping_line_id = fields.Many2one(
+    'res.partner',
+    string="Línea Naviera",
+    domain="[('is_company', '=', True)]",
+    help="Línea naviera comercial (diferente del buque)",
+    tracking=True
+  )
+
+  # FECHAS ADICIONALES
+  container_return_date = fields.Date(
+    string="Fecha Devolución Contenedor",
+    tracking=True
+  )
+
+  transfer_date = fields.Datetime(
+    string="Fecha de Traslado",
+    help="Fecha de traslado al depósito aduanero",
+    tracking=True
+  )
+
+  # DETALLES DE MERCANCÍA
+  supplies_detail = fields.Char(
+    string="Detalle de Suministros o Repuestos",
+    default="CONTENEDOR #",
+    help="Descripción breve de la carga"
+  )
+
+  deposit_description = fields.Char(
+    string="# Matrícula Depósito",
+    default="MA-00",
+    help="Número de matrícula asignado por almacenera",
+    tracking=True
+  )
+
+  # INFORMACIÓN DE TRASLADO
+  transfer_explanation = fields.Text(
+    string="Información del Traslado",
+    help="Datos del transportista: Chofer, Cédula, Placas, Cooperativa"
+  )
+
+  # CLIENTE Y FACTURACIÓN
+  client_partner_id = fields.Many2one(
+    'res.partner',
+    string="Cliente (Dueño del Barco)",
+    help="Cliente externo que solicita servicio de reparación",
+    tracking=True
+  )
+
+  client_vessel_name = fields.Char(
+    string="Nombre del Barco del Cliente",
+    help="Nombre de la embarcación del cliente"
+  )
+
+  # ORDEN DE VENTA Y FACTURACIÓN
+  sale_order_id = fields.Many2one(
+    'sale.order',
+    string="Orden de Venta",
+    help="Orden de venta generada para facturación al cliente",
+    readonly=True,
+    tracking=True
+  )
+
+  # VALIDACIÓN DE NOTA DE PEDIDO (REQ-006B)
+  purchase_order_attachment_id = fields.Many2one(
+    'ir.attachment',
+    string="Nota de Pedido",
+    help="Documento proporcionado por el agente aduanero"
+  )
+
+  purchase_order_data = fields.Text(
+    string="Datos Nota de Pedido",
+    help="JSON con datos extraídos de la Nota de Pedido"
+  )
+
+  invoice_validated = fields.Boolean(
+    string="Factura Validada",
+    default=False,
+    help="Indica si la factura fue validada contra Nota de Pedido",
+    tracking=True
+  )
+
+  # RESUMEN DE BULTOS POR BUQUE (REQ-010)
+  total_packages_by_vessel = fields.Text(
+    string="Resumen de Bultos por Buque",
+    compute="_compute_packages_summary",
+    store=True,
+    help="Resumen automático de bultos agrupados por buque"
+  )
+
   @api.depends(
     'ek_produc_packages_goods_ids.quantity',
     'ek_produc_packages_goods_ids.gross_weight',
@@ -85,6 +229,127 @@ class EkOperationRequest(models.Model):
       record.total_fob = sum(packages_goods.mapped('fob'))
       record.total_total_fob = sum(packages_goods.mapped('total_fob'))
       record.total_lines = len(packages_goods)
+
+  @api.depends(
+    'ek_produc_packages_goods_ids.ship_id',
+    'ek_produc_packages_goods_ids.packages_count'
+  )
+  def _compute_packages_summary(self):
+    """
+    Calcula resumen de bultos agrupados por buque
+    REQ-010: Cálculo de Bultos por Buque
+    """
+    for record in self:
+      if not record.ek_produc_packages_goods_ids:
+        record.total_packages_by_vessel = ""
+        continue
+
+      # Agrupar por buque
+      summary = {}
+      total_packages = 0
+
+      for line in record.ek_produc_packages_goods_ids:
+        ship_name = line.ship_id.name if line.ship_id else "Stock General"
+        packages = line.packages_count or 0
+
+        if ship_name not in summary:
+          summary[ship_name] = {'packages': 0, 'products': 0}
+
+        summary[ship_name]['packages'] += packages
+        summary[ship_name]['products'] += 1
+        total_packages += packages
+
+      # Generar texto formateado
+      lines = []
+      for ship_name in sorted(summary.keys()):
+        data = summary[ship_name]
+        lines.append(f"• {ship_name}: {data['packages']} bultos ({data['products']} productos)")
+
+      lines.append(f"\nBULTOS TOTALES: {total_packages}")
+
+      record.total_packages_by_vessel = "\n".join(lines)
+
+  def action_generate_sale_order(self):
+    """
+    Generar orden de venta para Régimen 70
+    REQ-025, REQ-027: Generación de Orden de Venta
+    """
+    self.ensure_one()
+
+    # Validaciones
+    if not self.client_partner_id:
+      raise UserError(_('Debe especificar un cliente (dueño del barco) antes de generar la orden de venta'))
+
+    if self.sale_order_id:
+      raise UserError(_('Ya existe una orden de venta asociada: %s') % self.sale_order_id.name)
+
+    if not self.ek_produc_packages_goods_ids:
+      raise UserError(_('No hay productos para incluir en la orden de venta'))
+
+    # Obtener markup del cliente (campo nuevo en res.partner)
+    markup_percent = self.client_partner_id.maritime_service_markup or 20.0
+
+    # Crear orden de venta
+    sale_vals = {
+      'partner_id': self.client_partner_id.id,
+      'date_order': fields.Datetime.now(),
+      'origin': self.name or '',
+      'note': _(
+        'Orden de venta generada automáticamente para Régimen 70\n'
+        'Contenedor: %s\n'
+        'Barco Cliente: %s\n'
+        'Markup aplicado: %s%%'
+      ) % (
+        self.number_container or 'N/A',
+        self.client_vessel_name or 'N/A',
+        markup_percent
+      ),
+    }
+
+    # Crear orden
+    sale_order = self.env['sale.order'].create(sale_vals)
+
+    # Crear líneas de orden de venta
+    for goods_line in self.ek_produc_packages_goods_ids:
+      if not goods_line.product_id:
+        continue
+
+      # Calcular precio con markup
+      cost_price = goods_line.product_id.standard_price or goods_line.fob or 0
+      sale_price = cost_price * (1 + markup_percent / 100)
+
+      line_vals = {
+        'order_id': sale_order.id,
+        'product_id': goods_line.product_id.id,
+        'name': goods_line.product_id.display_name or goods_line.name or '',
+        'product_uom_qty': goods_line.quantity or 1,
+        'price_unit': sale_price,
+        'tax_id': [(6, 0, goods_line.product_id.taxes_id.ids)],
+      }
+
+      self.env['sale.order.line'].create(line_vals)
+
+    # Vincular orden con solicitud
+    self.sale_order_id = sale_order.id
+
+    # Log en chatter
+    self.message_post(
+      body=_('Orden de venta %s creada con %s líneas. Markup: %s%%') % (
+        sale_order.name,
+        len(sale_order.order_line),
+        markup_percent
+      )
+    )
+
+    # Abrir orden de venta
+    return {
+      'type': 'ir.actions.act_window',
+      'name': _('Orden de Venta Generada'),
+      'res_model': 'sale.order',
+      'view_mode': 'form',
+      'res_id': sale_order.id,
+      'target': 'current',
+    }
 
   # DEFINIR COMO HACER ESTO
   # def _get_object_validation_model_config(self):
@@ -430,6 +695,9 @@ class EkOperationRequest(models.Model):
         'sticky': False,
       },
     }
+
+  # Note: AI extraction methods will be added via mixin composition
+  # See ek_operation_request_mixin.py
 
   bl_import_export_id = fields.Many2one('bl.import.export', string='BL Export')
   bl_import_export_id2 = fields.Many2one('bl.import.export', string='BL Import')

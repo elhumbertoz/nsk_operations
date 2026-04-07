@@ -147,11 +147,21 @@
           <field name="assigned_regimen_70" invisible="1" force_save="1" />
           <field name="ek_produc_packages_goods_ids" invisible="not regime in ['21','70','61']" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
             <tree editable="bottom">
+              <!-- NUEVO: Campo producto principal -->
+              <field name="product_id"
+                     required="0"
+                     options="{'no_create': False, 'no_open': True}"
+                     domain="[('purchase_ok', '=', True)]"/>
+
+              <!-- Campos relacionados del producto (solo lectura) -->
+              <field name="product_default_code" optional="show" readonly="1"/>
+
+              <!-- Campos tradicionales -->
               <field name="tariff_item" />
-              <field name="id_hs_copmt_cd" />
-              <field name="id_hs_spmt_cd" />
-              <field name="ek_requerid_burden_inter_nac_id" />
-              <field name="name" widget="text" />
+              <field name="id_hs_copmt_cd" optional="hide"/>
+              <field name="id_hs_spmt_cd" optional="hide"/>
+              <field name="ek_requerid_burden_inter_nac_id" optional="hide"/>
+              <field name="name" widget="text" optional="hide"/>
               <field name="quantity" sum="Total" />
               <field name="gross_weight" sum="Total" />
               <field name="product_weight_in_lbs" />

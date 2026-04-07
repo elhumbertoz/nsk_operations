@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del Wizard de Asignación de Buque -->
+    <record id="ek_ship_assignment_wizard_form" model="ir.ui.view">
+        <field name="name">ek.ship.assignment.wizard.form</field>
+        <field name="model">ek.ship.assignment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asignación Masiva de Buque">
+                <header>
+                    <button name="action_assign_ship"
+                            string="Asignar Buque"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Asignación Masiva de Buque</h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="line_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="ship_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione el buque destino..."/>
+                        </group>
+                    </group>
+
+                    <group string="Líneas Seleccionadas">
+                        <field name="line_ids" nolabel="1">
+                            <tree create="false" delete="false" edit="false">
+                                <field name="name" string="Descripción"/>
+                                <field name="quantity" string="Cantidad"/>
+                                <field name="packages_count" string="Bultos"/>
+                                <field name="ship_id" string="Buque Actual"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <div class="alert alert-info" role="alert">
+                        <p><i class="fa fa-info-circle"/> Esta acción asignará el buque seleccionado a las <strong><field name="line_count" readonly="1"/></strong> líneas de mercancía.</p>
+                        <p>El resumen de bultos por buque se actualizará automáticamente.</p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción del Wizard -->
+    <record id="action_ek_ship_assignment_wizard" model="ir.actions.act_window">
+        <field name="name">Asignar Buque</field>
+        <field name="res_model">ek.ship.assignment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_product_packagens_goods"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

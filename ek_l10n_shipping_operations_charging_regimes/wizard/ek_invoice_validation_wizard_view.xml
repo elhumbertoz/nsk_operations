@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del Wizard de Validación -->
+    <record id="ek_invoice_validation_wizard_form" model="ir.ui.view">
+        <field name="name">ek.invoice.validation.wizard.form</field>
+        <field name="model">ek.invoice.validation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Validación: Factura vs Nota de Pedido">
+                <header>
+                    <button name="action_compare_documents"
+                            string="Comparar Documentos"
+                            type="object"
+                            class="btn-primary"
+                            invisible="validation_line_ids"/>
+                    <button name="action_validate_matches"
+                            string="Validar Coincidencias"
+                            type="object"
+                            class="btn-success"
+                            invisible="not validation_line_ids or exact_matches == 0"/>
+                    <button name="action_validate_with_minor_diff"
+                            string="Validar con Diferencias Menores"
+                            type="object"
+                            class="btn-warning"
+                            invisible="not validation_line_ids or (exact_matches + minor_diff) == 0"/>
+                    <button name="action_validate_selected"
+                            string="Validar Seleccionadas"
+                            type="object"
+                            class="btn-info"
+                            invisible="not validation_line_ids"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Validación de Factura vs Nota de Pedido</h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="operation_request_id"/>
+                        </group>
+                        <group>
+                            <!-- Espacio para más campos si es necesario -->
+                        </group>
+                    </group>
+
+                    <!-- Resumen de Validación -->
+                    <group string="Resumen" invisible="not validation_line_ids">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="badge badge-success" style="font-size: 14px; padding: 10px;">
+                                    <i class="fa fa-check-circle"/> Coincidencias exactas: <strong><field name="exact_matches" readonly="1"/></strong>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="badge badge-warning" style="font-size: 14px; padding: 10px;">
+                                    <i class="fa fa-exclamation-triangle"/> Diferencias menores: <strong><field name="minor_diff" readonly="1"/></strong>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="badge badge-danger" style="font-size: 14px; padding: 10px;">
+                                    <i class="fa fa-times-circle"/> Diferencias significativas: <strong><field name="major_diff" readonly="1"/></strong>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="badge badge-secondary" style="font-size: 14px; padding: 10px;">
+                                    <i class="fa fa-question-circle"/> No en Nota Pedido: <strong><field name="missing_in_po" readonly="1"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+
+                    <!-- Líneas de Validación -->
+                    <field name="validation_line_ids" invisible="not validation_line_ids">
+                        <tree editable="bottom"
+                              decoration-success="validation_status=='match'"
+                              decoration-warning="validation_status=='minor'"
+                              decoration-danger="validation_status=='major'"
+                              decoration-muted="validation_status=='missing'">
+
+                            <!-- Datos de Factura -->
+                            <field name="invoice_description" string="Descripción" width="200px"/>
+                            <field name="invoice_quantity" string="Cant." width="60px"/>
+                            <field name="invoice_weight" string="Peso" width="70px"/>
+                            <field name="invoice_fob" string="FOB" width="90px"/>
+
+                            <!-- Datos de Nota de Pedido -->
+                            <field name="po_item_number" string="PO#" width="50px"/>
+                            <field name="po_description" string="Desc. PO" width="150px"/>
+                            <field name="po_quantity" string="Cant. PO" width="60px"/>
+                            <field name="po_weight" string="Peso PO" width="70px"/>
+                            <field name="po_fob" string="FOB PO" width="90px"/>
+
+                            <!-- Estado y Diferencias -->
+                            <field name="validation_status" string="Estado" width="100px"/>
+                            <field name="differences" string="Diferencias" width="200px"/>
+                            <field name="validate_anyway" string="Val?" width="40px"/>
+
+                            <!-- Campo oculto -->
+                            <field name="goods_line_id" column_invisible="1"/>
+                        </tree>
+                    </field>
+
+                    <!-- Mensaje de ayuda -->
+                    <div class="alert alert-info" role="alert" invisible="validation_line_ids">
+                        <p><i class="fa fa-info-circle"/> Haga clic en <strong>"Comparar Documentos"</strong> para iniciar la validación automática.</p>
+                        <p>El sistema comparará cada producto de la factura con la Nota de Pedido del agente aduanero.</p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción del Wizard -->
+    <record id="action_ek_invoice_validation_wizard" model="ir.actions.act_window">
+        <field name="name">Validar contra Nota de Pedido</field>
+        <field name="res_model">ek.invoice.validation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

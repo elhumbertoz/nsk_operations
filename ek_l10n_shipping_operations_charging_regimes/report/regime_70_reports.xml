@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        REQ-022, REQ-023, REQ-024: Reportes para Régimen 70
+    -->
+
+    <!-- REQ-022: Reporte de Cargas en Depósito -->
+    <record id="action_report_regime_70_deposit_cargo" model="ir.actions.report">
+        <field name="name">Cargas en Depósito Temporal</field>
+        <field name="model">ek.operation.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_regime_70_deposit_cargo</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_regime_70_deposit_cargo</field>
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_regime_70_deposit_cargo">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center">
+                            <h2>REPORTE DE CARGAS EN DEPÓSITO TEMPORAL</h2>
+                            <h4>Régimen 70 - Almacén Temporal</h4>
+                        </div>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Solicitud:</strong> <span t-field="o.name"/><br/>
+                                <strong>Contenedor:</strong> <span t-field="o.number_container"/><br/>
+                                <strong>ID CONTENEDOR:</strong> <span t-field="o.id_bl"/><br/>
+                                <strong>Depósito:</strong> <span t-field="o.deposit_description"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Fecha Ingreso:</strong> <span t-field="o.transfer_date"/><br/>
+                                <strong>Fecha Devolución:</strong> <span t-field="o.container_return_date"/><br/>
+                                <strong>Autorización:</strong> <span t-field="o.authorization_number"/><br/>
+                                <strong>Cliente:</strong> <span t-field="o.client_partner_id.name"/><br/>
+                            </div>
+                        </div>
+
+                        <h4>Detalle de Mercancía</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Subpartida</th>
+                                    <th>Descripción</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-center">Bultos</th>
+                                    <th class="text-center">Peso (kg)</th>
+                                    <th class="text-center">FOB USD</th>
+                                    <th>Buque Destino</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="line">
+                                    <tr>
+                                        <td class="text-center"><span t-field="line.tariff_item"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/></td>
+                                        <td class="text-right"><span t-field="line.packages_count"/></td>
+                                        <td class="text-right"><span t-field="line.gross_weight"/></td>
+                                        <td class="text-right"><span t-field="line.total_fob"/></td>
+                                        <td><span t-field="line.ship_id.name"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2" class="text-right">TOTALES:</th>
+                                    <th class="text-right"><span t-field="o.total_quantity"/></th>
+                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th class="text-right"><span t-field="o.total_gross_weight"/></th>
+                                    <th class="text-right"><span t-field="o.total_total_fob"/></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h5>Resumen por Buque</h5>
+                                <pre t-field="o.total_packages_by_vessel"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt32">
+                            <div class="col-6">
+                                <strong>Observaciones:</strong><br/>
+                                <span t-field="o.description_name"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- REQ-023: Reporte de Exportaciones Vinculadas -->
+    <record id="action_report_regime_70_linked_exports" model="ir.actions.report">
+        <field name="name">Exportaciones Vinculadas (Régimen 70)</field>
+        <field name="model">ek.operation.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_regime_70_linked_exports</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_regime_70_linked_exports</field>
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_regime_70_linked_exports">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center">
+                            <h2>REPORTE DE EXPORTACIONES VINCULADAS</h2>
+                            <h4>Régimen 70 - Repuestos para Embarcaciones</h4>
+                        </div>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Solicitud:</strong> <span t-field="o.name"/><br/>
+                                <strong>Contenedor:</strong> <span t-field="o.number_container"/><br/>
+                                <strong>Fecha:</strong> <span t-field="o.create_date" t-options='{"widget": "date"}'/><br/>
+                                <strong>Cliente:</strong> <span t-field="o.client_partner_id.name"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Barco Cliente:</strong> <span t-field="o.client_vessel_name"/><br/>
+                                <strong>Línea Naviera:</strong> <span t-field="o.shipping_line_id.name"/><br/>
+                                <strong>Orden de Venta:</strong> <span t-field="o.sale_order_id.name"/><br/>
+                            </div>
+                        </div>
+
+                        <h4>Mercancía Exportada (Régimen 70)</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Subpartida</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-center">Bultos</th>
+                                    <th>Buque Destino</th>
+                                    <th class="text-center">FOB USD</th>
+                                    <th>Factura</th>
+                                    <th>Proveedor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.product_id.name"/></td>
+                                        <td><span t-field="line.tariff_item"/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/></td>
+                                        <td class="text-right"><span t-field="line.packages_count"/></td>
+                                        <td><span t-field="line.ship_id.name"/></td>
+                                        <td class="text-right"><span t-field="line.total_fob"/></td>
+                                        <td><span t-field="line.invoice_number"/></td>
+                                        <td><span t-field="line.supplier"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2" class="text-right">TOTALES:</th>
+                                    <th class="text-right"><span t-field="o.total_quantity"/></th>
+                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th></th>
+                                    <th class="text-right"><span t-field="o.total_total_fob"/></th>
+                                    <th colspan="2"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h5>Detalle de Orden de Venta</h5>
+                                <t t-if="o.sale_order_id">
+                                    <p><strong>Orden:</strong> <span t-field="o.sale_order_id.name"/></p>
+                                    <p><strong>Fecha:</strong> <span t-field="o.sale_order_id.date_order"/></p>
+                                    <p><strong>Total:</strong> <span t-field="o.sale_order_id.amount_total"/></p>
+                                    <p><strong>Estado:</strong> <span t-field="o.sale_order_id.state"/></p>
+                                </t>
+                                <t t-else="">
+                                    <p class="text-muted">No se ha generado orden de venta</p>
+                                </t>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- REQ-024: Reporte de Aplicaciones de Pólizas -->
+    <record id="action_report_regime_70_insurance_applications" model="ir.actions.report">
+        <field name="name">Aplicación de Pólizas de Transporte</field>
+        <field name="model">ek.operation.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_regime_70_insurance_applications</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_regime_70_insurance_applications</field>
+        <field name="binding_model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_regime_70_insurance_applications">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center">
+                            <h2>APLICACIÓN DE PÓLIZA DE TRANSPORTE</h2>
+                            <h4>Régimen 70 - Traslado a Depósito Temporal</h4>
+                        </div>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Solicitud:</strong> <span t-field="o.name"/><br/>
+                                <strong>Contenedor:</strong> <span t-field="o.number_container"/><br/>
+                                <strong>Autorización:</strong> <span t-field="o.authorization_number"/><br/>
+                                <strong>Depósito:</strong> <span t-field="o.deposit_description"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Fecha Traslado:</strong> <span t-field="o.transfer_date"/><br/>
+                                <strong>Línea Naviera:</strong> <span t-field="o.shipping_line_id.name"/><br/>
+                                <strong>Cliente:</strong> <span t-field="o.client_partner_id.name"/><br/>
+                                <strong>Valor Declarado:</strong> USD <span t-field="o.total_total_fob"/><br/>
+                            </div>
+                        </div>
+
+                        <h4>Información del Traslado</h4>
+                        <div class="row">
+                            <div class="col-12">
+                                <pre t-field="o.transfer_explanation"/>
+                            </div>
+                        </div>
+
+                        <h4 class="mt32">Detalle de Carga Asegurada</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-center">Bultos</th>
+                                    <th class="text-center">Peso (kg)</th>
+                                    <th class="text-center">Valor FOB USD</th>
+                                    <th>Factura</th>
+                                    <th>Proveedor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/></td>
+                                        <td class="text-right"><span t-field="line.packages_count"/></td>
+                                        <td class="text-right"><span t-field="line.gross_weight"/></td>
+                                        <td class="text-right"><span t-field="line.total_fob"/></td>
+                                        <td><span t-field="line.invoice_number"/></td>
+                                        <td><span t-field="line.supplier"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-right">TOTALES:</th>
+                                    <th class="text-right"><span t-field="o.total_quantity"/></th>
+                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th class="text-right"><span t-field="o.total_gross_weight"/></th>
+                                    <th class="text-right"><span t-field="o.total_total_fob"/></th>
+                                    <th colspan="2"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h5>Suministros a Transportar</h5>
+                                <p><span t-field="o.supplies_detail"/></p>
+                            </div>
+                        </div>
+
+                        <div class="row mt32">
+                            <div class="col-6">
+                                <p><strong>Valor Total Asegurado:</strong></p>
+                                <h4>USD <span t-field="o.total_total_fob"/></h4>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Cantidad Total de Bultos:</strong></p>
+                                <h4><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/> bultos</h4>
+                            </div>
+                        </div>
+
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <p class="text-muted" style="font-size: 10px;">
+                                    * Este documento sirve como base para la aplicación de la póliza de transporte
+                                    correspondiente al traslado de mercancía bajo Régimen 70 (Almacén Temporal).
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

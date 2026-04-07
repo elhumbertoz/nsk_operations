@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- REQ-011: Plantilla - Solicitud a Agente de Aduanas -->
+    <record id="mail_template_regime_70_customs_agent" model="mail.template">
+        <field name="name">Régimen 70 - Solicitud a Agente de Aduanas</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="subject">RÉGIMEN 70: NAVIERA SANTA KATALINA // BL ${object.id_bl or ''} (CONT. ${object.number_container or ''})</field>
+        <field name="email_from">${object.company_id.email or ''}</field>
+        <field name="email_to">${object.shipping_agent_id.email or ''}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                <p>Buenas tardes Estimado equipo ${object.shipping_agent_id.name or 'Agente de Aduanas'},</p>
+
+                <p>Vuestra gentil ayuda con la gestión y trámite para la carga que ingresará a régimen 70:</p>
+                <p><strong>BL ${object.id_bl or 'N/A'} (CONTENEDOR ${object.number_container or 'N/A'})</strong>, Adjunto:</p>
+
+                <ul>
+                    <li>BL</li>
+                    <li>Facturas</li>
+                </ul>
+
+                <p>La carga tiene previsión de llegada sobre el <strong>${object.eta.strftime('%d/%m/%Y') if object.eta else 'N/A'}</strong>.</p>
+
+                <p>Quedo atenta a sus comentarios, y requerimientos.</p>
+
+                <p>Saludos cordiales,</p>
+                <p>${object.user_id.name or user.name}</p>
+                <p>${object.company_id.name or ''}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- REQ-012: Plantilla - Solicitud a Almacenera -->
+    <record id="mail_template_regime_70_warehouse" model="mail.template">
+        <field name="name">Régimen 70 - Solicitud a Almacenera</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="subject">RÉGIMEN 70: BL ${object.id_bl or ''} - ${object.number_container or ''} - LUBRICANTES Y BOYAS</field>
+        <field name="email_from">${object.company_id.email or ''}</field>
+        <field name="email_to">${object.res_partner_id.email or ''}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                <p>Buenas tardes Estimado ${object.res_partner_id.name or 'Almacenera'},</p>
+
+                <p>Sírvanse encontrar nota de pedido referente al <strong>BL ${object.id_bl or 'N/A'} (CONT. ${object.number_container or 'N/A'})</strong>
+                que estará ingresando a depósito en los próximos días, su ayuda con la generación de la
+                solicitud previa y demás documentación para el trámite correspondiente.</p>
+
+                <p>Saludos cordiales,</p>
+                <p>${object.user_id.name or user.name}</p>
+                <p>${object.company_id.name or ''}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- REQ-013: Plantilla - Datos de Chofer al Depósito -->
+    <record id="mail_template_regime_70_driver_info" model="mail.template">
+        <field name="name">Régimen 70 - Datos de Chofer al Depósito</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="subject">DATOS CHOFER - CONTENEDOR ${object.number_container or ''}</field>
+        <field name="email_from">${object.company_id.email or ''}</field>
+        <field name="email_to">${object.res_partner_id.email or ''}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                <p>Buenas tardes Estimado ${object.res_partner_id.name or 'Almacenera'},</p>
+
+                <p>Detallo información de vehículo y chofer que ingresará al depósito para la entrega de
+                la carga del cont. <strong>${object.number_container or 'N/A'}</strong> - BL <strong>${object.id_bl or 'N/A'}</strong>
+                (${object.supplies_detail or 'Carga general'}) el día de mañana
+                <strong>${object.transfer_date.strftime('%d/%m/%Y') if object.transfer_date else 'N/A'}</strong>
+                aproximadamente con ingreso en la Almacenera sobre las 16h00 pm.</p>
+
+                <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff;">
+                    <pre style="margin: 0; white-space: pre-wrap;">${object.transfer_explanation or 'Información no disponible'}</pre>
+                </div>
+
+                <p><strong>CONTENEDOR: ${object.number_container or 'N/A'}</strong></p>
+
+                <p>Particular que informo para los fines pertinentes,</p>
+
+                <p>Saludos Cordiales,</p>
+                <p>${object.user_id.name or user.name}</p>
+                <p>${object.company_id.name or ''}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- REQ-014: Plantilla - Solicitud de Custodia -->
+    <record id="mail_template_regime_70_custody" model="mail.template">
+        <field name="name">Régimen 70 - Solicitud de Custodia</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="subject">SERVICIO DE CUSTODIA ${object.client_vessel_name or object.ek_ship_registration_id.name or 'EMBARCACIÓN'} - RUTA YILPORT MACHALA</field>
+        <field name="email_from">${object.company_id.email or ''}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                <p>Buenas tardes Estimados Sres. CUPORT,</p>
+
+                <p>Solicito vuestra gentil ayuda con <strong>1 servicio de custodia (una patrulla)</strong> para 1 contenedor
+                con las siguientes condiciones:</p>
+
+                <table style="border-collapse: collapse; margin: 15px 0;">
+                    <tr>
+                        <td style="padding: 5px; font-weight: bold;">Punto de Partida:</td>
+                        <td style="padding: 5px;">YILPORT- MACHALA</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px; font-weight: bold;">Punto de Llegada:</td>
+                        <td style="padding: 5px;">KM 4.5 VÍA MANTA - ROCAFUERTE (SECTOR PARQUE DEL ATÚN-JARAMIJÓ) - ALMACENERA ALMACOPIO S.A.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px; font-weight: bold;">Día y hora de Salida:</td>
+                        <td style="padding: 5px;">${object.transfer_date.strftime('%d/%m/%Y %H:%M') if object.transfer_date else 'N/A'}</td>
+                    </tr>
+                </table>
+
+                <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0;">
+                    <pre style="margin: 0; white-space: pre-wrap;">${object.transfer_explanation or 'Información de transportista no disponible'}</pre>
+                </div>
+
+                <p><strong>Hora:</strong> 7:00 AM</p>
+                <p><strong>CONTENEDOR:</strong> ${object.number_container or 'N/A'}</p>
+
+                <p>Saludos cordiales,</p>
+                <p>${object.user_id.name or user.name}</p>
+                <p>${object.company_id.name or ''}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- REQ-015: Plantilla - Aplicación de Póliza de Transporte -->
+    <record id="mail_template_regime_70_insurance" model="mail.template">
+        <field name="name">Régimen 70 - Aplicación de Póliza de Transporte</field>
+        <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
+        <field name="subject">APLICACIÓN Nro: ${object.number_mrn or 'N/A'} - CARGA AÉREA ${object.number_container or ''}</field>
+        <field name="email_from">${object.company_id.email or ''}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                <p>Buenos días Estimada Alejandra,</p>
+
+                <p>Sírvanse encontrar la aplicación <strong>(Nro: ${object.number_mrn or 'N/A'})</strong> generada a través del sistema
+                para carga que será transportada. A su vez adjunto documentación complementaria.</p>
+
+                <p>Quedo atenta a cualquier comentario,</p>
+
+                <p>Saludos cordiales,</p>
+                <p>${object.user_id.name or user.name}</p>
+                <p>${object.company_id.name or ''}</p>
+            </div>
+        </field>
+    </record>
+</odoo>
