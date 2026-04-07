@@ -33,18 +33,6 @@
             <field name="change_state_travel_after_confirm">anotification</field>
             <field name="code">0070</field>
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
-            <!-- Asignar las 9 etapas específicas de Régimen 70 -->
-            <field name="stage_ids" eval="[(6, 0, [
-                ref('stage_regime_70_draft'),
-                ref('stage_regime_70_notification'),
-                ref('stage_regime_70_arrival'),
-                ref('stage_regime_70_transfer'),
-                ref('stage_regime_70_deposit'),
-                ref('stage_regime_70_closure'),
-                ref('stage_regime_70_generate_so'),
-                ref('stage_regime_70_done'),
-                ref('stage_regime_70_cancelled'),
-            ])]"/>
         </record>
         <record id="type_request_12" model="ek.l10n.type.model.mixin">
             <field name="name">SALIDA A RÉGIMEN 60</field>      

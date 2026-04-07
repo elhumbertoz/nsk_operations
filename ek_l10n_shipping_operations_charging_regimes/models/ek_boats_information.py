@@ -11,18 +11,53 @@ class EkBoatsInformation(models.Model):
     _name = 'ek.boats.information'
     _inherit = ['ek.boats.information', 'ek.ai.extraction.mixin']
 
-    
+    def _get_regime_70_product_domain(self):
+        """Retorna el dominio para filtrar solo productos CONSUMIBLES de categoría Régimen 70"""
+        category = self.env.ref(
+            'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
+            raise_if_not_found=False
+        )
+        if category:
+            return [
+                ('type', '=', 'consu'),  # Solo productos CONSUMIBLES
+                ('purchase_ok', '=', True),
+                ('categ_id', '=', category.id)
+            ]
+        return [('type', '=', 'consu'), ('purchase_ok', '=', True)]
+
+
 
 
     ref_container = fields.Char("Ref. Container")
-    ek_produc_packages_goods_ids = fields.One2many("ek.product.packagens.goods","ek_boats_information_id", string="Product Packagens Goods", copy=True)
 
-    value_of_container = fields.Float("Value of Container",compute="_compute_value_of_container",store=True, index=True)
+    # Relación DIRECTA con productos consumibles del catálogo (product.product)
+    # Solo productos de tipo 'consu' y categoría Régimen 70
+    product_ids = fields.Many2many(
+        'product.product',
+        'ek_boats_information_product_rel',
+        'container_id',
+        'product_id',
+        string='Productos Consumibles Régimen 70',
+        domain=_get_regime_70_product_domain,
+        help='Productos consumibles de Régimen 70 vinculados directamente al contenedor'
+    )
 
-    @api.depends("ek_produc_packages_goods_ids.quantity_hand","ek_produc_packages_goods_ids.delivery_product","ek_produc_packages_goods_ids")
+    # MANTENER: Campo legacy de líneas de detalle (usado en varios lugares del código)
+    ek_produc_packages_goods_ids = fields.One2many(
+        "ek.product.packagens.goods",
+        "ek_boats_information_id",
+        string="Product Packagens Goods",
+        copy=True
+    )
+
+    value_of_container = fields.Float("Value of Container", compute="_compute_value_of_container", store=True, index=True)
+
+    @api.depends("product_ids", "product_ids.standard_price")
     def _compute_value_of_container(self):
+        """Calcular valor total del contenedor basado en productos consumibles"""
         for rec in self:
-            rec.value_of_container = sum(rec.mapped("ek_produc_packages_goods_ids.quantity_hand")) 
+            # Sumar el costo estándar de todos los productos
+            rec.value_of_container = sum(rec.product_ids.mapped('standard_price')) 
 
 
 
@@ -127,6 +162,28 @@ class EkBoatsInformation(models.Model):
         for record in self:
             record.bl_attachment_filename = record.bl_attachment_ids[0].name if record.bl_attachment_ids else False
 
+    # ============================================================================
+    # AI Extraction Status Fields (Redefinidos explícitamente para garantizar persistencia)
+    # ============================================================================
+    ai_extraction_status = fields.Selection([
+        ('pending', 'Pendiente'),
+        ('processing', 'Procesando'),
+        ('completed', 'Completado'),
+        ('error', 'Error')
+    ], string='Estado Extracción IA', default='pending', tracking=True)
+
+    ai_extraction_log = fields.Html(
+        string='Resultado de Extracción',
+        readonly=True,
+        help='Muestra el resultado estructurado de la última operación de IA'
+    )
+
+    ai_confidence_score = fields.Float(
+        string='Confidence Score',
+        readonly=True,
+        help='Nivel de confianza de la última extracción (0-1)'
+    )
+
     # Aliases de campos para compatibilidad con el Mixin
     id_bl = fields.Char(related="bl_number", readonly=False, store=True)
 
@@ -153,14 +210,13 @@ class EkBoatsInformation(models.Model):
             'supplies_detail': self.supplies_detail or self.load_number,
         }
 
-        # Crear la solicitud
+        # Crear la solicitud con los productos consumibles del contenedor
         request = self.env['ek.operation.request'].create(vals)
 
-        # Traspasar líneas de productos/paquetes si existen
-        if self.ek_produc_packages_goods_ids:
-            # En ek.operation.request las líneas se vinculan vía ek_operation_request_id
-            for line in self.ek_produc_packages_goods_ids:
-                line.write({'ek_operation_request_id': request.id})
+        # Vincular los mismos productos consumibles a la solicitud
+        # Los productos se comparten entre contenedor Y solicitud
+        if self.product_ids:
+            request.write({'regime_70_product_ids': [(6, 0, self.product_ids.ids)]})
 
         return {
             'type': 'ir.actions.act_window',

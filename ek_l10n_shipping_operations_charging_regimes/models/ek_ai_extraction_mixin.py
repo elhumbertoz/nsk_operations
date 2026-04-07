@@ -445,6 +445,7 @@ El documento PDF está adjunto a este mensaje."""
             self._create_goods_lines_from_packages(packages)
 
         # Log en chatter
+        attachment_name = self.bl_attachment_ids[0].name if self.bl_attachment_ids else 'N/A'
         self.message_post(
             body=_(
                 '<strong>✅ Extracción de BL completada con IA</strong><br/>'
@@ -454,7 +455,7 @@ El documento PDF está adjunto a este mensaje."""
                 'BL#: %s<br/>'
                 'Contenedor: %s'
             ) % (
-                self.bl_attachment_id.name,
+                attachment_name,
                 extracted_data.get('confidence_score', 0) * 100,
                 len(packages),
                 self.id_bl or 'N/A',

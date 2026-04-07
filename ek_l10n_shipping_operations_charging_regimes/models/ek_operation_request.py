@@ -10,13 +10,16 @@ class EkOperationRequest(models.Model):
 
   # AI Extraction fields are now in ek.boats.information (Container)
   # Keeping related fields for visibility or transitional purposes if needed
-  ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA")
-  ai_extraction_log = fields.Html(related="container_id.ai_extraction_log", string="Log Extracción IA")
-  ai_confidence_score = fields.Float(related="container_id.ai_confidence_score", string="Confianza IA (%)")
-  
-  # Related PO fields for compatibility with validation wizards
-  purchase_order_attachment_ids = fields.Many2many(related="container_id.purchase_order_attachment_ids", string="Nota de Pedido (Rel)")
-  purchase_order_data = fields.Text(related="container_id.purchase_order_data", string="Datos Nota de Pedido (Rel)")
+  ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA", readonly=True, store=False)
+  ai_extraction_log = fields.Html(related="container_id.ai_extraction_log", string="Log Extracción IA", readonly=True, store=False)
+  ai_confidence_score = fields.Float(related="container_id.ai_confidence_score", string="Confianza IA (%)", readonly=True, store=False)
+
+  # Related attachment fields from container for email notifications
+  # NOTA: Estos campos solo funcionan cuando container_id está poblado
+  bl_attachment_ids = fields.Many2many(related="container_id.bl_attachment_ids", string="Bill of Lading (Rel)", readonly=True, store=False)
+  invoice_attachment_ids = fields.Many2many(related="container_id.invoice_attachment_ids", string="Facturas (Rel)", readonly=True, store=False)
+  purchase_order_attachment_ids = fields.Many2many(related="container_id.purchase_order_attachment_ids", string="Nota de Pedido (Rel)", readonly=True, store=False)
+  purchase_order_data = fields.Text(related="container_id.purchase_order_data", string="Datos Nota de Pedido (Rel)", readonly=True, store=False)
 
 
   use_in_regimen_60 = fields.Boolean(
@@ -32,6 +35,18 @@ class EkOperationRequest(models.Model):
   )
 
   container_id = fields.Many2one('ek.boats.information', string='Container')
+
+  # Relación directa con productos consumibles Régimen 70 (compartidos con el contenedor)
+  # NOTA: NO usar "product_ids" porque ya existe en el modelo base para One2many con ek.product.purchase.ship
+  regime_70_product_ids = fields.Many2many(
+    'product.product',
+    'ek_operation_request_regime70_product_rel',
+    'request_id',
+    'product_id',
+    string='Productos Consumibles Régimen 70',
+    domain=[('type', '=', 'consu'), ('purchase_ok', '=', True)],
+    help='Productos consumibles de Régimen 70 para esta solicitud'
+  )
 
   id_bl = fields.Char(string='ID BL')
 
@@ -872,6 +887,167 @@ class EkOperationRequest(models.Model):
           break
 
     return res
+
+  # ============================================================================
+  # FASE CRISTHIAN: Campos computados para detección de etapas (simplificado)
+  # Usados solo para visibilidad de botones de notificación
+  # ============================================================================
+
+  is_stage_draft = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_notification = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_arrival = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_transfer = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_deposit = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_closure = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_generate_so = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_done = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+  is_stage_cancelled = fields.Boolean(compute='_compute_regime_70_stage_flags', store=False)
+
+  @api.depends('stage_id', 'regime')
+  def _compute_regime_70_stage_flags(self):
+    """Detecta etapa actual para Régimen 70 (solo para botones de notificación)"""
+    for record in self:
+      # Por defecto todos en False
+      record.is_stage_draft = False
+      record.is_stage_notification = False
+      record.is_stage_arrival = False
+      record.is_stage_transfer = False
+      record.is_stage_deposit = False
+      record.is_stage_closure = False
+      record.is_stage_generate_so = False
+      record.is_stage_done = False
+      record.is_stage_cancelled = False
+
+      # Solo calcular si es Régimen 70 y tiene etapa
+      if record.regime != '70' or not record.stage_id:
+        continue
+
+      # Comparar por nombre de etapa (más confiable que por ID)
+      stage_name = record.stage_id.name
+      if stage_name == 'Borrador':
+        record.is_stage_draft = True
+      elif stage_name == 'Notificación':
+        record.is_stage_notification = True
+      elif stage_name == 'Arribo':
+        record.is_stage_arrival = True
+      elif stage_name == 'Traslado':
+        record.is_stage_transfer = True
+      elif stage_name == 'Ingreso a Depósito':
+        record.is_stage_deposit = True
+      elif stage_name == 'Cierre':
+        record.is_stage_closure = True
+      elif stage_name == 'Generar Orden de Venta':
+        record.is_stage_generate_so = True
+      elif stage_name == 'Realizado':
+        record.is_stage_done = True
+      elif stage_name == 'Cancelado':
+        record.is_stage_cancelled = True
+
+  # ============================================================================
+  # FASE CRISTHIAN: Métodos de envío de correos automáticos
+  # ============================================================================
+
+  def action_send_mail_customs_agent(self):
+    """REQ-011: Enviar correo a agente de aduanas (Etapa: NOTIFICACIÓN)"""
+    self.ensure_one()
+    if not self.shipping_agent_id:
+      raise UserError(_("Debe asignar un Agente de Aduanas antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_customs_agent', raise_if_not_found=False)
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para el agente de aduanas."))
+
+    attachment_ids = []
+    if self.bl_attachment_ids:
+      attachment_ids.extend(self.bl_attachment_ids.ids)
+    if self.invoice_attachment_ids:
+      attachment_ids.extend(self.invoice_attachment_ids.ids)
+
+    template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
+    self.message_post(body=_("📧 Correo enviado al agente de aduanas: %s") % self.shipping_agent_id.name)
+
+    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
+      'title': _('Correo Enviado'),
+      'message': _('Se envió correo a %s con %d adjuntos') % (self.shipping_agent_id.name, len(attachment_ids)),
+      'type': 'success',
+    }}
+
+  def action_send_mail_warehouse(self):
+    """REQ-012: Enviar correo a almacenera (Etapa: ARRIBO)"""
+    self.ensure_one()
+    if not self.res_partner_id:
+      raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_warehouse', raise_if_not_found=False)
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para la almacenera."))
+
+    attachment_ids = []
+    if self.purchase_order_attachment_ids:
+      attachment_ids.extend(self.purchase_order_attachment_ids.ids)
+    if self.bl_attachment_ids:
+      attachment_ids.extend(self.bl_attachment_ids.ids)
+    if self.invoice_attachment_ids:
+      attachment_ids.extend(self.invoice_attachment_ids.ids)
+
+    template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
+    self.message_post(body=_("📧 Correo enviado a almacenera: %s") % self.res_partner_id.name)
+
+    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
+      'title': _('Correo Enviado'),
+      'message': _('Se envió correo a %s') % self.res_partner_id.name,
+      'type': 'success',
+    }}
+
+  def action_send_mail_driver_info(self):
+    """REQ-013: Enviar datos de chofer (Etapa: TRASLADO)"""
+    self.ensure_one()
+    if not self.res_partner_id:
+      raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
+    if not self.transfer_explanation:
+      raise UserError(_("Debe completar la información del transportista."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_driver_info', raise_if_not_found=False)
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo."))
+
+    template.send_mail(self.id, force_send=True)
+    self.message_post(body=_("📧 Información de chofer enviada"))
+
+    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
+      'title': _('Correo Enviado'), 'message': _('Datos del chofer enviados'), 'type': 'success',
+    }}
+
+  def action_send_mail_custody(self):
+    """REQ-014: Solicitar custodia (Etapa: TRASLADO)"""
+    self.ensure_one()
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_custody', raise_if_not_found=False)
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo."))
+
+    template.send_mail(self.id, force_send=True)
+    self.message_post(body=_("🚨 Solicitud de custodia enviada"))
+
+    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
+      'title': _('Correo Enviado'), 'message': _('Solicitud de custodia enviada'), 'type': 'success',
+    }}
+
+  def action_send_mail_insurance(self):
+    """REQ-015: Enviar aplicación de póliza (Etapa: TRASLADO)"""
+    self.ensure_one()
+    if not self.number_mrn:
+      raise UserError(_("Debe ingresar el número de póliza (MRN)."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_insurance', raise_if_not_found=False)
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo."))
+
+    template.send_mail(self.id, force_send=True)
+    self.message_post(body=_("📋 Aplicación de póliza enviada (MRN: %s)") % self.number_mrn)
+
+    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
+      'title': _('Correo Enviado'), 'message': _('Póliza MRN: %s enviada') % self.number_mrn, 'type': 'success',
+    }}
 
 
 class bl_import_export(models.Model):

@@ -10,9 +10,9 @@
   'data': [
     # 1. Datos base (necesarios antes que cualquier vista)
     'data/product_category.xml',
-    'data/regime_70_stages.xml',
     'data/ek_type_request_data.xml',
     'data/mail_templates_regime_70.xml',
+    # NOTA: Las etapas de Régimen 70 se gestionan desde Configuración → Tipos de Solicitud
     # 2. Seguridad (permisos y grupos)
     'security/ir.model.access.csv',
     'security/security.xml',
