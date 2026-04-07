@@ -351,9 +351,10 @@ Matching rules:
 - If no clear match exists, omit `product_id` — never guess.
 - `description`: copy the raw text verbatim from the BL (for audit trail).
 - `product_name`: generate a normalized name following [Type] [Brand] [Model] [Key Spec].
-  - Keep it under 60 characters.
-  - Drop legal boilerplate, addresses, part codes, and filler text.
-  - Example: "Electric Motor WEG W22 7.5HP" not "WEG MOTORES ELETRICOS S.A. THREE PHASE INDUCTION MOTOR FRAME 132M MODEL W22 7.5HP 4 POLES 60HZ IP55 CLASS F INSULATION..."
+- LANGUAGE: IMPORTANT — Keep the product name in the language of the source document. If the document is in Spanish, the name must be in Spanish.
+  - Example (Spanish): "Motor Eléctrico WEG W22 7.5HP"
+  - Example (English): "Electric Motor WEG W22 7.5HP"
+  - Keep it under 60 characters and omit legal boilerplate and filler text.
 
 Always call `extract_bl_data` to return structured results."""
                 },
@@ -620,14 +621,16 @@ Your job has two parts:
 - Set `match_confidence` between 0.0 and 1.0 (e.g., 0.95 = near-exact, 0.75 = reasonable).
 - `description`: copy the raw line-item text exactly as printed in the invoice (for audit).
 - `product_name`: generate a concise, normalized name using the pattern [Type] [Brand] [Model] [Key Spec].
+- LANGUAGE: IMPORTANT — Keep the product name in the language of the source document. If the document is in Spanish, the name must be in Spanish.
   - Max ~60 characters. Omit serial numbers, lengthy specs, legal text, and addresses.
   - Retain brand and model — they are the most valuable identifiers.
   - Include only the single most discriminating spec (power, size, capacity, voltage, etc.).
-  - BAD: "MOTOR ELECTRICO TRIFASICO WEG W22 DE 7.5HP, 4 POLOS, 60HZ, CLASE DE AISLAMIENTO F, GRADO DE PROTECCION IP55, ARMAZON 132M"
-  - GOOD: "Electric Motor WEG W22 7.5HP 4P"
+  - EXAMPLE (Spanish): "Motor Eléctrico WEG W22 7.5HP 4P"
+  - EXAMPLE (English): "Electric Motor WEG W22 7.5HP 4P"
 
 ## EXTRACTION RULES
 - Extract all line items, quantities, and exact FOB prices.
+- IMPORTANT: Do NOT extract items with zero price (0.00). If an item has no price or it is zero, skip it entirely.
 - If the document explicitly mentions a destination vessel (e.g., "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), capture it in `ship_name`.
 
 Always call `extract_invoice_data` to return structured results."""
@@ -756,6 +759,14 @@ Always call `extract_invoice_data` to return structured results."""
             # Use normalized product_name for display; keep raw description as audit trail
             raw_description = item.get('description', '')
             display_name = item.get('product_name') or raw_description
+
+            # REQ: No agregar productos con precio en cero
+            unit_price = item.get('unit_price_fob') or 0
+            total_price = item.get('total_fob') or 0
+            if unit_price <= 0 and total_price <= 0:
+                _logger.info("Saltando item con precio en cero: %s", display_name)
+                continue
+
             line_vals = {
                 parent_field: self.id,
                 'name': display_name,

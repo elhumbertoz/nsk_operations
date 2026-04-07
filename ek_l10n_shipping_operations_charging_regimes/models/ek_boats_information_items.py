@@ -137,6 +137,30 @@ class ek_product_packagens_goods(models.Model):
     help="Nivel de confianza o similitud detectado por la IA o el algoritmo"
   )
 
+  # NUEVOS CAMPOS REQ: Indicadores y control de despacho
+  is_new_product = fields.Boolean(
+    string='Nuevo Producto',
+    default=False,
+    help="Indica si el producto fue creado automáticamente por el sistema"
+  )
+
+  creation_indicator = fields.Char(
+    string=' ',
+    compute='_compute_creation_indicator',
+    help="Emoji que indica el origen del producto"
+  )
+
+  is_not_dispatched = fields.Boolean(
+    string='No Despachado',
+    default=False,
+    help="Marcar si el producto no vino en este contenedor (no despachado o previo)"
+  )
+
+  @api.depends('is_new_product')
+  def _compute_creation_indicator(self):
+    for rec in self:
+      rec.creation_indicator = "✨" if rec.is_new_product else ""
+
   @api.depends('quantity', 'fob')
   def _compute_total_fob(self):
     for rec in self:
@@ -162,13 +186,16 @@ class ek_product_packagens_goods(models.Model):
   @api.model
   def _find_or_create_product(self, vals):
     """
-    Buscar producto existente o crear automáticamente
+    Buscar producto existente o crear automáticamente.
+    TODOS los pasos de búsqueda están restringidos a la categoría
+    'product_category_regime_70' para garantizar que el product_id
+    devuelto cumpla el domain del campo en la vista XML.
 
     Búsqueda en este orden:
-    1. Búsqueda exacta por nombre
-    2. Búsqueda por código arancelario (HS code)
-    3. Búsqueda por similitud (fuzzy matching > 85%)
-    4. Si no existe → Crear automáticamente
+    1. Búsqueda exacta por nombre (dentro de Régimen 70)
+    2. Búsqueda por código arancelario REG70-{hs_code} (dentro de Régimen 70)
+    3. Búsqueda por similitud fuzzy > 85% (dentro de Régimen 70)
+    4. Si no existe → Crear automáticamente con categ_id = Régimen 70
 
     Args:
         vals: Dict con 'name', 'tariff_item', 'fob', 'quantity'
@@ -185,25 +212,31 @@ class ek_product_packagens_goods(models.Model):
     if not description:
       return False
 
-    # 1. Búsqueda exacta por nombre
-    product = self.env['product.product'].search([
-      ('name', '=ilike', description)
-    ], limit=1)
+    # Obtener categoría Régimen 70 (base para todos los filtros)
+    category = self.env.ref(
+      'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
+      raise_if_not_found=False
+    )
+    regime_domain = [('categ_id', '=', category.id)] if category else []
 
+    # 1. Búsqueda exacta por nombre — SOLO dentro de Régimen 70
+    product = self.env['product.product'].search(
+      regime_domain + [('name', '=ilike', description)],
+      limit=1
+    )
     if product:
       return product.id
 
-    # 2. Búsqueda por código arancelario (coincidencia exacta + verificación de nombre)
-    # Nota: product.product estándar no tiene hs_code; usamos default_code REG70-{hs_code}
+    # 2. Búsqueda por código arancelario REG70-{hs_code} — SOLO dentro de Régimen 70
     if hs_code:
-      product = self.env['product.product'].search([
-        ('default_code', '=like', f'REG70-{hs_code}%')
-      ], limit=50)
+      candidates = self.env['product.product'].search(
+        regime_domain + [('default_code', '=like', f'REG70-{hs_code}%')],
+        limit=50
+      )
 
-      # Si hay candidatos, verificar similitud de nombre antes de confirmar
       best_hs_match = None
       best_hs_score = 0
-      for prod in product:
+      for prod in candidates:
         similarity = SequenceMatcher(
           None, prod.name.upper(), description.upper()
         ).ratio()
@@ -215,14 +248,8 @@ class ek_product_packagens_goods(models.Model):
       if best_hs_match and best_hs_score > 0.60:
         return best_hs_match.id
 
-    # 3. Búsqueda por similitud (fuzzy matching) en todos los productos REG70
-    category = self.env.ref(
-      'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
-      raise_if_not_found=False
-    )
-
-    search_domain = [('categ_id', '=', category.id)] if category else []
-    products = self.env['product.product'].search(search_domain, limit=200)
+    # 3. Búsqueda por similitud fuzzy — SOLO dentro de Régimen 70
+    products = self.env['product.product'].search(regime_domain, limit=200)
 
     best_match = None
     best_score = 0
@@ -250,12 +277,18 @@ class ek_product_packagens_goods(models.Model):
         description, best_score * 100, best_match.name, best_match.id
       )
 
-    # 4. NO ENCONTRADO → Crear automáticamente
-    return self._create_product_auto(description, hs_code, fob_unit)
+    # 4. NO ENCONTRADO → Crear automáticamente con categ_id = Régimen 70
+    return self._create_product_auto(description, hs_code, fob_unit, vals)
 
   @api.model
-  def _create_product_auto(self, description, hs_code, fob_unit):
+  def _create_product_auto(self, description, hs_code, fob_unit, vals=None):
     """Crear producto automáticamente como CONSUMIBLE (no stockeable)"""
+    if fob_unit <= 0:
+      _logger.warning("Saltando creación de producto '%s' porque el precio es cero.", description)
+      return False
+
+    if vals is not None:
+      vals['is_new_product'] = True
 
     # Obtener categoría Régimen 70
     category = self.env.ref(
@@ -313,9 +346,32 @@ class ek_product_packagens_goods(models.Model):
 
   @api.model
   def create(self, vals):
-    """Override create para búsqueda/creación automática de producto"""
+    """Override create para búsqueda/creación automática de producto.
 
-    # Si no viene product_id pero sí viene descripción (name)
+    Garantiza que el product_id final pertenezca a la categoría
+    'product_category_regime_70', tal como lo exige el domain del campo
+    en la vista XML.
+    """
+    # Obtener categoría Régimen 70 para validación
+    regime_category = self.env.ref(
+      'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
+      raise_if_not_found=False
+    )
+
+    # Si la IA ya sugirió un product_id, validar que sea de la categoría correcta
+    ai_product_id = vals.get('product_id')
+    if ai_product_id and regime_category:
+      product = self.env['product.product'].browse(ai_product_id)
+      if not product.exists() or product.categ_id.id != regime_category.id:
+        _logger.warning(
+          "product_id=%s sugerido por IA no pertenece a Régimen 70 "
+          "(categ_id=%s). Se descarta y se buscará/creará en el catálogo.",
+          ai_product_id,
+          product.categ_id.name if product.exists() else 'N/A'
+        )
+        vals.pop('product_id')
+
+    # Si finalmente no hay product_id pero sí descripción, buscar/crear en Régimen 70
     if not vals.get('product_id') and vals.get('name'):
       product_id = self._find_or_create_product(vals)
       if product_id:

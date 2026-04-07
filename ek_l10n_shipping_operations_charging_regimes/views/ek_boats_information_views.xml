@@ -92,13 +92,21 @@
               <button name="open_items_container" type="object" string="Actualizar Vista" class="btn btn-link p-0" icon="fa-refresh"/>
               <field name="ek_produc_packages_goods_ids">
                 <tree editable="bottom" decoration-info="match_confidence &gt;= 80" decoration-warning="match_confidence &lt; 80 and match_confidence &gt; 0">
-                  <field name="product_id"
-                         domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
-                         options="{'no_create': True}"/>
+                  <field name="creation_indicator" string=" " readonly="1"/>
+                  <div class="d-flex flex-column">
+                    <field name="product_id"
+                           domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
+                           options="{'no_create': True}"
+                           width="400px"
+                           class="fw-bold"/>
+                    <field name="extracted_name" 
+                           string=" " 
+                           class="text-muted italic small"
+                           placeholder="Descripción del proveedor..."/>
+                  </div>
                   <field name="ship_id" options="{'no_create': True}"/>
-                  <field name="packages_count"/>
-                  
-                  <field name="extracted_name" string="Descripción Factura"/>
+                  <field name="is_not_dispatched" string="No Vino"/>
+                  <field name="packages_count" optional="hide"/>
                   <field name="match_confidence" string="% Match IA" widget="progressbar"/>
                   <field name="tariff_item" optional="hide"/>
                   <field name="gross_weight" sum="total"/>
@@ -109,8 +117,6 @@
                   <field name="supplier" string="Proveedor" optional="hide" />
                   <field name="ek_ship_registration_id" column_invisible="1"/>
                   <field name="ek_boats_information_id" column_invisible="1"/>
-                  <field name="delivery_product" sum="total" string="Utilizado"/>
-                  <field name="quantity_hand" sum="total" string="Stock"/>
                   <field name="id_bl" optional="hide"/>
                 </tree>
               </field>
@@ -258,8 +264,12 @@
         <header>
           <button name="delete_table_70" type="object" string="Vaciar Tabla" class="btn-link mb-1 px-0" icon="fa-trash" />
         </header>
-        <field name="product_id" options="{'no_create': True}"/>
-        <field name="extracted_name"/>
+        <field name="creation_indicator" string=" " readonly="1"/>
+        <div class="d-flex flex-column">
+          <field name="product_id" options="{'no_create': True}" width="400px" class="fw-bold"/>
+          <field name="extracted_name" string=" " class="text-muted italic small" placeholder="Descripción del proveedor..."/>
+        </div>
+        <field name="is_not_dispatched" string="No Vino"/>
         <field name="match_confidence" widget="progressbar"/>
         <field name="tariff_item" optional="hide"/>
         <field name="quantity" />
