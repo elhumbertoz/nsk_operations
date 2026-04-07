@@ -71,6 +71,25 @@ class EkL10nModelMixin(models.Model):
     domain="[('type_ids', '=', type_id)]",
   )
 
+  @api.model
+  def _read_group_stage_ids(self, stages, domain, order):
+    """
+    Expand stages in Kanban view.
+    If a type_id is provided in the domain, filter stages by that type.
+    """
+    type_id = self._context.get('default_type_id')
+    if not type_id and domain:
+      for leaf in domain:
+        if isinstance(leaf, (list, tuple)) and leaf[0] == 'type_id' and leaf[1] == '=':
+          type_id = leaf[2]
+          break
+
+    search_domain = []
+    if type_id:
+      search_domain = [('type_ids', 'in', [type_id])]
+
+    return stages.search(search_domain, order=order)
+
   user_id = fields.Many2one(
     'res.users',
     string='Assigned to',

@@ -103,38 +103,41 @@ class EkInvoiceValidationWizard(models.TransientModel):
         return res
 
     def action_compare_documents(self):
-        """Comparar factura vs Nota de Pedido automáticamente"""
+        """
+        Comparar factura vs Nota de Pedido.
+        Si hay datos de PO cargados, intenta comparación con IA (con fallback determinista).
+        Si no hay PO, deja las líneas en 'pending' con datos de factura.
+        REQ-006B
+        """
         self.ensure_one()
 
         # Limpiar líneas anteriores
         self.validation_line_ids.unlink()
 
-        # Obtener líneas de productos de la factura
         goods_lines = self.operation_request_id.ek_produc_packages_goods_ids
-
         if not goods_lines:
             raise UserError(_('No hay productos en la factura para validar'))
 
-        # TODO: Parsear JSON de purchase_order_data cuando esté implementado
-        # Por ahora, crear líneas de validación sin datos de PO
-        validation_lines = []
+        po_raw = self.operation_request_id.purchase_order_data
+        if po_raw:
+            try:
+                po_data = json.loads(po_raw)
+                self._compare_with_ai(po_data)
+            except Exception as e:
+                _logger.warning("Fallo comparación IA, usando fallback determinista: %s", e)
+                try:
+                    po_items = json.loads(po_raw).get('items', [])
+                except Exception:
+                    po_items = []
+                self._fallback_manual_comparison(goods_lines, po_items)
+        else:
+            # Sin PO cargada: dejar líneas en pending con datos de factura únicamente
+            self._fallback_manual_comparison(goods_lines, [])
 
-        for line in goods_lines:
-            # Crear línea de validación
-            val_line = {
-                'goods_line_id': line.id,
-                'invoice_description': line.name or '',
-                'invoice_quantity': line.quantity or 0,
-                'invoice_weight': line.gross_weight or 0,
-                'invoice_fob': line.total_fob or 0,
-                'validation_status': 'pending',
-                'differences': 'Pendiente de comparación',
-            }
+        return self._reopen_wizard()
 
-            validation_lines.append((0, 0, val_line))
-
-        self.validation_line_ids = validation_lines
-
+    def _reopen_wizard(self):
+        """Reabrir este wizard en modo form después de comparar."""
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'ek.invoice.validation.wizard',
@@ -347,30 +350,69 @@ Devuelve JSON array con: invoice_id, po_match_index, status, differences, confid
             self._fallback_manual_comparison(invoice_lines, po_items)
 
     def _fallback_manual_comparison(self, invoice_lines, po_items):
-        """Comparación básica sin IA (fallback)"""
+        """
+        Comparación híbrida determinista: similitud de texto + diferencias numéricas.
+        Tolerancias: peso ±0.5 kg, FOB ±5%.
+        REQ-006B
+        """
+        WEIGHT_TOL_KG = 0.5
+        FOB_TOL_PCT = 0.05
+        TEXT_MATCH_MIN = 0.70
+
+        def _normalize(text):
+            """Normalizar texto: mayúsculas, strip, colapsar espacios."""
+            return ' '.join((text or '').upper().split())
+
         validation_lines = []
 
         for inv_line in invoice_lines:
-            best_match = None
             best_ratio = 0
+            best_po = None
+            inv_name_norm = _normalize(inv_line.name)
 
-            for idx, po_item in enumerate(po_items):
+            for po_item in po_items:
                 ratio = SequenceMatcher(
                     None,
-                    inv_line.name.lower() if inv_line.name else '',
-                    po_item.get('description', '').lower()
+                    inv_name_norm,
+                    _normalize(po_item.get('description', ''))
                 ).ratio()
-
                 if ratio > best_ratio:
                     best_ratio = ratio
-                    best_match = (idx, po_item)
+                    best_po = po_item
 
-            if best_ratio > 0.85:
-                status = 'match'
-            elif best_ratio > 0.70:
-                status = 'minor'
-            else:
-                status = 'missing'
+            diffs = []
+            status = 'missing'
+            po_w = 0.0
+            po_fob = 0.0
+
+            if best_ratio >= TEXT_MATCH_MIN and best_po:
+                # Comparación numérica de peso
+                inv_w = inv_line.gross_weight or 0
+                po_w = best_po.get('weight_kg', 0) or 0
+                if po_w and abs(inv_w - po_w) > WEIGHT_TOL_KG:
+                    diffs.append(
+                        'Peso: Factura=%.2f kg vs PO=%.2f kg (dif: %.2f kg)' % (
+                            inv_w, po_w, abs(inv_w - po_w)
+                        )
+                    )
+
+                # Comparación numérica de FOB
+                inv_fob = inv_line.total_fob or 0
+                po_fob = best_po.get('fob_value', 0) or 0
+                if po_fob and abs(inv_fob - po_fob) / po_fob > FOB_TOL_PCT:
+                    diffs.append(
+                        'FOB: Factura=$%.2f vs PO=$%.2f (dif: %.1f%%)' % (
+                            inv_fob, po_fob,
+                            abs(inv_fob - po_fob) / po_fob * 100
+                        )
+                    )
+
+                if not diffs:
+                    status = 'match'
+                elif len(diffs) == 1 and 'Peso' in diffs[0]:
+                    status = 'minor'
+                else:
+                    status = 'major'
 
             val_line = {
                 'goods_line_id': inv_line.id,
@@ -379,17 +421,20 @@ Devuelve JSON array con: invoice_id, po_match_index, status, differences, confid
                 'invoice_weight': inv_line.gross_weight or 0,
                 'invoice_fob': inv_line.total_fob or 0,
                 'validation_status': status,
-                'differences': f'Similitud: {best_ratio*100:.0f}%',
+                'differences': (
+                    '\n'.join(diffs) if diffs
+                    else ('Similitud: %.0f%%' % (best_ratio * 100) if best_po
+                          else 'No encontrado en Nota de Pedido')
+                ),
             }
 
-            if best_match:
-                po_item = best_match[1]
+            if best_po:
                 val_line.update({
-                    'po_item_number': po_item.get('item_number', ''),
-                    'po_description': po_item.get('description', ''),
-                    'po_quantity': po_item.get('quantity', 0),
-                    'po_weight': po_item.get('weight_kg', 0),
-                    'po_fob': po_item.get('fob_value', 0),
+                    'po_item_number': best_po.get('item_number', ''),
+                    'po_description': best_po.get('description', ''),
+                    'po_quantity': best_po.get('quantity', 0),
+                    'po_weight': po_w,
+                    'po_fob': po_fob,
                 })
 
             validation_lines.append((0, 0, val_line))

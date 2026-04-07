@@ -168,7 +168,17 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "unit_price_fob": {"type": "number"},
                                     "total_fob": {"type": "number"},
                                     "weight_kg": {"type": "number"},
-                                    "packages_count": {"type": "integer"}
+                                    "packages_count": {"type": "integer"},
+                                    "ship_name": {
+                                        "type": "string",
+                                        "description": (
+                                            "Nombre del buque destino si se menciona en esta línea "
+                                            "o en el encabezado/cuerpo de la factura para este ítem. "
+                                            "Buscar patrones: 'FOR VESSEL ...', 'PARA BUQUE ...', "
+                                            "'PARA BARCO ...', 'M/V ...', 'MV ...', 'VESSEL: ...'. "
+                                            "Dejar vacío si no se menciona ningún buque."
+                                        )
+                                    }
                                 },
                                 "required": ["description", "quantity", "total_fob"]
                             },
@@ -470,7 +480,12 @@ IMPORTANTE:
 - Si los precios están en otra moneda, indica cuál
 - Extrae TODAS las líneas de la tabla de productos
 - Si hay descuentos o cargos adicionales, inclúyelos
-- El campo "line_number" debe ser el número de ítem en la factura"""
+- El campo "line_number" debe ser el número de ítem en la factura
+- Si el documento menciona un buque destino (ej: "FOR VESSEL ATÚN I",
+  "PARA BARCO TXOPITUNA", "M/V CONTADORA", "VESSEL: TXOPITUNA DOS"),
+  indica el nombre en el campo ship_name de cada línea afectada.
+  Si aplica a todos los ítems, repite el nombre en cada uno.
+  Si no se menciona ningún buque, deja ship_name vacío."""
                     },
                     {
                         "role": "user",
@@ -562,6 +577,20 @@ IMPORTANTE:
             if item.get('hs_code'):
                 line_vals['tariff_item'] = item['hs_code']
 
+            # REQ-006A: Vincular buque destino si la IA lo detectó
+            ship_name = (item.get('ship_name') or '').strip()
+            if ship_name:
+                ship = self.env['ek.ship.registration'].search([
+                    ('name', 'ilike', ship_name)
+                ], limit=1)
+                if ship:
+                    line_vals['ship_id'] = ship.id
+                else:
+                    _logger.warning(
+                        "Buque '%s' mencionado en factura no encontrado en maestros.",
+                        ship_name
+                    )
+
             goods_model.create(line_vals)
 
     def action_extract_po_and_compare(self):
@@ -639,3 +668,92 @@ IMPORTANTE:
             error_msg = str(e)
             _logger.error(f"Error en extracción/comparación de PO: {error_msg}")
             raise UserError(_('Error al procesar Nota de Pedido:\n\n%s') % error_msg)
+
+    # ============================================================
+    # REQ-002: Identificación automática del tipo de documento
+    # ============================================================
+
+    def _detect_document_type(self, attachment):
+        """
+        Detecta si un PDF es BL, Factura Comercial o Nota de Pedido.
+        Devuelve: 'bl' | 'invoice' | 'purchase_order' | 'unknown'
+        REQ-002
+        """
+        llm = self.env['nsk.llm.provider']
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "Eres un experto en documentos aduaneros marítimos. "
+                    "Analiza el PDF adjunto y responde ÚNICAMENTE con una de estas palabras, "
+                    "sin puntuación ni explicación adicional: "
+                    "bl, invoice, purchase_order, unknown"
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    "¿Qué tipo de documento es este PDF?\n"
+                    "- bl: Bill of Lading / Conocimiento de Embarque\n"
+                    "- invoice: Factura Comercial\n"
+                    "- purchase_order: Nota de Pedido del agente aduanero\n"
+                    "- unknown: No se puede determinar\n\n"
+                    "Responde solo con la palabra clave."
+                )
+            }
+        ]
+
+        try:
+            response = llm.generate_completion(
+                messages=messages,
+                attachments=attachment
+            )
+            raw = response.choices[0].message.content.strip().lower()
+            _logger.info("Tipo de documento detectado para '%s': %s", attachment.name, raw)
+            if raw in ('bl', 'invoice', 'purchase_order'):
+                return raw
+        except Exception as e:
+            _logger.warning("Error en detección de tipo de documento: %s", str(e))
+
+        return 'unknown'
+
+    def action_auto_detect_and_extract(self):
+        """
+        Detecta automáticamente el tipo de documento adjunto y enruta
+        a la extracción correspondiente.
+        REQ-002: Identificación automática del tipo de documento
+        """
+        self.ensure_one()
+
+        # Si ya hay tipo definido en el registro, usar ese
+        doc_type = getattr(self, 'document_type', None)
+
+        # Determinar qué adjunto analizar
+        attachment = self.bl_attachment_id or (
+            self.invoice_attachment_ids[0] if self.invoice_attachment_ids else None
+        )
+
+        if not attachment:
+            raise UserError(_(
+                'Por favor adjunte un documento PDF antes de continuar.'
+            ))
+
+        if not doc_type:
+            self.ai_extraction_status = 'processing'
+            doc_type = self._detect_document_type(attachment)
+
+        if doc_type == 'bl':
+            return self.action_extract_bl_with_ai()
+        elif doc_type == 'invoice':
+            return self.action_extract_invoices_with_ai()
+        elif doc_type == 'purchase_order':
+            return self.action_extract_po_and_compare()
+        else:
+            self.ai_extraction_status = 'error'
+            raise UserError(_(
+                'No se pudo identificar automáticamente el tipo de documento "%s".\n\n'
+                'Por favor use los botones específicos:\n'
+                '- "Extraer BL con IA"\n'
+                '- "Extraer Facturas con IA"\n'
+                '- "Extraer Nota de Pedido con IA"'
+            ) % attachment.name)

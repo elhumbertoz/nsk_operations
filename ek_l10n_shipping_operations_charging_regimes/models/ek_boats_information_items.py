@@ -179,45 +179,62 @@ class ek_product_packagens_goods(models.Model):
     if product:
       return product.id
 
-    # 2. Búsqueda por código arancelario (usando default_code)
-    # Nota: product.product estándar no tiene hs_code
-    # Buscar por default_code si contiene el HS code
+    # 2. Búsqueda por código arancelario (coincidencia exacta + verificación de nombre)
+    # Nota: product.product estándar no tiene hs_code; usamos default_code REG70-{hs_code}
     if hs_code:
       product = self.env['product.product'].search([
-        ('default_code', 'ilike', hs_code)
-      ], limit=1)
+        ('default_code', '=like', f'REG70-{hs_code}%')
+      ], limit=50)
 
-      if product:
-        return product.id
+      # Si hay candidatos, verificar similitud de nombre antes de confirmar
+      best_hs_match = None
+      best_hs_score = 0
+      for prod in product:
+        similarity = SequenceMatcher(
+          None, prod.name.upper(), description.upper()
+        ).ratio()
+        if similarity > best_hs_score:
+          best_hs_score = similarity
+          best_hs_match = prod
 
-    # 3. Búsqueda por similitud (fuzzy matching)
+      # Umbral permisivo: mismo HS + nombre medianamente parecido
+      if best_hs_match and best_hs_score > 0.60:
+        return best_hs_match.id
+
+    # 3. Búsqueda por similitud (fuzzy matching) en todos los productos REG70
     category = self.env.ref(
       'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
       raise_if_not_found=False
     )
 
-    if category:
-      products = self.env['product.product'].search([
-        ('categ_id', '=', category.id)
-      ], limit=100)
+    search_domain = [('categ_id', '=', category.id)] if category else []
+    products = self.env['product.product'].search(search_domain, limit=200)
 
-      best_match = None
-      best_score = 0
+    best_match = None
+    best_score = 0
 
-      for prod in products:
-        similarity = SequenceMatcher(
-          None,
-          prod.name.upper(),
-          description.upper()
-        ).ratio()
+    for prod in products:
+      similarity = SequenceMatcher(
+        None,
+        prod.name.upper(),
+        description.upper()
+      ).ratio()
 
-        if similarity > best_score:
-          best_score = similarity
-          best_match = prod
+      if similarity > best_score:
+        best_score = similarity
+        best_match = prod
 
-      # Si similitud > 85%, usar ese producto
-      if best_score > 0.85:
-        return best_match.id
+    # Si similitud > 85%, usar ese producto
+    if best_score > 0.85:
+      return best_match.id
+
+    # Zona gris: advertir posible duplicado pero crear nuevo
+    if 0.70 < best_score <= 0.85 and best_match:
+      _logger.warning(
+        "Producto '%s' tiene similitud %.0f%% con '%s' (id=%s). "
+        "Se crea nuevo producto. Revisar si es duplicado.",
+        description, best_score * 100, best_match.name, best_match.id
+      )
 
     # 4. NO ENCONTRADO → Crear automáticamente
     return self._create_product_auto(description, hs_code, fob_unit)
@@ -256,10 +273,17 @@ class ek_product_packagens_goods(models.Model):
       'uom_po_id': self.env.ref('uom.product_uom_unit').id,
     }
 
-    # Agregar HS code al default_code si existe
-    # Nota: product.product estándar no tiene campo hs_code
+    # Agregar HS code al default_code garantizando unicidad
+    # Nota: product.product estándar no tiene campo hs_code nativo
     if hs_code:
-      product_vals['default_code'] = f'REG70-{hs_code}'
+      base_code = f'REG70-{hs_code}'
+      existing = self.env['product.product'].search([
+        ('default_code', '=like', f'{base_code}%')
+      ], limit=50)
+      if not existing:
+        product_vals['default_code'] = base_code
+      else:
+        product_vals['default_code'] = f'{base_code}-{len(existing) + 1:02d}'
     else:
       # Generar código secuencial
       seq = self.env['ir.sequence'].next_by_code('product.product') or '001'

@@ -147,6 +147,7 @@ class ek_operation_request(models.Model):
       }
     }
 
+  color = fields.Integer(string='Color Index')
   name = fields.Char(
     string='#Doc Internal',
     tracking=True,

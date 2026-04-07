@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import logging
 import base64
+import io
 import json
 
 _logger = logging.getLogger(__name__)
@@ -11,6 +12,17 @@ try:
 except ImportError:
     litellm = None
     _logger.warning("litellm library not installed. Please install it using: pip install litellm")
+
+try:
+    import pypdfium2 as _pdfium
+    _PDFIUM_AVAILABLE = True
+except ImportError:
+    _pdfium = None
+    _PDFIUM_AVAILABLE = False
+    _logger.warning(
+        "pypdfium2 library not installed. PDF pages will not be converted to images. "
+        "Install with: pip install pypdfium2"
+    )
 
 class LLMProvider(models.Model):
     _name = 'nsk.llm.provider'
@@ -30,45 +42,129 @@ class LLMProvider(models.Model):
     api_key = fields.Char(string='API Key')
     api_base = fields.Char(string='API Base URL', help="Optional. Useful for Ollama or custom endpoints.")
     
+    def _pdf_to_image_parts(self, att, dpi=150):
+        """
+        Convierte cada página de un PDF en una imagen JPEG y la devuelve
+        como bloque image_url con data URI base64.
+
+        Usa pypdfium2 (PDFium, motor de Chrome) — no requiere poppler ni
+        dependencias de sistema.
+
+        :param att: ir.attachment con mimetype application/pdf
+        :param dpi: resolución de renderizado (150 dpi: buen balance calidad/tamaño)
+        :returns: lista de bloques image_url listos para litellm
+        """
+        if not _PDFIUM_AVAILABLE:
+            _logger.error(
+                "pypdfium2 no está instalado. No se puede convertir '%s' a imágenes. "
+                "Instalar con: pip install pypdfium2",
+                att.name
+            )
+            return []
+
+        try:
+            pdf_bytes = base64.b64decode(att.datas)
+            doc = _pdfium.PdfDocument(pdf_bytes)
+        except Exception as e:
+            _logger.error("Error al abrir PDF '%s': %s", att.name, str(e))
+            return []
+
+        scale = dpi / 72.0  # PDFium trabaja en puntos (72 pt = 1 pulgada)
+        parts = []
+
+        try:
+            for page_num in range(len(doc)):
+                page = doc[page_num]
+                bitmap = page.render(scale=scale)
+                pil_img = bitmap.to_pil()
+
+                buffer = io.BytesIO()
+                pil_img.save(buffer, format='JPEG', quality=85, optimize=True)
+                img_b64 = base64.b64encode(buffer.getvalue()).decode()
+
+                parts.append({
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{img_b64}"
+                    }
+                })
+                _logger.debug(
+                    "PDF '%s' página %s/%s → JPEG %dx%d px.",
+                    att.name, page_num + 1, len(doc),
+                    pil_img.width, pil_img.height
+                )
+        finally:
+            doc.close()
+
+        _logger.info(
+            "PDF '%s' convertido: %s página(s) como imágenes JPEG (dpi=%s).",
+            att.name, len(parts), dpi
+        )
+        return parts
+
     def _prepare_attachment_content(self, attachments):
         """
-        Prepares attachments to be sent to the LLM.
-        Generates public share URLs to avoid large payloads.
-        Returns a list of content parts blocks compatible with litellm.
+        Prepara los adjuntos para enviarlos al LLM como bloques multimodal.
+
+        - Imágenes nativas → image_url con URL pública.
+        - PDFs → cada página convertida a JPEG y enviada como image_url base64
+          (los modelos de visión interpretan mejor imágenes que archivos PDF crudos).
+        - Otros formatos → referencia de texto como fallback.
+
+        Returns: lista de content parts compatible con litellm.
         """
         if not attachments:
             return []
-            
+
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         attachment_parts = []
         text_links = []
-        
+
         for att in attachments:
-            # Ensure access token exists
-            if not att.access_token:
-                att.generate_access_token()
-                
-            public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
             mime_type = att.mimetype or ''
-            
+
             if mime_type.startswith('image/'):
-                # Send as image_url for multimodal models
+                # Imagen nativa: enviar como URL pública
+                if not att.access_token:
+                    att.generate_access_token()
+                public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
                 attachment_parts.append({
                     "type": "image_url",
-                    "image_url": {
-                        "url": public_url
-                    }
+                    "image_url": {"url": public_url}
                 })
+
+            elif mime_type == 'application/pdf' or att.name.lower().endswith('.pdf'):
+                # PDF → convertir páginas a imágenes y enviar como base64
+                pdf_parts = self._pdf_to_image_parts(att)
+                if pdf_parts:
+                    # Añadir etiqueta de contexto antes de las imágenes del documento
+                    attachment_parts.append({
+                        "type": "text",
+                        "text": f"[Documento: {att.name} — {len(pdf_parts)} página(s)]"
+                    })
+                    attachment_parts.extend(pdf_parts)
+                else:
+                    # Fallback si la conversión falló
+                    if not att.access_token:
+                        att.generate_access_token()
+                    public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
+                    text_links.append(f"- {att.name}: {public_url} (PDF — conversión no disponible)")
+
             else:
-                # Add link to text references for the model to download/view
-                text_links.append(f"- {att.name}: {public_url} (Type: {mime_type})")
-                
+                # Otros formatos: referencia de texto
+                if not att.access_token:
+                    att.generate_access_token()
+                public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
+                text_links.append(f"- {att.name}: {public_url} (Tipo: {mime_type})")
+
         if text_links:
             attachment_parts.append({
                 "type": "text",
-                "text": "Se adjuntan los siguientes documentos de referencia (favor leer su contenido mediante las URLs):\n" + "\n".join(text_links)
+                "text": (
+                    "Documentos de referencia adicionales:\n" + "\n".join(text_links)
+                )
             })
-            
+
         return attachment_parts
 
     @api.model
