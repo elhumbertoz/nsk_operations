@@ -78,10 +78,9 @@ class ek_product_packagens_goods(models.Model):
   # ============================================================
 
   # REQ-009: Campos adicionales
-  packages_count = fields.Integer(
-    string="Bultos",
-    default=0,
-    help="Número de bultos/paquetes"
+  packages_count = fields.Char(
+    string="Nro. Bulto",
+    help="Número de bultos/paquetes (ej: 00001, 00002)"
   )
 
   commercial_unit = fields.Char(

@@ -765,23 +765,11 @@ Usa la función extract_invoice_data para devolver los resultados estructurados.
 
     def _sync_parent_product_ids(self):
         """
-        Sincroniza los productos encontrados/creados en las líneas con los campos
-        Many2many del modelo padre (product_ids en barcos, regime_70_product_ids en solicitudes)
+        DEPRECADO: Ya no se usa, los productos están directamente en ek_produc_packages_goods_ids
+        Mantenido por compatibilidad con código existente.
         """
-        self.ensure_one()
-        # Obtener todos los product_id únicos de las líneas Detail
-        product_ids = self.ek_produc_packages_goods_ids.filtered(lambda l: l.product_id).mapped('product_id').ids
-        if not product_ids:
-            return
-
-        # Actualizar campos Many2many si existen (usando (4, ID) para no sobrescribir)
-        # 1. Caso Contenedor (ek.boats.information)
-        if 'product_ids' in self._fields:
-            self.write({'product_ids': [(4, pid) for pid in product_ids]})
-        
-        # 2. Caso Solicitud (ek.operation.request)
-        if 'regime_70_product_ids' in self._fields:
-            self.write({'regime_70_product_ids': [(4, pid) for pid in product_ids]})
+        # Ya no es necesario sincronizar, los productos están en las líneas
+        pass
 
 
     def action_extract_po_and_compare(self):

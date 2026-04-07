@@ -11,53 +11,29 @@ class EkBoatsInformation(models.Model):
     _name = 'ek.boats.information'
     _inherit = ['ek.boats.information', 'ek.ai.extraction.mixin']
 
-    def _get_regime_70_product_domain(self):
-        """Retorna el dominio para filtrar solo productos CONSUMIBLES de categoría Régimen 70"""
-        category = self.env.ref(
-            'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
-            raise_if_not_found=False
-        )
-        if category:
-            return [
-                ('type', '=', 'consu'),  # Solo productos CONSUMIBLES
-                ('purchase_ok', '=', True),
-                ('categ_id', '=', category.id)
-            ]
-        return [('type', '=', 'consu'), ('purchase_ok', '=', True)]
 
 
 
 
     ref_container = fields.Char("Ref. Container")
 
-    # Relación DIRECTA con productos consumibles del catálogo (product.product)
-    # Solo productos de tipo 'consu' y categoría Régimen 70
-    product_ids = fields.Many2many(
-        'product.product',
-        'ek_boats_information_product_rel',
-        'container_id',
-        'product_id',
-        string='Productos Consumibles Régimen 70',
-        domain=_get_regime_70_product_domain,
-        help='Productos consumibles de Régimen 70 vinculados directamente al contenedor'
-    )
-
-    # MANTENER: Campo legacy de líneas de detalle (usado en varios lugares del código)
+    # Líneas de detalle de productos/mercancías del contenedor
     ek_produc_packages_goods_ids = fields.One2many(
         "ek.product.packagens.goods",
         "ek_boats_information_id",
-        string="Product Packagens Goods",
-        copy=True
+        string="Items en Contenedor",
+        copy=True,
+        help="Productos extraídos de facturas/BL con IA o ingresados manualmente"
     )
 
     value_of_container = fields.Float("Value of Container", compute="_compute_value_of_container", store=True, index=True)
 
-    @api.depends("product_ids", "product_ids.standard_price")
+    @api.depends("ek_produc_packages_goods_ids", "ek_produc_packages_goods_ids.total_fob")
     def _compute_value_of_container(self):
-        """Calcular valor total del contenedor basado en productos consumibles"""
+        """Calcular valor total del contenedor basado en FOB de items"""
         for rec in self:
-            # Sumar el costo estándar de todos los productos
-            rec.value_of_container = sum(rec.product_ids.mapped('standard_price')) 
+            # Sumar el FOB total de todas las líneas de productos
+            rec.value_of_container = sum(rec.ek_produc_packages_goods_ids.mapped('total_fob')) 
 
 
 
@@ -205,13 +181,11 @@ class EkBoatsInformation(models.Model):
             'id_bl': self.id_bl,
         }
 
-        # Crear la solicitud con los productos consumibles del contenedor
+        # Crear la solicitud
         request = self.env['ek.operation.request'].create(vals)
 
-        # Vincular los mismos productos consumibles a la solicitud
-        # Los productos se comparten entre contenedor Y solicitud
-        if self.product_ids:
-            request.write({'regime_70_product_ids': [(6, 0, self.product_ids.ids)]})
+        # Los items (ek_produc_packages_goods_ids) se comparten automáticamente
+        # a través de la relación con container_id
 
         return {
             'type': 'ir.actions.act_window',
