@@ -12,6 +12,68 @@
         <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_operation_request_form"/>
         <field name="arch" type="xml">
 
+            <!-- ========================================================================== -->
+            <!-- FASE CRISTHIAN: Botones de notificación en Header según etapa -->
+            <!-- REQ-011 a REQ-015: Envío de correos automáticos por etapa -->
+            <!-- ========================================================================== -->
+            <xpath expr="//form[1]/header[1]" position="inside">
+
+                <!-- Campos invisibles para control de etapas -->
+                <field name="is_stage_draft" invisible="1"/>
+                <field name="is_stage_notification" invisible="1"/>
+                <field name="is_stage_arrival" invisible="1"/>
+                <field name="is_stage_transfer" invisible="1"/>
+                <field name="is_stage_deposit" invisible="1"/>
+                <field name="is_stage_closure" invisible="1"/>
+                <field name="is_stage_generate_so" invisible="1"/>
+                <field name="is_stage_done" invisible="1"/>
+                <field name="is_stage_cancelled" invisible="1"/>
+
+                <!-- Botón: Notificar Agente de Aduanas (Etapa: NOTIFICACIÓN) -->
+                <button name="action_send_mail_customs_agent"
+                        string="📧 Notificar Agente"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not is_stage_notification"
+                        help="Envía correo al agente de aduanas con BL y facturas adjuntas"
+                        confirm="¿Está seguro de enviar el correo al agente de aduanas?"/>
+
+                <!-- Botón: Notificar Almacenera (Etapa: ARRIBO) -->
+                <button name="action_send_mail_warehouse"
+                        string="📧 Notificar Almacenera"
+                        type="object"
+                        class="btn-info"
+                        invisible="not is_stage_arrival"
+                        help="Envía correo a la almacenera con nota de pedido"
+                        confirm="¿Está seguro de enviar el correo a la almacenera?"/>
+
+                <!-- Botones de Etapa TRASLADO (múltiples opciones) -->
+                <button name="action_send_mail_driver_info"
+                        string="📧 Notificar Ingreso"
+                        type="object"
+                        class="btn-warning"
+                        invisible="not is_stage_transfer"
+                        help="Envía datos del chofer a la almacenera"
+                        confirm="¿Está seguro de enviar los datos del chofer?"/>
+
+                <button name="action_send_mail_custody"
+                        string="🚨 Solicitar Custodia"
+                        type="object"
+                        class="btn-danger"
+                        invisible="not is_stage_transfer"
+                        help="Solicita servicio de custodia para el traslado"
+                        confirm="¿Está seguro de solicitar el servicio de custodia?"/>
+
+                <button name="action_send_mail_insurance"
+                        string="📋 Emitir Póliza"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not is_stage_transfer"
+                        help="Envía aplicación de póliza de transporte"
+                        confirm="¿Está seguro de enviar la aplicación de póliza?"/>
+
+            </xpath>
+
             <!-- REQ-017: Cambiar label ID BL → ID CONTENEDOR -->
             <xpath expr="//field[@name='id_bl']" position="before">
                 <label for="id_bl" string="ID CONTENEDOR" invisible="not regime in ['70']"/>

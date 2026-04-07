@@ -482,37 +482,63 @@ class EkOperationRequest(models.Model):
       if rec.journey_crew_id and rec.type_id and rec.type_id.use_in_regimen_70:
         if not self.ek_produc_packages_goods_ids:
           raise ValidationError(_('upload file before continuing.'))
+
+        # FASE CRISTHIAN: Lógica mejorada de clonación con campos nuevos
         travel = rec.journey_crew_id
-        # travel.ek_produc_packages_goods_ids.unlink()
+
+        # Crear BL 70
         bl = self.env['id.bl.70'].create(
           {'name': rec.id_bl, 'journey_crew_id': rec.journey_crew_id.id}
         )
+
         new_lines = []
         for line in rec.ek_produc_packages_goods_ids:
-          new_lines.append(
-            (
-              0,
-              0,
-              {
-                'tariff_item': line.tariff_item,
-                'ek_requerid_burden_inter_nac_id': line.ek_requerid_burden_inter_nac_id.id,
-                'quantity': line.quantity,
-                'gross_weight': line.gross_weight,
-                'product_weight_in_lbs': line.product_weight_in_lbs,
-                'fob': line.fob,
-                'invoice_number': line.invoice_number,
-                'supplier': line.supplier,
-                'ek_boats_information_id': travel.id,
-                'id_bl': bl.id,
-                'id_hs_copmt_cd': line.id_hs_copmt_cd,
-                'id_hs_spmt_cd': line.id_hs_spmt_cd,
-                'date_request': rec.create_date,
-                'max_regime_date': rec.max_regime_date,
-                'number_dai': rec.number_dai,
-              },
-            )
-          )
+          # FASE CRISTHIAN: Incluir campos nuevos del REQ-006A, REQ-009
+          line_vals = {
+            'tariff_item': line.tariff_item,
+            'ek_requerid_burden_inter_nac_id': line.ek_requerid_burden_inter_nac_id.id,
+            'quantity': line.quantity,
+            'quantity_hand': line.quantity,  # REQ-020: Saldo inicial = cantidad importada
+            'gross_weight': line.gross_weight,
+            'net_weight': line.net_weight,  # Campo nuevo
+            'product_weight_in_lbs': line.product_weight_in_lbs,
+            'fob': line.fob,
+            'invoice_number': line.invoice_number,
+            'supplier': line.supplier,
+            'ek_boats_information_id': travel.id,
+            'id_bl': bl.id,
+            'id_hs_copmt_cd': line.id_hs_copmt_cd,
+            'id_hs_spmt_cd': line.id_hs_spmt_cd,
+            'date_request': rec.create_date,
+            'max_regime_date': rec.max_regime_date,
+            'number_dai': rec.number_dai,
+            # FASE CRISTHIAN: Campos nuevos REQ-006A, REQ-009
+            'ship_id': line.ship_id.id if line.ship_id else False,
+            'packages_count': line.packages_count or 0,
+            'commercial_unit': line.commercial_unit,
+            'observation': line.observation,
+            'classification': line.classification,
+            # REQ-005: Vinculación con producto real de inventario
+            'product_id': line.product_id.id if line.product_id else False,
+            'name': line.name,  # Descripción
+            # REQ-006B: Campos de validación
+            'is_validated': line.is_validated,
+            'validation_status': line.validation_status,
+            'validation_notes': line.validation_notes,
+            'po_line_reference': line.po_line_reference,
+          }
+
+          new_lines.append((0, 0, line_vals))
+
         rec.journey_crew_id.ek_produc_packages_goods_ids = new_lines
+
+        # Mensaje en chatter
+        rec.message_post(
+          body=_("✅ %d líneas de productos clonadas al contenedor %s con saldo inicial (quantity_hand)") % (
+            len(new_lines), travel.name
+          ),
+          subject=_("Clonación a contenedor completada")
+        )
 
       if rec.type_id and rec.type_id.use_in_regimen_60 and rec.journey_crew_id:
         data = []
@@ -916,6 +942,360 @@ class EkOperationRequest(models.Model):
           break
 
     return res
+
+  # ============================================================================
+  # FASE CRISTHIAN: Campos computados para detección de etapas
+  # REQ-007: Visibilidad condicional por etapa
+  # ============================================================================
+
+  is_stage_draft = fields.Boolean(
+    string="Es Etapa Borrador",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Borrador"
+  )
+
+  is_stage_notification = fields.Boolean(
+    string="Es Etapa Notificación",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Notificación"
+  )
+
+  is_stage_arrival = fields.Boolean(
+    string="Es Etapa Arribo",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Arribo"
+  )
+
+  is_stage_transfer = fields.Boolean(
+    string="Es Etapa Traslado",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Traslado"
+  )
+
+  is_stage_deposit = fields.Boolean(
+    string="Es Etapa Ingreso a Depósito",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Ingreso a Depósito"
+  )
+
+  is_stage_closure = fields.Boolean(
+    string="Es Etapa Cierre",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Cierre"
+  )
+
+  is_stage_generate_so = fields.Boolean(
+    string="Es Etapa Generar Orden de Venta",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Generar Orden de Venta"
+  )
+
+  is_stage_done = fields.Boolean(
+    string="Es Etapa Realizado",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Realizado"
+  )
+
+  is_stage_cancelled = fields.Boolean(
+    string="Es Etapa Cancelado",
+    compute='_compute_stage_flags',
+    store=False,
+    help="True si la solicitud está en etapa Cancelado"
+  )
+
+  @api.depends('stage_id', 'type_id')
+  def _compute_stage_flags(self):
+    """
+    Calcula flags booleanos para detectar la etapa actual
+    Esto permite usar invisible/required/readonly en vistas XML
+    """
+    for record in self:
+      # Si no es Régimen 70, todos los flags en False
+      if record.regime != '70':
+        record.is_stage_draft = False
+        record.is_stage_notification = False
+        record.is_stage_arrival = False
+        record.is_stage_transfer = False
+        record.is_stage_deposit = False
+        record.is_stage_closure = False
+        record.is_stage_generate_so = False
+        record.is_stage_done = False
+        record.is_stage_cancelled = False
+        continue
+
+      # Obtener referencias a las etapas de Régimen 70
+      try:
+        stage_draft = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_draft', raise_if_not_found=False)
+        stage_notification = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_notification', raise_if_not_found=False)
+        stage_arrival = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_arrival', raise_if_not_found=False)
+        stage_transfer = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_transfer', raise_if_not_found=False)
+        stage_deposit = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_deposit', raise_if_not_found=False)
+        stage_closure = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_closure', raise_if_not_found=False)
+        stage_generate_so = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_generate_so', raise_if_not_found=False)
+        stage_done = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_done', raise_if_not_found=False)
+        stage_cancelled = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_cancelled', raise_if_not_found=False)
+
+        # Comparar stage_id actual con cada etapa
+        record.is_stage_draft = record.stage_id == stage_draft if stage_draft else False
+        record.is_stage_notification = record.stage_id == stage_notification if stage_notification else False
+        record.is_stage_arrival = record.stage_id == stage_arrival if stage_arrival else False
+        record.is_stage_transfer = record.stage_id == stage_transfer if stage_transfer else False
+        record.is_stage_deposit = record.stage_id == stage_deposit if stage_deposit else False
+        record.is_stage_closure = record.stage_id == stage_closure if stage_closure else False
+        record.is_stage_generate_so = record.stage_id == stage_generate_so if stage_generate_so else False
+        record.is_stage_done = record.stage_id == stage_done if stage_done else False
+        record.is_stage_cancelled = record.stage_id == stage_cancelled if stage_cancelled else False
+
+      except Exception:
+        # Si hay error al obtener referencias, todos en False
+        record.is_stage_draft = False
+        record.is_stage_notification = False
+        record.is_stage_arrival = False
+        record.is_stage_transfer = False
+        record.is_stage_deposit = False
+        record.is_stage_closure = False
+        record.is_stage_generate_so = False
+        record.is_stage_done = False
+        record.is_stage_cancelled = False
+
+  # ============================================================================
+  # FASE CRISTHIAN: Métodos de envío de correos automáticos
+  # REQ-011 a REQ-015: Plantillas de correo con adjuntos
+  # ============================================================================
+
+  def action_send_mail_customs_agent(self):
+    """
+    REQ-011: Enviar correo a agente de aduanas
+    Etapa: NOTIFICACIÓN
+    Adjuntos: BL + Facturas
+    """
+    self.ensure_one()
+
+    if not self.shipping_agent_id:
+      raise UserError(_("Debe asignar un Agente de Aduanas antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_customs_agent', raise_if_not_found=False)
+
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para el agente de aduanas."))
+
+    # Preparar adjuntos
+    attachment_ids = []
+    if self.bl_attachment_id:
+      attachment_ids.append(self.bl_attachment_id.id)
+    if self.invoice_attachment_ids:
+      attachment_ids.extend(self.invoice_attachment_ids.ids)
+
+    # Enviar correo
+    template.send_mail(
+      self.id,
+      force_send=True,
+      email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
+    )
+
+    # Mensaje en chatter
+    self.message_post(
+      body=_("📧 Correo enviado al agente de aduanas: %s") % self.shipping_agent_id.name,
+      subject=_("Notificación enviada")
+    )
+
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Correo Enviado'),
+        'message': _('Se envió correo a %s con %d adjuntos') % (self.shipping_agent_id.name, len(attachment_ids)),
+        'type': 'success',
+        'sticky': False,
+      }
+    }
+
+  def action_send_mail_warehouse(self):
+    """
+    REQ-012: Enviar correo a almacenera
+    Etapa: ARRIBO
+    Adjuntos: Nota de Pedido + BL + Facturas
+    """
+    self.ensure_one()
+
+    if not self.res_partner_id:
+      raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_warehouse', raise_if_not_found=False)
+
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para la almacenera."))
+
+    # Preparar adjuntos
+    attachment_ids = []
+    if self.purchase_order_attachment_id:
+      attachment_ids.append(self.purchase_order_attachment_id.id)
+    if self.bl_attachment_id:
+      attachment_ids.append(self.bl_attachment_id.id)
+    if self.invoice_attachment_ids:
+      attachment_ids.extend(self.invoice_attachment_ids.ids)
+
+    # Enviar correo
+    template.send_mail(
+      self.id,
+      force_send=True,
+      email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
+    )
+
+    # Mensaje en chatter
+    self.message_post(
+      body=_("📧 Correo enviado a almacenera: %s") % self.res_partner_id.name,
+      subject=_("Notificación enviada")
+    )
+
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Correo Enviado'),
+        'message': _('Se envió correo a %s con %d adjuntos') % (self.res_partner_id.name, len(attachment_ids)),
+        'type': 'success',
+        'sticky': False,
+      }
+    }
+
+  def action_send_mail_driver_info(self):
+    """
+    REQ-013: Enviar datos de chofer al depósito
+    Etapa: TRASLADO
+    """
+    self.ensure_one()
+
+    if not self.res_partner_id:
+      raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
+
+    if not self.transfer_explanation:
+      raise UserError(_("Debe completar la información del transportista antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_driver_info', raise_if_not_found=False)
+
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para datos de chofer."))
+
+    # Enviar correo
+    template.send_mail(self.id, force_send=True)
+
+    # Mensaje en chatter
+    self.message_post(
+      body=_("📧 Información de chofer enviada a almacenera: %s") % self.res_partner_id.name,
+      subject=_("Datos de Ingreso enviados")
+    )
+
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Correo Enviado'),
+        'message': _('Se enviaron los datos del chofer a %s') % self.res_partner_id.name,
+        'type': 'success',
+        'sticky': False,
+      }
+    }
+
+  def action_send_mail_custody(self):
+    """
+    REQ-014: Solicitar servicio de custodia
+    Etapa: TRASLADO
+    """
+    self.ensure_one()
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_custody', raise_if_not_found=False)
+
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para solicitud de custodia."))
+
+    # Enviar correo
+    template.send_mail(self.id, force_send=True)
+
+    # Mensaje en chatter
+    self.message_post(
+      body=_("🚨 Solicitud de custodia enviada"),
+      subject=_("Custodia solicitada")
+    )
+
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Correo Enviado'),
+        'message': _('Se envió solicitud de servicio de custodia'),
+        'type': 'success',
+        'sticky': False,
+      }
+    }
+
+  def action_send_mail_insurance(self):
+    """
+    REQ-015: Enviar aplicación de póliza de transporte
+    Etapa: TRASLADO
+    """
+    self.ensure_one()
+
+    if not self.number_mrn:
+      raise UserError(_("Debe ingresar el número de póliza (MRN) antes de enviar el correo."))
+
+    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_insurance', raise_if_not_found=False)
+
+    if not template:
+      raise UserError(_("No se encontró la plantilla de correo para aplicación de póliza."))
+
+    # Enviar correo
+    template.send_mail(self.id, force_send=True)
+
+    # Mensaje en chatter
+    self.message_post(
+      body=_("📋 Aplicación de póliza enviada (MRN: %s)") % self.number_mrn,
+      subject=_("Póliza enviada")
+    )
+
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Correo Enviado'),
+        'message': _('Se envió aplicación de póliza MRN: %s') % self.number_mrn,
+        'type': 'success',
+        'sticky': False,
+      }
+    }
+
+  # ============================================================================
+  # FASE CRISTHIAN: Validación de factura antes de cambio de etapa
+  # REQ-007: Validaciones por etapa
+  # ============================================================================
+
+  def write(self, vals):
+    """
+    Override write para validar cambios de etapa
+    """
+    # Validar invoice_validated antes de pasar a etapa NOTIFICACIÓN
+    if 'stage_id' in vals and self.regime == '70':
+      new_stage = self.env['ek.l10n.stages.mixin'].browse(vals['stage_id'])
+      stage_notification = self.env.ref('ek_l10n_shipping_operations_charging_regimes.stage_regime_70_notification', raise_if_not_found=False)
+
+      # Si intenta pasar a NOTIFICACIÓN sin validar factura
+      if new_stage == stage_notification and not self.invoice_validated:
+        # Verificar si tiene Nota de Pedido y líneas de productos
+        if self.purchase_order_attachment_id and self.ek_produc_packages_goods_ids:
+          raise ValidationError(_(
+            "⚠️ No puede pasar a la etapa NOTIFICACIÓN sin validar la factura contra la Nota de Pedido.\n\n"
+            "Use el botón '🤖 Validar con IA' en la pestaña Régimen 70 para realizar la validación automática."
+          ))
+
+    return super(EkOperationRequest, self).write(vals)
 
 
 class bl_import_export(models.Model):
