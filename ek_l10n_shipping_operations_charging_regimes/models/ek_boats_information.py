@@ -92,8 +92,8 @@ class EkBoatsInformation(models.Model):
         comodel_name="res.partner",
         required=False, tracking=True
     )
-    shipping_company = fields.Many2one(
-        string="Shipping Company",
+    shipping_line_id = fields.Many2one(
+        string="Shipping Line",
         comodel_name="res.partner",
         required=False, tracking=True
     )
@@ -105,7 +105,7 @@ class EkBoatsInformation(models.Model):
 
     load_number = fields.Char("Load Number", default=_("CONTAINER #"))
     supplies_detail = fields.Char("Supplies Detail", tracking=True)
-    container_number = fields.Char("Container Number", tracking=True)
+    number_container = fields.Char("Container Number", tracking=True)
     bl_number = fields.Char("# AWB O BL", tracking=True)
     
     supplier_ids = fields.Many2many(
@@ -195,8 +195,7 @@ class EkBoatsInformation(models.Model):
         self.ensure_one()
         
         # Buscar tipo de operación predeterminado para Régimen 70
-        operation_type = self.env['ek.operation.request.type'].search([
-            ('regime', '=', '70'),
+        operation_type = self.env['ek.l10n.type.model.mixin'].search([
             ('use_in_regimen_70', '=', True)
         ], limit=1)
 
@@ -206,8 +205,10 @@ class EkBoatsInformation(models.Model):
             'type_id': operation_type.id if operation_type else False,
             'ek_ship_registration_id': self.ship_name_id.id if self.ship_name_id else False,
             'res_partner_id': self.shipper_id.id if self.shipper_id else False,
-            'shipping_line_id': self.shipping_company.id if self.shipping_company else False,
+            'shipping_line_id': self.shipping_line_id.id if self.shipping_line_id else False,
             'supplies_detail': self.supplies_detail or self.load_number,
+            'number_container': self.number_container,
+            'id_bl': self.id_bl,
         }
 
         # Crear la solicitud con los productos consumibles del contenedor

@@ -3,6 +3,7 @@
   <record id="view_ek_boats_information_regimens_form" model="ir.ui.view">
     <field name="name">ek.boats.information.regimen.form</field>
     <field name="model">ek.boats.information</field>
+    <field name="priority">10</field>
     <field name="arch" type="xml">
       <form string="">
         <header>
@@ -53,11 +54,11 @@
             </group>
             <group>
               <field name="shipper_id"/>
-              <field name="shipping_company"/>
+              <field name="shipping_line_id"/>
               <field name="type_container_id"/>
               <field name="type_move_container"/>
               <field name="load_number"/>
-              <field name="container_number"/>
+              <field name="number_container"/>
               <field name="bl_number"/>
               <field name="value_of_container" invisible="1" />
             </group>
@@ -124,7 +125,7 @@
                   <field name="delivery_product" sum="total" string="Producto"/>
                   <field name="quantity_hand" sum="total" string="Cantidad"/>
                   <field name="id_bl"/>
-                </tree>
+                </tree> 
               </field>
             </page>
             <page string="Extracción con IA">
@@ -134,6 +135,7 @@
                                widget="many2many_binary"
                                string="Bill of Lading"/>
                         <field name="bl_attachment_filename" invisible="1"/>
+                        <label for="action_extract_bl_with_ai" string=" "/>
                         <button name="action_extract_bl_with_ai"
                                 string="Extraer BL con IA"
                                 type="object"
@@ -145,6 +147,7 @@
                         
                         <field name="invoice_attachment_ids"
                                widget="many2many_binary"/>
+                        <label for="action_extract_invoices_with_ai" string=" "/>
                         <button name="action_extract_invoices_with_ai"
                                 string="Extraer Facturas con IA"
                                 type="object"
@@ -155,6 +158,7 @@
                     <group string="Validación Aduanera">
                         <field name="purchase_order_attachment_ids"
                                widget="many2many_binary"/>
+                        <label for="action_extract_po_and_compare" string=" "/>
                         <button name="action_extract_po_and_compare"
                                 string="Validar Nota de Pedido"
                                 type="object"
@@ -163,15 +167,25 @@
                                 invisible="not purchase_order_attachment_ids or not ek_produc_packages_goods_ids"/>
                         
                         <separator/>
-                        <field name="ai_extraction_status" widget="badge"
-                               decoration-success="ai_extraction_status=='completed'"
-                               decoration-warning="ai_extraction_status=='processing'"
-                               decoration-danger="ai_extraction_status=='error'"/>
-                        <field name="ai_confidence_score" widget="progressbar"/>
+                        <field name="ai_extraction_status_bl" widget="badge"
+                               string="Estado BL"
+                               decoration-success="ai_extraction_status_bl=='completed'"
+                               decoration-warning="ai_extraction_status_bl=='processing'"
+                               decoration-danger="ai_extraction_status_bl=='error'"/>
+                        
+                        <field name="ai_extraction_status_fc" widget="badge"
+                               string="Estado Facturas"
+                               decoration-success="ai_extraction_status_fc=='completed'"
+                               decoration-warning="ai_extraction_status_fc=='processing'"
+                               decoration-danger="ai_extraction_status_fc=='error'"/>
+
+                        <field name="ai_extraction_status_np" widget="badge"
+                               string="Estado Nota Pedido"
+                               decoration-success="ai_extraction_status_np=='completed'"
+                               decoration-warning="ai_extraction_status_np=='processing'"
+                               decoration-danger="ai_extraction_status_np=='error'"/>
+
                     </group>
-                </group>
-                <group string="Logs de Extracción" invisible="not ai_extraction_log">
-                    <field name="ai_extraction_log" nolabel="1" readonly="1"/>
                 </group>
             </page>
             <page string="Notas">

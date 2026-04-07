@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from markupsafe import Markup
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import json
@@ -41,7 +42,28 @@ class EkAIExtractionMixin(models.AbstractModel):
         ('processing', 'Procesando'),
         ('completed', 'Completado'),
         ('error', 'Error')
-    ], string='Estado Extracción IA', default='pending', tracking=True)
+    ], string='Estado Extracción IA (General)', default='pending', tracking=True)
+
+    ai_extraction_status_bl = fields.Selection([
+        ('pending', 'Pendiente'),
+        ('processing', 'Procesando'),
+        ('completed', 'Completado'),
+        ('error', 'Error')
+    ], string='Estado BL', default='pending', tracking=True)
+
+    ai_extraction_status_fc = fields.Selection([
+        ('pending', 'Pendiente'),
+        ('processing', 'Procesando'),
+        ('completed', 'Completado'),
+        ('error', 'Error')
+    ], string='Estado Facturas', default='pending', tracking=True)
+
+    ai_extraction_status_np = fields.Selection([
+        ('pending', 'Pendiente'),
+        ('processing', 'Procesando'),
+        ('completed', 'Completado'),
+        ('error', 'Error')
+    ], string='Estado Nota Pedido', default='pending', tracking=True)
 
     ai_extraction_log = fields.Html(
         string='Resultado de Extracción',
@@ -49,11 +71,6 @@ class EkAIExtractionMixin(models.AbstractModel):
         help='Muestra el resultado estructurado de la última operación de IA'
     )
 
-    ai_confidence_score = fields.Float(
-        string='Confidence Score',
-        readonly=True,
-        help='Nivel de confianza de la última extracción (0-1)'
-    )
 
     def _get_bl_extraction_tool_definition(self):
         """
@@ -90,7 +107,7 @@ class EkAIExtractionMixin(models.AbstractModel):
                         },
                         "supplies_detail": {
                             "type": "string",
-                            "description": "Descripción general de la carga o suministros"
+                            "description": "Descripción generalizada de la carga (ej: 'Maquinaria industrial y repuestos', 'Electrodomésticos y accesorios'). NO listar productos individuales, resumir en una frase corta qué tipo de mercancía se transporta."
                         },
                         "total_weight": {
                             "type": "number",
@@ -120,12 +137,8 @@ class EkAIExtractionMixin(models.AbstractModel):
                             },
                             "description": "Lista detallada de productos/paquetes en el contenedor"
                         },
-                        "confidence_score": {
-                            "type": "number",
-                            "description": "Nivel de confianza de la extracción (0.0 a 1.0)"
-                        }
                     },
-                    "required": ["id_bl", "confidence_score"]
+                    "required": ["id_bl"]
                 }
             }
         }
@@ -189,9 +202,8 @@ class EkAIExtractionMixin(models.AbstractModel):
                         },
                         "subtotal": {"type": "number"},
                         "total": {"type": "number"},
-                        "confidence_score": {"type": "number"}
                     },
-                    "required": ["invoice_number", "supplier", "items", "confidence_score"]
+                    "required": ["invoice_number", "supplier", "items"]
                 }
             }
         }
@@ -236,9 +248,8 @@ class EkAIExtractionMixin(models.AbstractModel):
                                 "required": ["description", "quantity"]
                             }
                         },
-                        "confidence_score": {"type": "number"}
                     },
-                    "required": ["items", "confidence_score"]
+                    "required": ["items"]
                 }
             }
         }
@@ -256,6 +267,7 @@ class EkAIExtractionMixin(models.AbstractModel):
         attachment = self.bl_attachment_ids[0]
 
         # Actualizar estado
+        self.ai_extraction_status_bl = 'processing'
         self.ai_extraction_status = 'processing'
 
         try:
@@ -318,25 +330,25 @@ El documento PDF está adjunto a este mensaje."""
             tool_call = response.choices[0].message.tool_calls[0]
             extracted_data = json.loads(tool_call.function.arguments)
 
-            _logger.info(f"Datos extraídos exitosamente. Confidence: {extracted_data.get('confidence_score', 0)}")
+            _logger.info(f"Datos extraídos exitosamente.")
 
             # Aplicar datos extraídos
-            self._apply_bl_data(extracted_data)
+            self._apply_bl_data(extracted_data, attachment)
 
             # Actualizar estado
+            self.ai_extraction_status_bl = 'completed'
             self.ai_extraction_status = 'completed'
-            self.ai_confidence_score = extracted_data.get('confidence_score', 0)
 
             # Log Elegante (HTML)
             packages = extracted_data.get('packages', [])
             html_log = f"""
                 <div class="alert alert-success" role="alert">
-                    <h4 class="alert-heading">✅ Extracción de BL Completada</h4>
-                    <p>Se procesó el documento <strong>{attachment.name}</strong> con un nivel de confianza del <strong>{self.ai_confidence_score * 100:.0f}%</strong>.</p>
+                    <h4 class="alert-heading">Extracción de BL Completada</h4>
+                    <p>Se procesó el documento <strong>{attachment.name}</strong>.</p>
                     <hr>
                     <table class="table table-sm table-borderless mb-0">
-                        <tr><td><strong>BL#:</strong> {self.id_bl or 'N/A'}</td><td><strong>Contenedor:</strong> {self.number_container or 'N/A'}</td></tr>
-                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if self.shipping_line_id else 'No encontrada'}</td><td><strong>Productos:</strong> {len(packages)}</td></tr>
+                        <tr><td><strong>BL#:</strong> {getattr(self, 'id_bl', 'N/A') or 'N/A'}</td><td><strong>Contenedor:</strong> {getattr(self, 'number_container', getattr(self, 'container_number', 'N/A')) or 'N/A'}</td></tr>
+                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if hasattr(self, 'shipping_line_id') and self.shipping_line_id else (self.shipping_company.name if hasattr(self, 'shipping_company') and self.shipping_company else 'No encontrada')}</td><td><strong>Productos:</strong> {len(packages)}</td></tr>
                     </table>
                 </div>
                 <div class="mt-3">
@@ -372,10 +384,9 @@ El documento PDF está adjunto a este mensaje."""
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('✅ Extracción Completada'),
-                    'message': _('Se extrajeron %s productos del BL con confianza de %.0f%%') % (
-                        len(extracted_data.get('packages', [])),
-                        self.ai_confidence_score * 100
+                    'title': _('Extracción Completada'),
+                    'message': _('Se extrajeron %s productos del BL') % (
+                        len(extracted_data.get('packages', []))
                     ),
                     'type': 'success',
                     'sticky': False,
@@ -384,6 +395,7 @@ El documento PDF está adjunto a este mensaje."""
             }
 
         except Exception as e:
+            self.ai_extraction_status_bl = 'error'
             self.ai_extraction_status = 'error'
             error_msg = str(e)
             _logger.error(f"Error en extracción de BL: {error_msg}")
@@ -392,7 +404,7 @@ El documento PDF está adjunto a este mensaje."""
 
             raise UserError(_('Error al extraer datos del BL:\n\n%s\n\nVerifique:\n- Que nsk_llm esté configurado correctamente\n- Que el documento sea un PDF válido\n- Que el servidor tenga acceso a Internet') % error_msg)
 
-    def _apply_bl_data(self, extracted_data):
+    def _apply_bl_data(self, extracted_data, attachment):
         """
         Aplica los datos extraídos del BL al registro
         REQ-002: Aplicación de datos extraídos
@@ -402,13 +414,10 @@ El documento PDF está adjunto a este mensaje."""
             self.id_bl = extracted_data['id_bl']
 
         if extracted_data.get('number_container'):
-            # En ek.boats.information es container_number
-            if hasattr(self, 'container_number'):
-                self.container_number = extracted_data['number_container']
-            # En ek.operation.request es id_bl (el contenedor se muestra como label ID CONTENEDOR)
-            # Pero if el mixin tiene number_container, usarlo
-            elif hasattr(self, 'number_container'):
+            if hasattr(self, 'number_container'):
                 self.number_container = extracted_data['number_container']
+            elif hasattr(self, 'container_number'):
+                self.container_number = extracted_data['number_container']
 
         if extracted_data.get('eta'):
             try:
@@ -425,7 +434,11 @@ El documento PDF está adjunto a este mensaje."""
                 _logger.warning(f"No se pudo parsear fecha ETD: {extracted_data['etd']}")
 
         if extracted_data.get('supplies_detail'):
-            self.supplies_detail = extracted_data['supplies_detail']
+            self.message_post(
+                body=Markup(_('<strong>Descripción de carga:</strong> %s')) % extracted_data['supplies_detail'],
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
 
         # Buscar línea naviera
         if extracted_data.get('shipping_line'):
@@ -435,7 +448,10 @@ El documento PDF está adjunto a este mensaje."""
             ], limit=1)
 
             if shipping_line:
-                self.shipping_line_id = shipping_line.id
+                if hasattr(self, 'shipping_line_id'):
+                    self.shipping_line_id = shipping_line.id
+                elif hasattr(self, 'shipping_company'):
+                    self.shipping_company = shipping_line.id
             else:
                 _logger.info(f"Línea naviera no encontrada: {extracted_data['shipping_line']}")
 
@@ -447,20 +463,18 @@ El documento PDF está adjunto a este mensaje."""
         # Log en chatter
         attachment_name = self.bl_attachment_ids[0].name if self.bl_attachment_ids else 'N/A'
         self.message_post(
-            body=_(
+            body=Markup(_(
                 '<strong>✅ Extracción de BL completada con IA</strong><br/>'
                 'Documento: %s<br/>'
-                'Confidence Score: %.0f%%<br/>'
-                'Productos extraídos: %s<br/>'
+                'Productos: %s<br/>'
                 'BL#: %s<br/>'
                 'Contenedor: %s'
             ) % (
                 attachment_name,
-                extracted_data.get('confidence_score', 0) * 100,
                 len(packages),
                 self.id_bl or 'N/A',
                 self.number_container or 'N/A'
-            )
+            ))
         )
 
     def _create_goods_lines_from_packages(self, packages):
@@ -502,6 +516,7 @@ El documento PDF está adjunto a este mensaje."""
         if not self.invoice_attachment_ids:
             raise UserError(_('Por favor adjunte al menos una factura comercial antes de continuar.'))
 
+        self.ai_extraction_status_fc = 'processing'
         self.ai_extraction_status = 'processing'
 
         try:
@@ -568,6 +583,7 @@ IMPORTANTE:
                 self._create_goods_lines_from_invoice_items(all_items)
 
             # Actualizar estado
+            self.ai_extraction_status_fc = 'completed'
             self.ai_extraction_status = 'completed'
 
             # Log Elegante (HTML)
@@ -611,11 +627,11 @@ IMPORTANTE:
 
             # Mensaje en chatter
             self.message_post(
-                body=_(
+                body=Markup(_(
                     '<strong>✅ Extracción de Facturas completada con IA</strong><br/>'
                     'Facturas procesadas: %s<br/>'
                     'Items totales: %s<br/>'
-                ) % (invoices_processed, len(all_items))
+                )) % (invoices_processed, len(all_items))
             )
 
             _logger.info("Extracción de facturas finalizada para %s", self.name)
@@ -636,6 +652,7 @@ IMPORTANTE:
             }
 
         except Exception as e:
+            self.ai_extraction_status_fc = 'error'
             self.ai_extraction_status = 'error'
             error_msg = str(e)
             _logger.error(f"Error en extracción de facturas: {error_msg}")
@@ -704,6 +721,8 @@ IMPORTANTE:
 
             # 1. Extraer datos de Nota de Pedido
             _logger.info("Extrayendo datos de Nota de Pedido...")
+            self.ai_extraction_status_np = 'processing'
+            self.ai_extraction_status = 'processing'
 
             messages = [
                 {
@@ -739,14 +758,20 @@ IMPORTANTE:
             self.purchase_order_data = json.dumps(po_data, indent=2)
 
             # 2. Abrir wizard de validación para comparación
-            wizard = self.env['ek.invoice.validation.wizard'].create({
-                'operation_request_id': self.id,
-            })
+            wizard_vals = {}
+            if self._name == 'ek.operation.request':
+                wizard_vals['operation_request_id'] = self.id
+            else:
+                wizard_vals['container_id'] = self.id
+
+            wizard = self.env['ek.invoice.validation.wizard'].create(wizard_vals)
 
             # 3. Comparar usando IA
             wizard._compare_with_ai(po_data)
 
             # Abrir wizard
+            self.ai_extraction_status_np = 'completed'
+            self.ai_extraction_status = 'completed'
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Validación: Factura vs Nota de Pedido'),
@@ -754,9 +779,12 @@ IMPORTANTE:
                 'view_mode': 'form',
                 'res_id': wizard.id,
                 'target': 'new',
+                'context': self.env.context,
             }
 
         except Exception as e:
+            self.ai_extraction_status_np = 'error'
+            self.ai_extraction_status = 'error'
             error_msg = str(e)
             _logger.error(f"Error en extracción/comparación de PO: {error_msg}")
             raise UserError(_('Error al procesar Nota de Pedido:\n\n%s') % error_msg)
@@ -831,6 +859,7 @@ IMPORTANTE:
             ))
 
         if not doc_type:
+            # No sabemos cual es todavia, pero la operacion general esta en proceso
             self.ai_extraction_status = 'processing'
             doc_type = self._detect_document_type(attachment)
 

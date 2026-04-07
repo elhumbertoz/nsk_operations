@@ -19,7 +19,14 @@ class EkInvoiceValidationWizard(models.TransientModel):
     operation_request_id = fields.Many2one(
         'ek.operation.request',
         string='Solicitud',
-        required=True,
+        required=False,
+        readonly=True
+    )
+
+    container_id = fields.Many2one(
+        'ek.boats.information',
+        string='Contenedor',
+        required=False,
         readonly=True
     )
 
@@ -82,43 +89,49 @@ class EkInvoiceValidationWizard(models.TransientModel):
             wizard.major_diff = len(wizard.validation_line_ids.filtered(lambda l: l.validation_status == 'major'))
             wizard.missing_in_po = len(wizard.validation_line_ids.filtered(lambda l: l.validation_status == 'missing'))
 
+    def _get_active_record(self):
+        """Retorna el registro origen (Solicitud o Contenedor)"""
+        self.ensure_one()
+        return self.operation_request_id or self.container_id
+
     @api.model
     def default_get(self, fields_list):
         """Cargar datos al abrir el wizard"""
         res = super().default_get(fields_list)
 
-        # Obtener solicitud desde contexto
-        operation_id = self.env.context.get('active_id')
-        if not operation_id:
-            raise UserError(_('No se encontró la solicitud'))
+        # Obtener ID y Modelo desde contexto
+        active_id = self.env.context.get('active_id')
+        active_model = self.env.context.get('active_model')
 
-        operation = self.env['ek.operation.request'].browse(operation_id)
+        # Si no hay contexto o el modelo activo es el mismo wizard, no intentar pre-llenar
+        if not active_id or not active_model or active_model == self._name:
+            return res
 
-        # Validar que exista nota de pedido
-        if not operation.purchase_order_data:
-            raise UserError(_('Debe cargar y procesar la Nota de Pedido primero'))
-
-        res['operation_request_id'] = operation_id
+        # Intentar pre-llenar según el modelo activo
+        if active_model == 'ek.operation.request':
+            res['operation_request_id'] = active_id
+        elif active_model == 'ek.boats.information':
+            res['container_id'] = active_id
 
         return res
 
     def action_compare_documents(self):
         """
         Comparar factura vs Nota de Pedido.
-        Si hay datos de PO cargados, intenta comparación con IA (con fallback determinista).
-        Si no hay PO, deja las líneas en 'pending' con datos de factura.
-        REQ-006B
         """
         self.ensure_one()
+        source = self._get_active_record()
+        if not source:
+            raise UserError(_('No se encontró el registro origen (Solicitud o Contenedor).'))
 
         # Limpiar líneas anteriores
         self.validation_line_ids.unlink()
 
-        goods_lines = self.operation_request_id.ek_produc_packages_goods_ids
+        goods_lines = source.ek_produc_packages_goods_ids
         if not goods_lines:
-            raise UserError(_('No hay productos en la factura para validar'))
+            raise UserError(_('No hay productos registrados para validar'))
 
-        po_raw = self.operation_request_id.purchase_order_data
+        po_raw = source.purchase_order_data
         if po_raw:
             try:
                 po_data = json.loads(po_raw)
@@ -213,6 +226,7 @@ class EkInvoiceValidationWizard(models.TransientModel):
 
     def _validate_lines(self, lines):
         """Actualizar estados de validación en líneas de productos"""
+        source = self._get_active_record()
         for line in lines:
             if line.goods_line_id:
                 line.goods_line_id.write({
@@ -223,14 +237,14 @@ class EkInvoiceValidationWizard(models.TransientModel):
                 })
 
         # Verificar si todas las líneas están validadas
-        all_lines = self.operation_request_id.ek_produc_packages_goods_ids
+        all_lines = source.ek_produc_packages_goods_ids
         all_validated = all(line.is_validated for line in all_lines)
 
         if all_validated:
-            self.operation_request_id.invoice_validated = True
+            source.invoice_validated = True
 
         # Log en chatter
-        self.operation_request_id.message_post(
+        source.message_post(
             body=_(
                 'Validación completada: %s coincidencias, %s diferencias menores, %s diferencias mayores'
             ) % (self.exact_matches, self.minor_diff, self.major_diff)
@@ -242,9 +256,10 @@ class EkInvoiceValidationWizard(models.TransientModel):
         REQ-005, REQ-006: Comparación inteligente con matching
         """
         self.ensure_one()
+        source = self._get_active_record()
 
         # Obtener productos de la factura
-        invoice_lines = self.operation_request_id.ek_produc_packages_goods_ids
+        invoice_lines = source.ek_produc_packages_goods_ids
 
         if not invoice_lines:
             raise UserError(_('No hay productos en la factura para validar'))

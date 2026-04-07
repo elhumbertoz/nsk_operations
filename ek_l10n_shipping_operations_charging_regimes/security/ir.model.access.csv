@@ -13,3 +13,5 @@ access_ek_customs_agent_data_user,ek.customs.agent.data.user,model_ek_customs_ag
 access_ek_customs_import_wizard_user,ek.customs.import.wizard.user,model_ek_customs_import_wizard,base.group_user,1,1,1,1
 access_ek_customs_data_clear_wizard_user,ek.customs.data.clear.wizard.user,model_ek_customs_data_clear_wizard,base.group_user,1,1,1,1
 access_ek_packages_goods_clear_wizard_user,ek.packages.goods.clear.wizard.user,model_ek_packages_goods_clear_wizard,base.group_user,1,1,1,1
+access_ek_invoice_validation_wizard_user,ek.invoice.validation.wizard.user,model_ek_invoice_validation_wizard,base.group_user,1,1,1,1
+access_ek_invoice_validation_line_wizard_user,ek.invoice.validation.line.wizard.user,model_ek_invoice_validation_line_wizard,base.group_user,1,1,1,1

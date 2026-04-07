@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from difflib import SequenceMatcher
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ek_product_packagens_goods(models.Model):

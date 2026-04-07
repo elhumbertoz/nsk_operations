@@ -4,6 +4,9 @@ import logging
 import base64
 import io
 import json
+import subprocess
+import tempfile
+import os
 
 _logger = logging.getLogger(__name__)
 
@@ -102,6 +105,98 @@ class LLMProvider(models.Model):
         )
         return parts
 
+    def _excel_to_image_parts(self, att):
+        """
+        Convierte un archivo Excel (.xlsx, .xls) a imágenes JPEG (una por hoja)
+        para que los modelos de visión de la IA puedan procesar el contenido tabular.
+        
+        Requiere: pandas, openpyxl y wkhtmltoimage (en el sistema).
+        """
+        try:
+            import pandas as pd
+        except ImportError:
+            _logger.error("Pandas no instalado. No se puede convertir Excel.")
+            return []
+
+        file_data = base64.b64decode(att.datas)
+        parts = []
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "input_file")
+            # Determinar extensión para que pandas no se confunda
+            ext = ".xlsx" if att.name.lower().endswith(".xlsx") else ".xls"
+            if not att.name.lower().endswith((".xlsx", ".xls")):
+                ext = ".xlsx" # Default
+            
+            local_path = excel_path + ext
+            with open(local_path, 'wb') as f:
+                f.write(file_data)
+            
+            try:
+                # Usar pd.ExcelFile para detectar hojas
+                excel_file = pd.ExcelFile(local_path)
+                
+                for sheet_name in excel_file.sheet_names:
+                    # Leer hoja (limitar filas para no crear imágenes gigantes)
+                    df = pd.read_excel(local_path, sheet_name=sheet_name).head(100)
+                    if df.empty:
+                        continue
+                    
+                    # Convertir a HTML con estilos mínimos
+                    html_table = df.to_html(index=False, border=1)
+                    full_html = f"""
+                    <html>
+                    <head>
+                        <meta charset="utf-8">
+                        <style>
+                            body {{ font-family: 'Helvetica', 'Arial', sans-serif; padding: 20px; background: white; }}
+                            table {{ border-collapse: collapse; width: 100%; font-size: 12px; }}
+                            th, td {{ border: 1px solid #ccc; padding: 6px; text-align: left; }}
+                            th {{ background-color: #f1f1f1; font-weight: bold; }}
+                            h2 {{ color: #333; border-bottom: 2px solid #555; padding-bottom: 5px; }}
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Hoja: {sheet_name}</h2>
+                        {html_table}
+                    </body>
+                    </html>
+                    """
+                    
+                    html_file = os.path.join(tmpdir, f"sheet.html")
+                    img_file = os.path.join(tmpdir, f"sheet.jpg")
+                    
+                    with open(html_file, 'w', encoding='utf-8') as f:
+                        f.write(full_html)
+                    
+                    # Llamar a wkhtmltoimage
+                    try:
+                        subprocess.run([
+                            'wkhtmltoimage',
+                            '--quiet',
+                            '--quality', '90',
+                            '--encoding', 'utf-8',
+                            html_file, img_file
+                        ], check=True, timeout=30)
+                        
+                        if os.path.exists(img_file):
+                            with open(img_file, 'rb') as f:
+                                img_data = base64.b64encode(f.read()).decode()
+                            
+                            parts.append({
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{img_data}"
+                                }
+                            })
+                            _logger.info("Hoja '%s' convertida a imagen.", sheet_name)
+                    except Exception as e:
+                        _logger.warning("Error ejecutando wkhtmltoimage para hoja %s: %s", sheet_name, e)
+            except Exception as e:
+                _logger.error("Error procesando Excel '%s': %s", att.name, e)
+                
+        return parts
+
     def _prepare_attachment_content(self, attachments):
         """
         Prepara los adjuntos para enviarlos al LLM como bloques multimodal.
@@ -149,6 +244,22 @@ class LLMProvider(models.Model):
                         att.generate_access_token()
                     public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
                     text_links.append(f"- {att.name}: {public_url} (PDF — conversión no disponible)")
+
+            elif mime_type in ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'] or att.name.lower().endswith(('.xlsx', '.xls')):
+                # Excel -> Convertir hojas a imágenes usando Pandas + wkhtmltoimage
+                _logger.info("Convirtiendo Excel '%s' a imágenes...", att.name)
+                excel_parts = self._excel_to_image_parts(att)
+                if excel_parts:
+                    attachment_parts.append({
+                        "type": "text",
+                        "text": f"[Documento Excel: {att.name} — {len(excel_parts)} hoja(s)]"
+                    })
+                    attachment_parts.extend(excel_parts)
+                else:
+                    if not att.access_token:
+                        att.generate_access_token()
+                    public_url = f"{base_url}/web/content/{att.id}?access_token={att.access_token}"
+                    text_links.append(f"- {att.name}: {public_url} (Excel — conversión a imagen falló)")
 
             else:
                 # Otros formatos: referencia de texto
