@@ -11,7 +11,7 @@ class EkOperationRequest(models.Model):
   # AI Extraction fields are now in ek.boats.information (Container)
   # Keeping related fields for visibility or transitional purposes if needed
   ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA")
-  ai_extraction_log = fields.Text(related="container_id.ai_extraction_log", string="Log Extracción IA")
+  ai_extraction_log = fields.Html(related="container_id.ai_extraction_log", string="Log Extracción IA")
   ai_confidence_score = fields.Float(related="container_id.ai_confidence_score", string="Confianza IA (%)")
   
   # Related PO fields for compatibility with validation wizards

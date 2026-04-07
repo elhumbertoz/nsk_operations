@@ -110,7 +110,7 @@
                 </tree>
               </field>
             </page>
-            <page string="🤖 Extracción con IA">
+            <page string="Extracción con IA">
                 <group>
                     <group string="Carga de Documentos">
                         <field name="bl_attachment_ids"

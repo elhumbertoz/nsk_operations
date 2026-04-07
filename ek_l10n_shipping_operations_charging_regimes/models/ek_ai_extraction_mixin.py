@@ -43,10 +43,10 @@ class EkAIExtractionMixin(models.AbstractModel):
         ('error', 'Error')
     ], string='Estado Extracción IA', default='pending', tracking=True)
 
-    ai_extraction_log = fields.Text(
-        string='Log de Extracción IA',
+    ai_extraction_log = fields.Html(
+        string='Resultado de Extracción',
         readonly=True,
-        help='Registro de las extracciones realizadas con IA'
+        help='Muestra el resultado estructurado de la última operación de IA'
     )
 
     ai_confidence_score = fields.Float(
@@ -327,13 +327,46 @@ El documento PDF está adjunto a este mensaje."""
             self.ai_extraction_status = 'completed'
             self.ai_confidence_score = extracted_data.get('confidence_score', 0)
 
-            # Log
-            log_entry = f"\n=== Extracción BL - {fields.Datetime.now()} ===\n"
-            log_entry += f"Documento: {attachment.name}\n"
-            log_entry += f"Confidence Score: {self.ai_confidence_score:.2f}\n"
-            log_entry += f"Productos extraídos: {len(extracted_data.get('packages', []))}\n"
-
-            self.ai_extraction_log = (self.ai_extraction_log or '') + log_entry
+            # Log Elegante (HTML)
+            packages = extracted_data.get('packages', [])
+            html_log = f"""
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">✅ Extracción de BL Completada</h4>
+                    <p>Se procesó el documento <strong>{attachment.name}</strong> con un nivel de confianza del <strong>{self.ai_confidence_score * 100:.0f}%</strong>.</p>
+                    <hr>
+                    <table class="table table-sm table-borderless mb-0">
+                        <tr><td><strong>BL#:</strong> {self.id_bl or 'N/A'}</td><td><strong>Contenedor:</strong> {self.number_container or 'N/A'}</td></tr>
+                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if self.shipping_line_id else 'No encontrada'}</td><td><strong>Productos:</strong> {len(packages)}</td></tr>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <h6>Detalle de Productos Extraídos:</h6>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cód. HS</th>
+                                <th class="text-end">Cant.</th>
+                                <th class="text-end">Peso (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            """
+            for pkg in packages[:15]: # Limitar a 15 para no saturar
+                html_log += f"""
+                    <tr>
+                        <td>{pkg.get('description', '')}</td>
+                        <td><span class="badge bg-secondary">{pkg.get('hs_code', '')}</span></td>
+                        <td class="text-end">{pkg.get('quantity') or 0}</td>
+                        <td class="text-end">{pkg.get('weight_kg') or 0}</td>
+                    </tr>
+                """
+            if len(packages) > 15:
+                html_log += f'<tr><td colspan="4" class="text-center text-muted">... y {len(packages) - 15} productos más</td></tr>'
+            
+            html_log += "</tbody></table></div>"
+            
+            self.ai_extraction_log = html_log
 
             return {
                 'type': 'ir.actions.client',
@@ -536,11 +569,44 @@ IMPORTANTE:
             # Actualizar estado
             self.ai_extraction_status = 'completed'
 
-            # Log
-            log_entry = f"\n=== Extracción Facturas - {fields.Datetime.now()} ===\n"
-            log_entry += f"Facturas procesadas: {invoices_processed}\n"
-            log_entry += f"Items totales extraídos: {len(all_items)}\n"
-            self.ai_extraction_log = (self.ai_extraction_log or '') + log_entry
+            # Log Elegante (HTML)
+            html_log = f"""
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">✅ Extracción de Facturas Completada</h4>
+                    <p>Se procesaron <strong>{invoices_processed}</strong> facturas comerciales exitosamente.</p>
+                    <hr>
+                    <table class="table table-sm table-borderless mb-0">
+                        <tr><td><strong>Total Items:</strong> {len(all_items)}</td><td><strong>Estado:</strong> <span class="badge bg-success">Completado</span></td></tr>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <table class="table table-hover table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Factura</th>
+                                <th class="text-end">Cant.</th>
+                                <th class="text-end">FOB Unit.</th>
+                                <th class="text-end">FOB Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            """
+            for item in all_items[:20]: # Limitar a 20 para el log
+                html_log += f"""
+                    <tr>
+                        <td>{item.get('description', '')[:50]}...</td>
+                        <td><small>{item.get('invoice_number', '')}</small></td>
+                        <td class="text-end">{item.get('quantity') or 0}</td>
+                        <td class="text-end">{item.get('unit_price_fob') or 0:,.2f}</td>
+                        <td class="text-end"><strong>{item.get('total_fob') or 0:,.2f}</strong></td>
+                    </tr>
+                """
+            if len(all_items) > 20:
+                html_log += f'<tr><td colspan="5" class="text-center text-muted">... y {len(all_items) - 20} items más registrados en la tabla principal</td></tr>'
+            
+            html_log += "</tbody></table></div>"
+            self.ai_extraction_log = html_log
 
             # Mensaje en chatter
             self.message_post(
