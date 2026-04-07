@@ -210,7 +210,23 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "line_number": {"type": "integer"},
                                     "description": {
                                         "type": "string",
-                                        "description": "Descripción completa y detallada del producto. Evitar abreviaciones ambiguas si es posible."
+                                        "description": (
+                                            "Raw product description exactly as it appears in the document. "
+                                            "Do NOT truncate or rephrase — preserve the full original text for audit purposes."
+                                        )
+                                    },
+                                    "product_name": {
+                                        "type": "string",
+                                        "description": (
+                                            "Normalized, human-readable product name following the pattern: "
+                                            "[Product Type] [Brand] [Model] [Key Spec]. "
+                                            "Rules: (1) Be concise — max ~60 chars. "
+                                            "(2) Omit verbose legal text, part numbers, addresses, and generic filler words. "
+                                            "(3) Preserve the brand and model when present — they are the most identifying attributes. "
+                                            "(4) Include only the single most discriminating specification (e.g., power rating, size, voltage). "
+                                            "Examples: 'Electric Motor WEG W22 7.5HP 4P', 'Hydraulic Pump Bosch Rexroth A10V 45cc', "
+                                            "'Spare Part SKF Bearing 6205-2RS'."
+                                        )
                                     },
                                     "hs_code": {
                                         "type": "string",
@@ -323,19 +339,23 @@ class EkAIExtractionMixin(models.AbstractModel):
             messages = [
                 {
                     "role": "system",
-                    "content": f"""Eres un experto en documentos marítimos y aduaneros.
+                    "content": f"""You are a senior maritime customs and logistics analyst with 20+ years of experience reading Bills of Lading, commercial invoices, and customs declarations.
 
-Tu tarea es leer el Bill of Lading (BL) adjunto, extraer la información y hacer MATCH con el catálogo.
+Your task is to extract structured data from the attached Bill of Lading (BL) and, when possible, match each cargo item against the existing product catalog provided below.
 
+## CATALOG MATCHING
 {self._get_regime_70_catalog_prompt()}
 
-REGLAS DE MATCHING:
-- Si el producto coincide con el catálogo (>70% seguridad), devuelve el "product_id".
-- Si NO hay match claro, deja "product_id" vacío.
-- "description" debe ser el texto tal cual aparece en el BL.
+Matching rules:
+- If an item clearly corresponds to a catalog entry (confidence > 70%), return its `product_id`.
+- If no clear match exists, omit `product_id` — never guess.
+- `description`: copy the raw text verbatim from the BL (for audit trail).
+- `product_name`: generate a normalized name following [Type] [Brand] [Model] [Key Spec].
+  - Keep it under 60 characters.
+  - Drop legal boilerplate, addresses, part codes, and filler text.
+  - Example: "Electric Motor WEG W22 7.5HP" not "WEG MOTORES ELETRICOS S.A. THREE PHASE INDUCTION MOTOR FRAME 132M MODEL W22 7.5HP 4 POLES 60HZ IP55 CLASS F INSULATION..."
 
-IMPORTANTE:
-..."""
+Always call `extract_bl_data` to return structured results."""
                 },
                 {
                     "role": "user",
@@ -535,11 +555,13 @@ El documento PDF está adjunto a este mensaje."""
         parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
 
         for pkg in packages:
-            # Preparar valores
+            # Use normalized product_name for display; keep raw description as audit trail
+            raw_description = pkg.get('description', '')
+            display_name = pkg.get('product_name') or raw_description
             line_vals = {
                 parent_field: self.id,
-                'name': pkg.get('description', ''),
-                'extracted_name': pkg.get('description', ''),
+                'name': display_name,
+                'extracted_name': raw_description,
                 'quantity': pkg.get('quantity') or 0,
                 'gross_weight': pkg.get('weight_kg') or 0,
                 'invoice_number': pkg.get('invoice_number', ''),
@@ -583,26 +605,32 @@ El documento PDF está adjunto a este mensaje."""
                 messages = [
                     {
                         "role": "system",
-                        "content": f"""Eres un experto en facturas comerciales internacionales y gestión de inventarios.
+                        "content": f"""You are an expert commercial invoice analyst and inventory specialist for international maritime trade.
 
-TU TAREA:
-1. Extraer TODA la información de la factura adjunta.
-2. Hacer MATCH de cada producto de la factura con el catálogo de productos existente que se detalla abajo.
+Your job has two parts:
+1. **Extract** every line item from the attached commercial invoice with full precision.
+2. **Match** each item against the existing Régimen 70 product catalog below.
 
+## PRODUCT CATALOG
 {self._get_regime_70_catalog_prompt()}
 
-REGLAS DE MATCHING:
-- Usa el nombre del producto, el código y el contexto para encontrar el producto correcto del catálogo.
-- Si encuentras un match claro (>70% de seguridad), devuelve el "product_id".
-- Si NO encuentras un match claro, deja "product_id" vacío (null).
-- En "match_confidence", indica qué tan seguro estás (0.9 para coincidencia casi exacta, 0.7 para razonable).
-- En "description", usa la descripción TAL CUAL aparece en la FACTURA.
+## MATCHING RULES
+- Use the product name, context, and HS code together to find the best catalog match.
+- Only set `product_id` when confidence exceeds 70% — never force a match.
+- Set `match_confidence` between 0.0 and 1.0 (e.g., 0.95 = near-exact, 0.75 = reasonable).
+- `description`: copy the raw line-item text exactly as printed in the invoice (for audit).
+- `product_name`: generate a concise, normalized name using the pattern [Type] [Brand] [Model] [Key Spec].
+  - Max ~60 characters. Omit serial numbers, lengthy specs, legal text, and addresses.
+  - Retain brand and model — they are the most valuable identifiers.
+  - Include only the single most discriminating spec (power, size, capacity, voltage, etc.).
+  - BAD: "MOTOR ELECTRICO TRIFASICO WEG W22 DE 7.5HP, 4 POLOS, 60HZ, CLASE DE AISLAMIENTO F, GRADO DE PROTECCION IP55, ARMAZON 132M"
+  - GOOD: "Electric Motor WEG W22 7.5HP 4P"
 
-OTRAS REGLAS DE EXTRACCIÓN:
-- Cantidades exactas y precios FOB.
-- Si el documento menciona un buque destino (ej: "FOR VESSEL ATÚN I", "PARA BARCO TXOPITUNA"), refléjalo en ship_name.
+## EXTRACTION RULES
+- Extract all line items, quantities, and exact FOB prices.
+- If the document explicitly mentions a destination vessel (e.g., "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), capture it in `ship_name`.
 
-Usa la función extract_invoice_data para devolver los resultados estructurados."""
+Always call `extract_invoice_data` to return structured results."""
                     },
                     {
                         "role": "user",
@@ -725,10 +753,13 @@ Usa la función extract_invoice_data para devolver los resultados estructurados.
         parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
 
         for item in items:
+            # Use normalized product_name for display; keep raw description as audit trail
+            raw_description = item.get('description', '')
+            display_name = item.get('product_name') or raw_description
             line_vals = {
                 parent_field: self.id,
-                'name': item.get('description', ''),
-                'extracted_name': item.get('description', ''), # Guardar original del proveedor
+                'name': display_name,
+                'extracted_name': raw_description,  # Original supplier text for audit trail
                 'quantity': item.get('quantity') or 0,
                 'fob': item.get('unit_price_fob') or 0,
                 'total_fob': item.get('total_fob') or 0,
@@ -799,14 +830,18 @@ Usa la función extract_invoice_data para devolver los resultados estructurados.
             messages = [
                 {
                     "role": "system",
-                    "content": """Eres un experto en documentos aduaneros.
+                    "content": """You are a senior customs clearance specialist with deep expertise in reading purchase orders and customs declarations (Nota de Pedido) issued by customs brokers.
 
-Extrae TODOS los productos listados en la Nota de Pedido del agente aduanero.
+Extract ALL items listed in the attached Nota de Pedido with full accuracy.
 
-IMPORTANTE:
-- Extrae cada ítem con su número
-- Incluye cantidades, pesos y valores FOB
-- Los códigos HS son críticos para matching"""
+Key extraction rules:
+- Capture every item number exactly as listed.
+- HS codes are critical — extract them precisely, preserving all digits.
+- Include quantities, net/gross weights, and FOB values per line.
+- `description`: raw text from the document (verbatim, for audit purposes).
+- Do not merge or split items — one document line = one extracted item.
+
+Always call `extract_purchase_order_data` to return structured results."""
                 },
                 {
                     "role": "user",
