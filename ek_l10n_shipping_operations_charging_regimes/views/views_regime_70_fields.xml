@@ -169,7 +169,9 @@
                               decoration-warning="is_validated and validation_status=='manual'"
                               decoration-danger="not is_validated"
                               decoration-muted="is_validated and validation_status=='pending'">
-                            <field name="name" string="Descripción"/>
+                            <field name="product_id" string="Producto Odoo"/>
+                            <field name="extracted_name" string="En Factura"/>
+                            <field name="match_confidence" widget="progressbar"/>
                             <field name="quantity"/>
                             <field name="ship_id" string="Buque Destino"/>
                             <field name="packages_count" string="Bultos"/>
@@ -186,6 +188,15 @@
             <xpath expr="//field[@name='ek_produc_packages_goods_ids']//tree[@editable='bottom']/field[@name='supplier']" position="after">
                 <field name="ship_id"
                        string="Buque Destino"
+                       optional="show"
+                       invisible="not parent.regime in ['70']"/>
+                <field name="extracted_name"
+                       string="Descripción Factura"
+                       optional="show"
+                       invisible="not parent.regime in ['70']"/>
+                <field name="match_confidence"
+                       string="% IA"
+                       widget="progressbar"
                        optional="show"
                        invisible="not parent.regime in ['70']"/>
                 <field name="packages_count"

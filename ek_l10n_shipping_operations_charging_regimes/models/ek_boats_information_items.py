@@ -126,6 +126,18 @@ class ek_product_packagens_goods(models.Model):
     help="Número de ítem/línea en la Nota de Pedido"
   )
 
+  # REQ-010: Integración de Matching por IA
+  extracted_name = fields.Char(
+    string='Descripción del Proveedor',
+    help="Descripción tal cual aparece en el documento fuente (factura/BL)"
+  )
+
+  match_confidence = fields.Float(
+    string='% Proximidad',
+    group_operator="avg",
+    help="Nivel de confianza o similitud detectado por la IA o el algoritmo"
+  )
+
   @api.depends('quantity', 'fob')
   def _compute_total_fob(self):
     for rec in self:

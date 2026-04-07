@@ -71,6 +71,28 @@ class EkAIExtractionMixin(models.AbstractModel):
         help='Muestra el resultado estructurado de la última operación de IA'
     )
 
+    def _get_regime_70_catalog_prompt(self):
+        """
+        Genera un string con el catálogo actual de productos Régimen 70 para el prompt de la IA
+        """
+        category = self.env.ref('ek_l10n_shipping_operations_charging_regimes.product_category_regime_70', raise_if_not_found=False)
+        domain = [('categ_id', '=', category.id)] if category else []
+        products = self.env['product.product'].search(domain)
+        
+        if not products:
+            return "No hay productos registrados actualmente en el catálogo de Régimen 70."
+            
+        catalog_lines = [
+            "A continuación se presenta el catálogo de REGIMEN 70 existente.",
+            "Si el producto de la factura coincide con uno de estos, devuelve su ID.",
+            "ID | CÓDIGO | NOMBRE"
+        ]
+        for p in products:
+            code = p.default_code or 'S/N'
+            catalog_lines.append(f"{p.id} | {code} | {p.name}")
+            
+        return "\n".join(catalog_lines)
+
 
     def _get_bl_extraction_tool_definition(self):
         """
@@ -132,7 +154,15 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "quantity": {"type": "number"},
                                     "weight_kg": {"type": "number"},
                                     "invoice_number": {"type": "string"},
-                                    "supplier": {"type": "string"}
+                                    "supplier": {"type": "string"},
+                                    "product_id": {
+                                        "type": "integer",
+                                        "description": "ID del producto en el catálogo (similitud > 70%)."
+                                    },
+                                    "match_confidence": {
+                                        "type": "number",
+                                        "description": "Nivel de confianza del matching (0.0 a 1.0)."
+                                    }
                                 }
                             },
                             "description": "Lista detallada de productos/paquetes en el contenedor"
@@ -178,8 +208,14 @@ class EkAIExtractionMixin(models.AbstractModel):
                                 "type": "object",
                                 "properties": {
                                     "line_number": {"type": "integer"},
-                                    "description": {"type": "string"},
-                                    "hs_code": {"type": "string"},
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Descripción completa y detallada del producto. Evitar abreviaciones ambiguas si es posible."
+                                    },
+                                    "hs_code": {
+                                        "type": "string",
+                                        "description": "Código arancelario (HS Code) para clasificación aduanera."
+                                    },
                                     "quantity": {"type": "number"},
                                     "unit_price_fob": {"type": "number"},
                                     "total_fob": {"type": "number"},
@@ -188,17 +224,22 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "ship_name": {
                                         "type": "string",
                                         "description": (
-                                            "Nombre del buque destino si se menciona en esta línea "
-                                            "o en el encabezado/cuerpo de la factura para este ítem. "
-                                            "Buscar patrones: 'FOR VESSEL ...', 'PARA BUQUE ...', "
-                                            "'PARA BARCO ...', 'M/V ...', 'MV ...', 'VESSEL: ...'. "
-                                            "Dejar vacío si no se menciona ningún buque."
+                                            "Nombre del buque destino si se menciona explícitamente "
+                                            "(ej: 'FOR VESSEL ...', 'PARA BUQUE ...')."
                                         )
+                                    },
+                                    "product_id": {
+                                        "type": "integer",
+                                        "description": "ID del producto en el catálogo si se encontró una coincidencia razonable (similitud > 70%)."
+                                    },
+                                    "match_confidence": {
+                                        "type": "number",
+                                        "description": "Nivel de confianza del matching con el catálogo proporcionado (0.0 a 1.0)."
                                     }
                                 },
                                 "required": ["description", "quantity", "total_fob"]
                             },
-                            "description": "Lista de productos/items en la factura"
+                            "description": "Lista de productos/items en la factura. Es CRÍTICO extraer la descripción completa para el matching de catálogo."
                         },
                         "subtotal": {"type": "number"},
                         "total": {"type": "number"},
@@ -207,6 +248,7 @@ class EkAIExtractionMixin(models.AbstractModel):
                 }
             }
         }
+
 
     def _get_po_extraction_tool_definition(self):
         """
@@ -281,19 +323,19 @@ class EkAIExtractionMixin(models.AbstractModel):
             messages = [
                 {
                     "role": "system",
-                    "content": """Eres un experto en documentos marítimos y aduaneros.
+                    "content": f"""Eres un experto en documentos marítimos y aduaneros.
 
-Tu tarea es leer el Bill of Lading (BL) adjunto y extraer TODA la información relevante.
+Tu tarea es leer el Bill of Lading (BL) adjunto, extraer la información y hacer MATCH con el catálogo.
+
+{self._get_regime_70_catalog_prompt()}
+
+REGLAS DE MATCHING:
+- Si el producto coincide con el catálogo (>70% seguridad), devuelve el "product_id".
+- Si NO hay match claro, deja "product_id" vacío.
+- "description" debe ser el texto tal cual aparece en el BL.
 
 IMPORTANTE:
-- El documento puede estar en español o inglés
-- Extrae TODOS los productos mencionados
-- Si hay tablas, extrae cada fila
-- Los códigos HS pueden tener formato: 1234.56.78.90 o similar
-- El peso puede estar en KG o LBS (convierte a KG si es LBS: 1 LB = 0.453592 KG)
-- Las fechas pueden tener varios formatos, normaliza a YYYY-MM-DD
-
-Usa la función extract_bl_data para devolver los resultados estructurados."""
+..."""
                 },
                 {
                     "role": "user",
@@ -464,9 +506,9 @@ El documento PDF está adjunto a este mensaje."""
         attachment_name = self.bl_attachment_ids[0].name if self.bl_attachment_ids else 'N/A'
         self.message_post(
             body=Markup(_(
-                '<strong>✅ Extracción de BL completada con IA</strong><br/>'
+                '<strong>Extracción de BL completada con IA</strong><br/>'
                 'Documento: %s<br/>'
-                'Productos: %s<br/>'
+                'Productos procesados: %s<br/>'
                 'BL#: %s<br/>'
                 'Contenedor: %s'
             ) % (
@@ -476,6 +518,10 @@ El documento PDF está adjunto a este mensaje."""
                 self.number_container or 'N/A'
             ))
         )
+
+        # Actualizar catálogo de productos en el padre
+        self._sync_parent_product_ids()
+
 
     def _create_goods_lines_from_packages(self, packages):
         """
@@ -493,18 +539,22 @@ El documento PDF está adjunto a este mensaje."""
             line_vals = {
                 parent_field: self.id,
                 'name': pkg.get('description', ''),
+                'extracted_name': pkg.get('description', ''),
                 'quantity': pkg.get('quantity') or 0,
                 'gross_weight': pkg.get('weight_kg') or 0,
                 'invoice_number': pkg.get('invoice_number', ''),
                 'supplier': pkg.get('supplier', ''),
+                'product_id': pkg.get('product_id'),
+                'match_confidence': (pkg.get('match_confidence') or 0.0) * 100,
             }
 
             # HS Code
             if pkg.get('hs_code'):
                 line_vals['tariff_item'] = pkg['hs_code']
 
-            # Crear línea (el sistema buscará/creará producto automáticamente)
+            # Crear línea (el sistema buscará/creará producto automáticamente vía create override)
             goods_model.create(line_vals)
+
 
     def action_extract_invoices_with_ai(self):
         """
@@ -533,29 +583,30 @@ El documento PDF está adjunto a este mensaje."""
                 messages = [
                     {
                         "role": "system",
-                        "content": """Eres un experto en facturas comerciales internacionales.
+                        "content": f"""Eres un experto en facturas comerciales internacionales y gestión de inventarios.
 
-Extrae TODA la información de la factura adjunta, incluyendo:
-- Todos los productos/items listados
-- Cantidades exactas
-- Precios FOB
-- Códigos HS si están disponibles
-- Pesos si están disponibles
+TU TAREA:
+1. Extraer TODA la información de la factura adjunta.
+2. Hacer MATCH de cada producto de la factura con el catálogo de productos existente que se detalla abajo.
 
-IMPORTANTE:
-- Si los precios están en otra moneda, indica cuál
-- Extrae TODAS las líneas de la tabla de productos
-- Si hay descuentos o cargos adicionales, inclúyelos
-- El campo "line_number" debe ser el número de ítem en la factura
-- Si el documento menciona un buque destino (ej: "FOR VESSEL ATÚN I",
-  "PARA BARCO TXOPITUNA", "M/V CONTADORA", "VESSEL: TXOPITUNA DOS"),
-  indica el nombre en el campo ship_name de cada línea afectada.
-  Si aplica a todos los ítems, repite el nombre en cada uno.
-  Si no se menciona ningún buque, deja ship_name vacío."""
+{self._get_regime_70_catalog_prompt()}
+
+REGLAS DE MATCHING:
+- Usa el nombre del producto, el código y el contexto para encontrar el producto correcto del catálogo.
+- Si encuentras un match claro (>70% de seguridad), devuelve el "product_id".
+- Si NO encuentras un match claro, deja "product_id" vacío (null).
+- En "match_confidence", indica qué tan seguro estás (0.9 para coincidencia casi exacta, 0.7 para razonable).
+- En "description", usa la descripción TAL CUAL aparece en la FACTURA.
+
+OTRAS REGLAS DE EXTRACCIÓN:
+- Cantidades exactas y precios FOB.
+- Si el documento menciona un buque destino (ej: "FOR VESSEL ATÚN I", "PARA BARCO TXOPITUNA"), refléjalo en ship_name.
+
+Usa la función extract_invoice_data para devolver los resultados estructurados."""
                     },
                     {
                         "role": "user",
-                        "content": f"Extrae todos los datos de esta factura comercial. El documento está adjunto."
+                        "content": "Extrae los datos de la factura comercial y realiza el matching con el catálogo proporcionado. El documento está adjunto."
                     }
                 ]
 
@@ -586,44 +637,49 @@ IMPORTANTE:
             self.ai_extraction_status_fc = 'completed'
             self.ai_extraction_status = 'completed'
 
-            # Log Elegante (HTML)
+            # Log Elegante (HTML) con info de productos
             html_log = f"""
                 <div class="alert alert-success" role="alert">
-                    <h4 class="alert-heading">✅ Extracción de Facturas Completada</h4>
-                    <p>Se procesaron <strong>{invoices_processed}</strong> facturas comerciales exitosamente.</p>
+                    <h4 class="alert-heading">Extracción de Facturas Completada</h4>
+                    <p>Se procesaron <strong>{invoices_processed}</strong> facturas. Los productos han sido sincronizados con el catálogo unificado de Régimen 70.</p>
                     <hr>
                     <table class="table table-sm table-borderless mb-0">
-                        <tr><td><strong>Total Items:</strong> {len(all_items)}</td><td><strong>Estado:</strong> <span class="badge bg-success">Completado</span></td></tr>
+                        <tr><td><strong>Total Items:</strong> {len(all_items)}</td><td><strong>Estado:</strong> <span class="badge bg-success">Catálogo Sincronizado</span></td></tr>
                     </table>
                 </div>
                 <div class="mt-3">
                     <table class="table table-hover table-sm">
                         <thead class="table-light">
                             <tr>
-                                <th>Descripción</th>
-                                <th>Factura</th>
+                                <th>Descripción Extracción</th>
+                                <th>Producto Catálogo</th>
                                 <th class="text-end">Cant.</th>
-                                <th class="text-end">FOB Unit.</th>
                                 <th class="text-end">FOB Total</th>
                             </tr>
                         </thead>
                         <tbody>
             """
-            for item in all_items[:20]: # Limitar a 20 para el log
+            # Obtener las últimas líneas creadas para mostrar el matching real
+            parent_field = 'ek_operation_request_id' if self._name == 'ek.operation.request' else 'ek_boats_information_id'
+            recent_lines = self.env['ek.product.packagens.goods'].search([
+                (parent_field, '=', self.id)
+            ], order='id desc', limit=20)
+
+            for line in recent_lines:
                 html_log += f"""
                     <tr>
-                        <td>{item.get('description', '')[:50]}...</td>
-                        <td><small>{item.get('invoice_number', '')}</small></td>
-                        <td class="text-end">{item.get('quantity') or 0}</td>
-                        <td class="text-end">{item.get('unit_price_fob') or 0:,.2f}</td>
-                        <td class="text-end"><strong>{item.get('total_fob') or 0:,.2f}</strong></td>
+                        <td><small>{line.name[:50]}</small></td>
+                        <td><span class="badge {"bg-info" if line.product_id else "bg-warning"}">{line.product_id.name if line.product_id else 'No vinculado'}</span></td>
+                        <td class="text-end">{line.quantity or 0}</td>
+                        <td class="text-end"><strong>{line.total_fob or 0:,.2f}</strong></td>
                     </tr>
                 """
             if len(all_items) > 20:
-                html_log += f'<tr><td colspan="5" class="text-center text-muted">... y {len(all_items) - 20} items más registrados en la tabla principal</td></tr>'
+                html_log += f'<tr><td colspan="4" class="text-center text-muted">... y {len(all_items) - 20} productos más</td></tr>'
             
             html_log += "</tbody></table></div>"
             self.ai_extraction_log = html_log
+
 
             # Mensaje en chatter
             self.message_post(
@@ -672,6 +728,7 @@ IMPORTANTE:
             line_vals = {
                 parent_field: self.id,
                 'name': item.get('description', ''),
+                'extracted_name': item.get('description', ''), # Guardar original del proveedor
                 'quantity': item.get('quantity') or 0,
                 'fob': item.get('unit_price_fob') or 0,
                 'total_fob': item.get('total_fob') or 0,
@@ -679,6 +736,8 @@ IMPORTANTE:
                 'packages_count': item.get('packages_count') or 0,
                 'invoice_number': item.get('invoice_number', ''),
                 'supplier': item.get('supplier', ''),
+                'product_id': item.get('product_id'),
+                'match_confidence': (item.get('match_confidence') or 0.0) * 100, # Convertir a porcentaje 0-100
             }
 
             if item.get('hs_code'):
@@ -698,7 +757,32 @@ IMPORTANTE:
                         ship_name
                     )
 
+            # Crear línea (el sistema buscará/creará producto automáticamente vía create override)
             goods_model.create(line_vals)
+
+        # Sincronizar catálogo Many2many del padre
+        self._sync_parent_product_ids()
+
+    def _sync_parent_product_ids(self):
+        """
+        Sincroniza los productos encontrados/creados en las líneas con los campos
+        Many2many del modelo padre (product_ids en barcos, regime_70_product_ids en solicitudes)
+        """
+        self.ensure_one()
+        # Obtener todos los product_id únicos de las líneas Detail
+        product_ids = self.ek_produc_packages_goods_ids.filtered(lambda l: l.product_id).mapped('product_id').ids
+        if not product_ids:
+            return
+
+        # Actualizar campos Many2many si existen (usando (4, ID) para no sobrescribir)
+        # 1. Caso Contenedor (ek.boats.information)
+        if 'product_ids' in self._fields:
+            self.write({'product_ids': [(4, pid) for pid in product_ids]})
+        
+        # 2. Caso Solicitud (ek.operation.request)
+        if 'regime_70_product_ids' in self._fields:
+            self.write({'regime_70_product_ids': [(4, pid) for pid in product_ids]})
+
 
     def action_extract_po_and_compare(self):
         """
