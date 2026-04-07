@@ -93,17 +93,11 @@
               <field name="ek_produc_packages_goods_ids">
                 <tree editable="bottom" decoration-info="match_confidence &gt;= 80" decoration-warning="match_confidence &lt; 80 and match_confidence &gt; 0">
                   <field name="creation_indicator" string=" " readonly="1"/>
-                  <div class="d-flex flex-column">
-                    <field name="product_id"
-                           domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
-                           options="{'no_create': True}"
-                           width="400px"
-                           class="fw-bold"/>
-                    <field name="extracted_name" 
-                           string=" " 
-                           class="text-muted italic small"
-                           placeholder="Descripción del proveedor..."/>
-                  </div>
+                  <field name="product_id"
+                         domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
+                         options="{'no_create': True}"
+                         width="400px"/>
+                  <field name="extracted_name" optional="show" string="Descripción Proveedor" class="text-muted italic"/>
                   <field name="ship_id" options="{'no_create': True}"/>
                   <field name="is_not_dispatched" string="No Vino"/>
                   <field name="packages_count" optional="hide"/>
@@ -265,10 +259,8 @@
           <button name="delete_table_70" type="object" string="Vaciar Tabla" class="btn-link mb-1 px-0" icon="fa-trash" />
         </header>
         <field name="creation_indicator" string=" " readonly="1"/>
-        <div class="d-flex flex-column">
-          <field name="product_id" options="{'no_create': True}" width="400px" class="fw-bold"/>
-          <field name="extracted_name" string=" " class="text-muted italic small" placeholder="Descripción del proveedor..."/>
-        </div>
+        <field name="product_id" options="{'no_create': True}" width="400px"/>
+        <field name="extracted_name" string="Descripción Proveedor" class="text-muted italic"/>
         <field name="is_not_dispatched" string="No Vino"/>
         <field name="match_confidence" widget="progressbar"/>
         <field name="tariff_item" optional="hide"/>

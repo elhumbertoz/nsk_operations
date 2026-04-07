@@ -211,21 +211,21 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "description": {
                                         "type": "string",
                                         "description": (
-                                            "Raw product description exactly as it appears in the document. "
-                                            "Do NOT truncate or rephrase — preserve the full original text for audit purposes."
+                                            "Descripción original del producto exactamente como aparece en el documento. "
+                                            "NO truncar ni parafrasear — preservar el texto original completo para fines de auditoría."
                                         )
                                     },
                                     "product_name": {
                                         "type": "string",
                                         "description": (
-                                            "Normalized, human-readable product name following the pattern: "
-                                            "[Product Type] [Brand] [Model] [Key Spec]. "
-                                            "Rules: (1) Be concise — max ~60 chars. "
-                                            "(2) Omit verbose legal text, part numbers, addresses, and generic filler words. "
-                                            "(3) Preserve the brand and model when present — they are the most identifying attributes. "
-                                            "(4) Include only the single most discriminating specification (e.g., power rating, size, voltage). "
-                                            "Examples: 'Electric Motor WEG W22 7.5HP 4P', 'Hydraulic Pump Bosch Rexroth A10V 45cc', "
-                                            "'Spare Part SKF Bearing 6205-2RS'."
+                                            "Nombre de producto normalizado y legible siguiendo el patrón: "
+                                            "[Tipo de Producto] [Marca] [Modelo] [Especificaciones Clave]. "
+                                            "Reglas: (1) Ser conciso — máx ~60 caracteres. "
+                                            "(2) Omitir texto legal extenso, números de parte complejos, direcciones y palabras genéricas de relleno. "
+                                            "(3) Preservar la marca y el modelo cuando estén presentes — son los atributos más identificables. "
+                                            "(4) Incluir solo la especificación más discriminante (ej: potencia, tamaño, voltaje). "
+                                            "Ejemplos: 'Motor Eléctrico WEG W22 7.5HP 4P', 'Bomba Hidráulica Bosch Rexroth A10V 45cc', "
+                                            "'Rodamiento SKF 6205-2RS'."
                                         )
                                     },
                                     "hs_code": {
@@ -339,24 +339,24 @@ class EkAIExtractionMixin(models.AbstractModel):
             messages = [
                 {
                     "role": "system",
-                    "content": f"""You are a senior maritime customs and logistics analyst with 20+ years of experience reading Bills of Lading, commercial invoices, and customs declarations.
+                    "content": f"""Eres un analista senior de aduanas y logística marítima con más de 20 años de experiencia interpretando Bill of Ladings (BL), facturas comerciales y declaraciones de aduanas.
 
-Your task is to extract structured data from the attached Bill of Lading (BL) and, when possible, match each cargo item against the existing product catalog provided below.
+Tu tarea es extraer datos estructurados del Bill of Lading (BL) adjunto y, cuando sea posible, vincular cada item de carga con el catálogo de productos existente proporcionado a continuación.
 
-## CATALOG MATCHING
+## VINCULACIÓN CON CATÁLOGO
 {self._get_regime_70_catalog_prompt()}
 
-Matching rules:
-- If an item clearly corresponds to a catalog entry (confidence > 70%), return its `product_id`.
-- If no clear match exists, omit `product_id` — never guess.
-- `description`: copy the raw text verbatim from the BL (for audit trail).
-- `product_name`: generate a normalized name following [Type] [Brand] [Model] [Key Spec].
-- LANGUAGE: IMPORTANT — Keep the product name in the language of the source document. If the document is in Spanish, the name must be in Spanish.
-  - Example (Spanish): "Motor Eléctrico WEG W22 7.5HP"
-  - Example (English): "Electric Motor WEG W22 7.5HP"
-  - Keep it under 60 characters and omit legal boilerplate and filler text.
+Reglas de vinculación:
+- Si un item corresponde claramente a una entrada del catálogo (confianza > 70%), devuelve su `product_id`.
+- Si no existe una coincidencia clara, omite `product_id` — nunca adivines.
+- `description`: copia el texto original exactamente como aparece en el BL (para fines de auditoría).
+- `product_name`: genera un nombre normalizado siguiendo [Tipo] [Marca] [Modelo] [Especificación Clave].
+- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe ser en español.
+  - Ejemplo (Español): "Motor Eléctrico WEG W22 7.5HP"
+  - Ejemplo (Inglés): "Electric Motor WEG W22 7.5HP"
+  - Mantenerlo por debajo de 60 caracteres y omitir terminología legal y texto de relleno.
 
-Always call `extract_bl_data` to return structured results."""
+Llama siempre a `extract_bl_data` para devolver los resultados estructurados."""
                 },
                 {
                     "role": "user",
@@ -606,34 +606,34 @@ El documento PDF está adjunto a este mensaje."""
                 messages = [
                     {
                         "role": "system",
-                        "content": f"""You are an expert commercial invoice analyst and inventory specialist for international maritime trade.
+                        "content": f"""Eres un experto analista de facturas comerciales y especialista en inventarios para el comercio marítimo internacional.
 
-Your job has two parts:
-1. **Extract** every line item from the attached commercial invoice with full precision.
-2. **Match** each item against the existing Régimen 70 product catalog below.
+Tu trabajo tiene dos partes:
+1. **Extraer** cada item de línea de la factura comercial adjunta con total precisión.
+2. **Vincular** cada item con el catálogo de productos de Régimen 70 proporcionado a continuación.
 
-## PRODUCT CATALOG
+## CATÁLOGO DE PRODUCTOS
 {self._get_regime_70_catalog_prompt()}
 
-## MATCHING RULES
-- Use the product name, context, and HS code together to find the best catalog match.
-- Only set `product_id` when confidence exceeds 70% — never force a match.
-- Set `match_confidence` between 0.0 and 1.0 (e.g., 0.95 = near-exact, 0.75 = reasonable).
-- `description`: copy the raw line-item text exactly as printed in the invoice (for audit).
-- `product_name`: generate a concise, normalized name using the pattern [Type] [Brand] [Model] [Key Spec].
-- LANGUAGE: IMPORTANT — Keep the product name in the language of the source document. If the document is in Spanish, the name must be in Spanish.
-  - Max ~60 characters. Omit serial numbers, lengthy specs, legal text, and addresses.
-  - Retain brand and model — they are the most valuable identifiers.
-  - Include only the single most discriminating spec (power, size, capacity, voltage, etc.).
-  - EXAMPLE (Spanish): "Motor Eléctrico WEG W22 7.5HP 4P"
-  - EXAMPLE (English): "Electric Motor WEG W22 7.5HP 4P"
+## REGLAS DE VINCULACIÓN
+- Utiliza el nombre del producto, el contexto y el código HS en conjunto para encontrar la mejor coincidencia en el catálogo.
+- Solo asigna `product_id` cuando la confianza supere el 70% — nunca fuerces una vinculación.
+- Asigna `match_confidence` entre 0.0 y 1.0 (ej: 0.95 = casi exacto, 0.75 = razonable).
+- `description`: copia el texto original de la línea exactamente como está impreso en la factura (para auditoría).
+- `product_name`: genera un nombre normalizado y conciso usando el patrón: [Tipo] [Marca] [Modelo] [Especificación Clave].
+- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe estar en español.
+  - Máximo ~60 caracteres. Omitir números de serie, especificaciones largas, texto legal y direcciones.
+  - Conservar la marca y el modelo — son los identificadores más valiosos.
+  - Incluir solo la especificación más discriminante (potencia, tamaño, capacidad, voltaje, etc.).
+  - EJEMPLO (Español): "Motor Eléctrico WEG W22 7.5HP 4P"
+  - EJEMPLO (Inglés): "Electric Motor WEG W22 7.5HP 4P"
 
-## EXTRACTION RULES
-- Extract all line items, quantities, and exact FOB prices.
-- IMPORTANT: Do NOT extract items with zero price (0.00). If an item has no price or it is zero, skip it entirely.
-- If the document explicitly mentions a destination vessel (e.g., "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), capture it in `ship_name`.
+## REGLAS DE EXTRACCIÓN
+- Extrae todos los items, cantidades y precios FOB exactos.
+- IMPORTANTE: NO extraigas items con precio cero (0.00). Si un item no tiene precio o es cero, ignóralo por completo.
+- Si el documento menciona explícitamente un buque destino (ej: "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), captúralo en `ship_name`.
 
-Always call `extract_invoice_data` to return structured results."""
+Llama siempre a `extract_invoice_data` para devolver los resultados estructurados."""
                     },
                     {
                         "role": "user",
@@ -841,18 +841,18 @@ Always call `extract_invoice_data` to return structured results."""
             messages = [
                 {
                     "role": "system",
-                    "content": """You are a senior customs clearance specialist with deep expertise in reading purchase orders and customs declarations (Nota de Pedido) issued by customs brokers.
+                    "content": """Eres un especialista senior en despacho de aduanas con amplia experiencia en la lectura de Notas de Pedido y declaraciones aduaneras emitidas por agentes de aduana.
 
-Extract ALL items listed in the attached Nota de Pedido with full accuracy.
+Extrae TODOS los items listados en la Nota de Pedido adjunta con total precisión.
 
-Key extraction rules:
-- Capture every item number exactly as listed.
-- HS codes are critical — extract them precisely, preserving all digits.
-- Include quantities, net/gross weights, and FOB values per line.
-- `description`: raw text from the document (verbatim, for audit purposes).
-- Do not merge or split items — one document line = one extracted item.
+Reglas clave de extracción:
+- Captura cada número de item exactamente como aparece listado.
+- Los códigos HS son críticos — extráelos con precisión, preservando todos los dígitos.
+- Incluye cantidades, pesos netos/brutos y valores FOB por línea.
+- `description`: texto original del documento (verbatim, para fines de auditoría).
+- No combines ni dividas items — una línea del documento = un item extraído.
 
-Always call `extract_purchase_order_data` to return structured results."""
+Llama siempre a `extract_purchase_order_data` para devolver los resultados estructurados."""
                 },
                 {
                     "role": "user",
