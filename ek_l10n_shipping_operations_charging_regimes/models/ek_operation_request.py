@@ -11,8 +11,10 @@ class EkOperationRequest(models.Model):
   # AI Extraction fields are now in ek.boats.information (Container)
   # Keeping related fields for visibility or transitional purposes if needed
   ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA", readonly=True, store=False)
+  ai_extraction_status_bl = fields.Selection(related="container_id.ai_extraction_status_bl", string="Estado BL", readonly=True, store=False)
+  ai_extraction_status_fc = fields.Selection(related="container_id.ai_extraction_status_fc", string="Estado Facturas", readonly=True, store=False)
+  ai_extraction_status_np = fields.Selection(related="container_id.ai_extraction_status_np", string="Estado Nota Pedido", readonly=True, store=False)
   ai_extraction_log = fields.Html(related="container_id.ai_extraction_log", string="Log Extracción IA", readonly=True, store=False)
-  ai_confidence_score = fields.Float(related="container_id.ai_confidence_score", string="Confianza IA (%)", readonly=True, store=False)
 
   # Related attachment fields from container for email notifications
   # NOTA: Estos campos solo funcionan cuando container_id está poblado

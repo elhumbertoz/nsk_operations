@@ -178,12 +178,6 @@ class EkBoatsInformation(models.Model):
         help='Muestra el resultado estructurado de la última operación de IA'
     )
 
-    ai_confidence_score = fields.Float(
-        string='Confidence Score',
-        readonly=True,
-        help='Nivel de confianza de la última extracción (0-1)'
-    )
-
     # Aliases de campos para compatibilidad con el Mixin
     id_bl = fields.Char(related="bl_number", readonly=False, store=True)
 
