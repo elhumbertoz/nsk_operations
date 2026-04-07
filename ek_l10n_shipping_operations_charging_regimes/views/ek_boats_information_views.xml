@@ -8,6 +8,13 @@
         <header>
           <button name="action_cancelled_request" string="Cancelado" type="object" icon="fa-check-circle" class="oe_stat_button" invisible="state not in ['draft']"/>
           <button name="action_finalize_travel" string="Finalizado" type="object" class="oe_stat_button" invisible="1"/>
+          <button name="action_create_operation_request"
+                  string="Crear Solicitud de Operación"
+                  type="object"
+                  class="btn-primary"
+                  icon="fa-plus-circle"
+                  invisible="state in ['cancelled']"
+                  help="Crea una solicitud de operación a partir de los bultos registrados en este contenedor"/>
 
           <field name="state" widget="statusbar" statusbar_visible="draft"/>
         </header>
@@ -102,6 +109,53 @@
                   <field name="id_bl"/>
                 </tree>
               </field>
+            </page>
+            <page string="🤖 Extracción con IA">
+                <group>
+                    <group string="Carga de Documentos">
+                        <field name="bl_attachment_ids"
+                               widget="many2many_binary"
+                               string="Bill of Lading"/>
+                        <field name="bl_attachment_filename" invisible="1"/>
+                        <button name="action_extract_bl_with_ai"
+                                string="Extraer BL con IA"
+                                type="object"
+                                class="btn-primary"
+                                icon="fa-magic"
+                                invisible="not bl_attachment_ids"/>
+
+                        <separator/>
+                        
+                        <field name="invoice_attachment_ids"
+                               widget="many2many_binary"/>
+                        <button name="action_extract_invoices_with_ai"
+                                string="Extraer Facturas con IA"
+                                type="object"
+                                class="btn-success"
+                                icon="fa-file-pdf-o"
+                                invisible="not invoice_attachment_ids"/>
+                    </group>
+                    <group string="Validación Aduanera">
+                        <field name="purchase_order_attachment_ids"
+                               widget="many2many_binary"/>
+                        <button name="action_extract_po_and_compare"
+                                string="Validar Nota de Pedido"
+                                type="object"
+                                class="btn-warning"
+                                icon="fa-check-square-o"
+                                invisible="not purchase_order_attachment_ids or not ek_produc_packages_goods_ids"/>
+                        
+                        <separator/>
+                        <field name="ai_extraction_status" widget="badge"
+                               decoration-success="ai_extraction_status=='completed'"
+                               decoration-warning="ai_extraction_status=='processing'"
+                               decoration-danger="ai_extraction_status=='error'"/>
+                        <field name="ai_confidence_score" widget="progressbar"/>
+                    </group>
+                </group>
+                <group string="Logs de Extracción" invisible="not ai_extraction_log">
+                    <field name="ai_extraction_log" nolabel="1" readonly="1"/>
+                </group>
             </page>
             <page string="Notas">
               <field name="notes" nolabel="1"/>

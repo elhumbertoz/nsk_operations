@@ -16,8 +16,11 @@ class EkAIExtractionMixin(models.AbstractModel):
     _description = 'AI Document Extraction Mixin'
 
     # Campo para adjuntar BL
-    bl_attachment_id = fields.Many2one(
+    bl_attachment_ids = fields.Many2many(
         'ir.attachment',
+        'ek_operation_bl_attachment_rel',
+        'operation_id',
+        'attachment_id',
         string='Bill of Lading (PDF)',
         help='Adjunte el documento BL para extracción automática con IA'
     )
@@ -247,8 +250,10 @@ class EkAIExtractionMixin(models.AbstractModel):
         """
         self.ensure_one()
 
-        if not self.bl_attachment_id:
+        if not self.bl_attachment_ids:
             raise UserError(_('Por favor adjunte el documento Bill of Lading (BL) antes de continuar.'))
+
+        attachment = self.bl_attachment_ids[0]
 
         # Actualizar estado
         self.ai_extraction_status = 'processing'
@@ -298,12 +303,11 @@ El documento PDF está adjunto a este mensaje."""
                 }
             ]
 
-            # Llamar al LLM (nsk_llm maneja el attachment automáticamente)
-            _logger.info(f"Extrayendo datos de BL {self.bl_attachment_id.name} usando IA...")
+            _logger.info(f"Extrayendo datos de BL {attachment.name} usando IA...")
 
             response = llm.generate_completion(
                 messages=messages,
-                attachments=self.bl_attachment_id,
+                attachments=attachment,
                 tools=tools
             )
 
@@ -325,7 +329,7 @@ El documento PDF está adjunto a este mensaje."""
 
             # Log
             log_entry = f"\n=== Extracción BL - {fields.Datetime.now()} ===\n"
-            log_entry += f"Documento: {self.bl_attachment_id.name}\n"
+            log_entry += f"Documento: {attachment.name}\n"
             log_entry += f"Confidence Score: {self.ai_confidence_score:.2f}\n"
             log_entry += f"Productos extraídos: {len(extracted_data.get('packages', []))}\n"
 
@@ -342,6 +346,7 @@ El documento PDF está adjunto a este mensaje."""
                     ),
                     'type': 'success',
                     'sticky': False,
+                    'next': {'type': 'ir.actions.client', 'tag': 'reload'},
                 }
             }
 
@@ -364,11 +369,19 @@ El documento PDF está adjunto a este mensaje."""
             self.id_bl = extracted_data['id_bl']
 
         if extracted_data.get('number_container'):
-            self.number_container = extracted_data['number_container']
+            # En ek.boats.information es container_number
+            if hasattr(self, 'container_number'):
+                self.container_number = extracted_data['number_container']
+            # En ek.operation.request es id_bl (el contenedor se muestra como label ID CONTENEDOR)
+            # Pero if el mixin tiene number_container, usarlo
+            elif hasattr(self, 'number_container'):
+                self.number_container = extracted_data['number_container']
 
         if extracted_data.get('eta'):
             try:
-                self.eta = fields.Date.from_string(extracted_data['eta'])
+                # Odoo Datetime fields need string or datetime object. 
+                # extracted_data['eta'] is likely a string YYYY-MM-DD
+                self.eta = extracted_data['eta']
             except:
                 _logger.warning(f"No se pudo parsear fecha ETA: {extracted_data['eta']}")
 
@@ -423,13 +436,17 @@ El documento PDF está adjunto a este mensaje."""
         """
         goods_model = self.env['ek.product.packagens.goods']
 
+        # Determinar modelo y campo padre
+        is_request = self._name == 'ek.operation.request'
+        parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
+
         for pkg in packages:
             # Preparar valores
             line_vals = {
-                'ek_operation_request_id': self.id,
+                parent_field: self.id,
                 'name': pkg.get('description', ''),
-                'quantity': pkg.get('quantity', 0),
-                'gross_weight': pkg.get('weight_kg', 0),
+                'quantity': pkg.get('quantity') or 0,
+                'gross_weight': pkg.get('weight_kg') or 0,
                 'invoice_number': pkg.get('invoice_number', ''),
                 'supplier': pkg.get('supplier', ''),
             }
@@ -534,17 +551,20 @@ IMPORTANTE:
                 ) % (invoices_processed, len(all_items))
             )
 
+            _logger.info("Extracción de facturas finalizada para %s", self.name)
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'title': _('✅ Extracción Completada'),
-                    'message': _('Se procesaron %s facturas con %s productos') % (
+                    'message': _('Se procesaron %s facturas con %s productos totales extraídos.') % (
                         invoices_processed,
                         len(all_items)
                     ),
                     'type': 'success',
                     'sticky': False,
+                    'next': {'type': 'ir.actions.client', 'tag': 'reload'},
                 }
             }
 
@@ -561,15 +581,18 @@ IMPORTANTE:
         """
         goods_model = self.env['ek.product.packagens.goods']
 
+        is_request = self._name == 'ek.operation.request'
+        parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
+
         for item in items:
             line_vals = {
-                'ek_operation_request_id': self.id,
+                parent_field: self.id,
                 'name': item.get('description', ''),
-                'quantity': item.get('quantity', 0),
-                'fob': item.get('unit_price_fob', 0),
-                'total_fob': item.get('total_fob', 0),
-                'gross_weight': item.get('weight_kg', 0),
-                'packages_count': item.get('packages_count', 0),
+                'quantity': item.get('quantity') or 0,
+                'fob': item.get('unit_price_fob') or 0,
+                'total_fob': item.get('total_fob') or 0,
+                'gross_weight': item.get('weight_kg') or 0,
+                'packages_count': item.get('packages_count') or 0,
                 'invoice_number': item.get('invoice_number', ''),
                 'supplier': item.get('supplier', ''),
             }
@@ -600,8 +623,10 @@ IMPORTANTE:
         """
         self.ensure_one()
 
-        if not self.purchase_order_attachment_id:
+        if not self.purchase_order_attachment_ids:
             raise UserError(_('Por favor adjunte la Nota de Pedido del agente aduanero.'))
+
+        attachment = self.purchase_order_attachment_ids[0]
 
         if not self.ek_produc_packages_goods_ids:
             raise UserError(_('Debe tener productos de la factura para comparar.\nPrimero extraiga las facturas.'))
@@ -633,7 +658,7 @@ IMPORTANTE:
 
             response = llm.generate_completion(
                 messages=messages,
-                attachments=self.purchase_order_attachment_id,
+                attachments=attachment,
                 tools=tools
             )
 
@@ -729,7 +754,7 @@ IMPORTANTE:
         doc_type = getattr(self, 'document_type', None)
 
         # Determinar qué adjunto analizar
-        attachment = self.bl_attachment_id or (
+        attachment = (self.bl_attachment_ids[0] if self.bl_attachment_ids else None) or (
             self.invoice_attachment_ids[0] if self.invoice_attachment_ids else None
         )
 

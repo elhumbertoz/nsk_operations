@@ -8,48 +8,16 @@ from odoo.exceptions import UserError, ValidationError
 class EkOperationRequest(models.Model):
   _inherit = 'ek.operation.request'
 
-  # AI Extraction fields (from ek.ai.extraction.mixin)
-  bl_attachment_id = fields.Many2one(
-    'ir.attachment',
-    string="Bill of Lading (PDF)",
-    help="Adjuntar BL en formato PDF para extracción automática con IA"
-  )
+  # AI Extraction fields are now in ek.boats.information (Container)
+  # Keeping related fields for visibility or transitional purposes if needed
+  ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA")
+  ai_extraction_log = fields.Text(related="container_id.ai_extraction_log", string="Log Extracción IA")
+  ai_confidence_score = fields.Float(related="container_id.ai_confidence_score", string="Confianza IA (%)")
+  
+  # Related PO fields for compatibility with validation wizards
+  purchase_order_attachment_ids = fields.Many2many(related="container_id.purchase_order_attachment_ids", string="Nota de Pedido (Rel)")
+  purchase_order_data = fields.Text(related="container_id.purchase_order_data", string="Datos Nota de Pedido (Rel)")
 
-  bl_attachment_filename = fields.Char(
-    string="Nombre del archivo BL",
-    compute='_compute_bl_attachment_filename'
-  )
-
-  invoice_attachment_ids = fields.Many2many(
-    'ir.attachment',
-    'ek_operation_invoice_attachment_rel',
-    'operation_id',
-    'attachment_id',
-    string="Facturas Comerciales (PDF)",
-    help="Adjuntar facturas comerciales en PDF para extracción con IA"
-  )
-
-  ai_extraction_status = fields.Selection([
-    ('pending', 'Pendiente'),
-    ('processing', 'Procesando'),
-    ('completed', 'Completado'),
-    ('error', 'Error')
-  ], string="Estado Extracción IA", default='pending')
-
-  ai_extraction_log = fields.Text(
-    string="Log Extracción IA",
-    help="Registro de extracciones realizadas con IA"
-  )
-
-  ai_confidence_score = fields.Float(
-    string="Confianza IA (%)",
-    help="Nivel de confianza de la última extracción"
-  )
-
-  @api.depends('bl_attachment_id')
-  def _compute_bl_attachment_filename(self):
-    for record in self:
-      record.bl_attachment_filename = record.bl_attachment_id.name if record.bl_attachment_id else False
 
   use_in_regimen_60 = fields.Boolean(
     related='type_id.use_in_regimen_60',
@@ -186,18 +154,6 @@ class EkOperationRequest(models.Model):
     help="Orden de venta generada para facturación al cliente",
     readonly=True,
     tracking=True
-  )
-
-  # VALIDACIÓN DE NOTA DE PEDIDO (REQ-006B)
-  purchase_order_attachment_id = fields.Many2one(
-    'ir.attachment',
-    string="Nota de Pedido",
-    help="Documento proporcionado por el agente aduanero"
-  )
-
-  purchase_order_data = fields.Text(
-    string="Datos Nota de Pedido",
-    help="JSON con datos extraídos de la Nota de Pedido"
   )
 
   invoice_validated = fields.Boolean(

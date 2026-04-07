@@ -51,37 +51,23 @@
             <!-- Agregar tabs nuevos al notebook -->
             <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
 
-                <!-- TAB: Información Régimen 70 -->
                 <page string="Régimen 70" invisible="not regime in ['70']">
 
-                    <!-- SECCIÓN: Extracción con IA -->
-                    <group string="🤖 Extracción Automática con IA" invisible="not regime in ['70']">
+                    <!-- SECCIÓN: Extracción con IA (AHORA EN EL CONTENEDOR) -->
+                    <group string="🤖 Extracción Automática con IA (Gestionado en Contenedor)">
                         <group>
-                            <field name="bl_attachment_id"
-                                   filename="bl_attachment_filename"
-                                   help="Adjunte el Bill of Lading (BL) en formato PDF"/>
-                            <button name="action_extract_bl_with_ai"
-                                    string="🤖 Extraer BL con IA"
-                                    type="object"
-                                    class="btn-primary"
-                                    icon="fa-magic"
-                                    invisible="not bl_attachment_id"/>
-                        </group>
-                        <group>
-                            <field name="invoice_attachment_ids"
-                                   widget="many2many_binary"
-                                   help="Adjunte las facturas comerciales en PDF"/>
-                            <button name="action_extract_invoices_with_ai"
-                                    string="🤖 Extraer Facturas con IA"
-                                    type="object"
-                                    class="btn-success"
-                                    icon="fa-file-pdf-o"
-                                    invisible="not invoice_attachment_ids"/>
+                            <label for="container_id" string="Los bultos y facturas ahora se procesan directamente en el Contenedor."/>
+                            <button name="%(ek_l10n_shipping_operations_charging_regimes.ek_boats_container_information_act)d"
+                                    string="Abrir Contenedor para procesar"
+                                    type="action"
+                                    class="btn-link"
+                                    icon="fa-arrow-right"
+                                    context="{'res_id': container_id}"/>
                         </group>
                     </group>
 
-                    <!-- Estado de extracción IA -->
-                    <group string="Estado IA" invisible="ai_extraction_status == 'pending'">
+                    <!-- Estado de extracción IA (Copiado del contenedor) -->
+                    <group string="Resumen de Extracción" invisible="ai_extraction_status == 'pending'">
                         <group>
                             <field name="ai_extraction_status" widget="badge"
                                    decoration-success="ai_extraction_status=='completed'"
@@ -102,14 +88,6 @@
                         <group>
                             <field name="authorization_number"/>
                             <field name="deposit_description" placeholder="MA-00"/>
-                            <field name="purchase_order_attachment_id"/>
-                            <button name="action_extract_po_and_compare"
-                                    string="🤖 Validar con IA"
-                                    type="object"
-                                    class="btn-warning"
-                                    icon="fa-check-square-o"
-                                    invisible="not purchase_order_attachment_id or not ek_produc_packages_goods_ids"
-                                    help="Extrae la Nota de Pedido y compara automáticamente con la factura usando IA"/>
                         </group>
                         <group>
                             <field name="shipping_line_id"/>
@@ -117,6 +95,7 @@
                             <field name="invoice_validated" widget="boolean_toggle"/>
                         </group>
                     </group>
+
 
                     <group string="Cliente y Facturación">
                         <group>
@@ -165,7 +144,6 @@
 
                     <group>
                         <group>
-                            <field name="purchase_order_attachment_id"/>
                             <field name="invoice_validated" widget="boolean_toggle"/>
                         </group>
                         <group>
@@ -173,8 +151,7 @@
                                     string="Validar contra Nota de Pedido"
                                     type="action"
                                     class="btn-primary"
-                                    icon="fa-check-square-o"
-                                    invisible="not purchase_order_attachment_id"/>
+                                    icon="fa-check-square-o"/>
                         </group>
                     </group>
 

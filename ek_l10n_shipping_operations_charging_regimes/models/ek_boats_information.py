@@ -8,7 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 class EkBoatsInformation(models.Model):
-    _inherit = 'ek.boats.information'
+    _name = 'ek.boats.information'
+    _inherit = ['ek.boats.information', 'ek.ai.extraction.mixin']
 
     
 
@@ -82,6 +83,93 @@ class EkBoatsInformation(models.Model):
     notes = fields.Text("Notes", tracking=True)
 
     rcd = fields.Datetime(string="Return Container Date", copy=False, tracking=True)
+
+    # Campos de IA (Redefinidos para evitar conflictos de M2M y asegurar persistencia)
+    bl_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'ek_container_bl_attachment_rel', # Tabla única para este modelo
+        'container_id',
+        'attachment_id',
+        string='Bill of Lading (PDF)',
+        help='Adjunte el documento BL para extracción automática con IA'
+    )
+
+    bl_attachment_filename = fields.Char(
+        string="Nombre del archivo BL",
+        compute='_compute_bl_attachment_filename'
+    )
+
+    invoice_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'ek_container_invoice_attachment_rel', # Tabla única para este modelo
+        'container_id',
+        'attachment_id',
+        string='Facturas Comerciales',
+        help='Adjunte las facturas comerciales para extracción automática'
+    )
+
+    purchase_order_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'ek_container_po_attachment_rel', # Tabla única para este modelo
+        'container_id',
+        'attachment_id',
+        string="Nota de Pedido (PO)",
+        help="Documento proporcionado por el agente aduanero para validación"
+    )
+
+    purchase_order_data = fields.Text(
+        string="Datos Nota de Pedido",
+        help="JSON con datos extraídos de la Nota de Pedido"
+    )
+
+    @api.depends('bl_attachment_ids')
+    def _compute_bl_attachment_filename(self):
+        for record in self:
+            record.bl_attachment_filename = record.bl_attachment_ids[0].name if record.bl_attachment_ids else False
+
+    # Aliases de campos para compatibilidad con el Mixin
+    id_bl = fields.Char(related="bl_number", readonly=False, store=True)
+
+    def action_create_operation_request(self):
+        """
+        Crea una solicitud de operación (Régimen 70) a partir de los datos 
+        del contenedor (ya extraídos con IA).
+        """
+        self.ensure_one()
+        
+        # Buscar tipo de operación predeterminado para Régimen 70
+        operation_type = self.env['ek.operation.request.type'].search([
+            ('regime', '=', '70'),
+            ('use_in_regimen_70', '=', True)
+        ], limit=1)
+
+        vals = {
+            'container_id': self.id,
+            'journey_crew_id': self.id, # El contenedor actúa como el "viaje" en este contexto
+            'type_id': operation_type.id if operation_type else False,
+            'ek_ship_registration_id': self.ship_name_id.id if self.ship_name_id else False,
+            'res_partner_id': self.shipper_id.id if self.shipper_id else False,
+            'shipping_line_id': self.shipping_company.id if self.shipping_company else False,
+            'supplies_detail': self.supplies_detail or self.load_number,
+        }
+
+        # Crear la solicitud
+        request = self.env['ek.operation.request'].create(vals)
+
+        # Traspasar líneas de productos/paquetes si existen
+        if self.ek_produc_packages_goods_ids:
+            # En ek.operation.request las líneas se vinculan vía ek_operation_request_id
+            for line in self.ek_produc_packages_goods_ids:
+                line.write({'ek_operation_request_id': request.id})
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Nueva Solicitud Generada'),
+            'res_model': 'ek.operation.request',
+            'view_mode': 'form',
+            'res_id': request.id,
+            'target': 'current',
+        }
 
 
     def open_items_container(self):

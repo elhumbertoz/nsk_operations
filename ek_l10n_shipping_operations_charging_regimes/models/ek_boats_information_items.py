@@ -164,8 +164,8 @@ class ek_product_packagens_goods(models.Model):
     """
     description = vals.get('name', '').strip()
     hs_code = vals.get('tariff_item', '') or vals.get('id_hs_copmt_cd', '')
-    fob = vals.get('fob', 0)
-    quantity = vals.get('quantity', 1)
+    fob = vals.get('fob') or 0.0
+    quantity = vals.get('quantity') or 1.0
     fob_unit = fob / quantity if quantity else fob
 
     if not description:

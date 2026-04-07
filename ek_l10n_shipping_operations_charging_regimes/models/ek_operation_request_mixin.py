@@ -17,23 +17,24 @@ class EkOperationRequestMixinComposition(models.Model):
     """
     _inherit = 'ek.operation.request'
 
-    # Delegate to AI mixin methods by calling them directly
+    # Delegate to the container methods if available
     def action_extract_bl_with_ai(self):
-        """Extrae datos del Bill of Lading usando IA"""
-        from . import ek_ai_extraction_mixin
-        # Create a temporary mixin instance with our context
-        mixin_methods = ek_ai_extraction_mixin.EkAIExtractionMixin()
-        # Bind to our instance
-        return mixin_methods.action_extract_bl_with_ai.__get__(self, type(self))()
+        """Redirige extracción al contenedor vinculado"""
+        self.ensure_one()
+        if self.container_id:
+            return self.container_id.action_extract_bl_with_ai()
+        raise UserError(_("Debe vincular un contenedor primero para realizar la extracción."))
 
     def action_extract_invoices_with_ai(self):
-        """Extrae datos de facturas comerciales usando IA"""
-        from . import ek_ai_extraction_mixin
-        mixin_methods = ek_ai_extraction_mixin.EkAIExtractionMixin()
-        return mixin_methods.action_extract_invoices_with_ai.__get__(self, type(self))()
+        """Redirige extracción al contenedor vinculado"""
+        self.ensure_one()
+        if self.container_id:
+            return self.container_id.action_extract_invoices_with_ai()
+        raise UserError(_("Debe vincular un contenedor primero para realizar la extracción."))
 
     def action_extract_po_and_compare(self):
-        """Extrae Nota de Pedido y compara con factura usando IA"""
-        from . import ek_ai_extraction_mixin
-        mixin_methods = ek_ai_extraction_mixin.EkAIExtractionMixin()
-        return mixin_methods.action_extract_po_and_compare.__get__(self, type(self))()
+        """Redirige validación al contenedor vinculado"""
+        self.ensure_one()
+        if self.container_id:
+            return self.container_id.action_extract_po_and_compare()
+        raise UserError(_("Debe vincular un contenedor primero para realizar la validación."))
