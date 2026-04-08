@@ -144,6 +144,35 @@ class EkAIExtractionMixin(models.AbstractModel):
                             "items": {"type": "string"},
                             "description": "Lista de números de factura mencionados"
                         },
+                        "booking_number": {
+                            "type": "string",
+                            "description": "Número de Reserva o Booking"
+                        },
+                        "seal_number": {
+                            "type": "string",
+                            "description": "Número de Sello o Seal (ej: L6701305)"
+                        },
+                        "consignee": {
+                            "type": "string",
+                            "description": "Nombre del Consignatario (Consignee)"
+                        },
+                        "port_of_loading": {
+                            "type": "string",
+                            "description": "Nombre del puerto de carga (ej: VIGO)"
+                        },
+                        "port_of_discharge": {
+                            "type": "string",
+                            "description": "Nombre del puerto de descarga (ej: GUAYAQUIL)"
+                        },
+                        "type_move": {
+                            "type": "string",
+                            "enum": ["fcl_fcl", "fcl_lcl", "lcl_lcl", "lcl_fcl"],
+                            "description": "Tipo de movimiento (ej: FCL/FCL)"
+                        },
+                        "on_board_date": {
+                            "type": "string",
+                            "description": "Fecha de carga a bordo (formato YYYY-MM-DD)"
+                        }
                     },
                     "required": ["id_bl"]
                 }
@@ -316,27 +345,33 @@ class EkAIExtractionMixin(models.AbstractModel):
             messages = [
                 {
                     "role": "system",
-                    "content": f"""Eres un analista senior de aduanas y logística marítima con más de 20 años de experiencia interpretando Bill of Ladings (BL).
+                    "content": f"""Eres un experto analista senior de aduanas y logística marítima con más de 20 años de experiencia interpretando Bill of Ladings (BL).
+                    
+Tu objetivo es extraer con total precisión los datos logísticos y de transporte del documento adjunto.
 
-Tu tarea es extraer datos estructurados del Bill of Lading (BL) adjunto. Concéntrate en la información logística del documento (números de BL, contenedor, fechas y descripción general).
-
-Reglas de extracción:
-- `supplies_detail`: resume en una frase corta qué tipo de mercancía se transporta (ej: 'REPUESTOS PARA MOTOR', 'EQUIPOS ELECTRÓNICOS'). 
-- NO extraigas productos individuales uno por uno, ya que esa información será procesada desde las Facturas Comerciales.
+REGLAS DE EXTRACCIÓN CRÍTICAS:
+1. **Identificación de Contenedor y Sello**: Busca en la sección 'Particulars Furnished by Shipper' o 'Marks and Nos'. El sello suele estar precedido por 'SEAL'.
+2. **Booking vs BL**: El número de Booking es distinto al número de BL. Extráelos por separado.
+3. **Puertos**: Identifica claramente el Port of Loading (Origen) y Port of Discharge (Destino).
+4. **Tipo de Movimiento**: Identifica si es FCL/FCL, FCL/LCL, etc. Si no se especifica, usa el contexto.
+5. **Fechas**: La fecha 'On Board' es la fecha real en que la mercancía subió al buque.
+6. **Consignatario**: Es la entidad local que recibe la carga.
+7. **NO EXTRACCIÓN DE PRODUCTOS**: Ignora la lista detallada de bultos individuales, solo extrae el PESO BRUTO total y la CANTIDAD TOTAL de bultos.
 
 Llama siempre a `extract_bl_data` para devolver los resultados estructurados."""
                 },
                 {
                     "role": "user",
-                    "content": """Por favor, extrae la siguiente información del Bill of Lading adjunto:
+                    "content": """Analiza el Bill of Lading adjunto y extrae:
+- Número de BL y de Booking.
+- Número de Contenedor y de Sello (Seal).
+- Buque y puertos de carga/descarga.
+- Consignatario y Exportador.
+- Pesos totales, cantidad de bultos y tipo de movimiento (FCL/LCL).
+- Fechas estimadas (ETA/ETD) y fecha de carga a bordo (On Board).
+- Descripción resumida de la carga.
 
-1. Número de BL o Contenedor (ID)
-2. Línea naviera (Shipping Line)
-3. Fechas estimadas (ETA y ETD)
-4. Descripción general resumida de la carga
-5. Cantidad total de bultos y peso bruto si están indicados.
-
-El documento PDF está adjunto a este mensaje."""
+El documento PDF está adjunto."""
                 }
             ]
 
@@ -368,13 +403,30 @@ El documento PDF está adjunto a este mensaje."""
             html_log = f"""
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Extracción de BL Completada</h4>
-                    <p>Se procesó el documento <strong>{attachment.name}</strong> correctamente.</p>
+                    <p>Se procesó el documento <strong>{attachment.name}</strong> con éxito.</p>
                     <hr>
-                    <table class="table table-sm table-borderless mb-0">
-                        <tr><td><strong>BL#:</strong> {getattr(self, 'id_bl', 'N/A') or 'N/A'}</td><td><strong>Contenedor:</strong> {getattr(self, 'number_container', getattr(self, 'container_number', 'N/A')) or 'N/A'}</td></tr>
-                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if hasattr(self, 'shipping_line_id') and self.shipping_line_id else (self.shipping_company.name if hasattr(self, 'shipping_company') and self.shipping_company else 'No encontrada')}</td><td><strong>Peso Total:</strong> {extracted_data.get('total_weight', 0)} kg</td></tr>
-                        <tr><td colspan="2"><strong>Descripción:</strong> {extracted_data.get('supplies_detail', 'N/A')}</td></tr>
-                    </table>
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td><strong>BL#:</strong></td><td>{extracted_data.get('id_bl', 'N/A')}</td></tr>
+                                <tr><td><strong>Booking:</strong></td><td>{extracted_data.get('booking_number', 'N/A')}</td></tr>
+                                <tr><td><strong>Contenedor:</strong></td><td>{getattr(self, 'number_container', extracted_data.get('number_container', 'N/A'))}</td></tr>
+                                <tr><td><strong>Sello:</strong></td><td>{extracted_data.get('seal_number', 'N/A')}</td></tr>
+                                <tr><td><strong>Buque:</strong></td><td>{extracted_data.get('shipping_line', 'N/A')}</td></tr>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><td><strong>Peso Bruto:</strong></td><td>{extracted_data.get('total_weight', 0)} kg</td></tr>
+                                <tr><td><strong>Bultos:</strong></td><td>{extracted_data.get('total_packages', 0)}</td></tr>
+                                <tr><td><strong>Movimiento:</strong></td><td>{extracted_data.get('type_move', 'N/A').upper()}</td></tr>
+                                <tr><td><strong>Puerto Carga:</strong></td><td>{extracted_data.get('port_of_loading', 'N/A')}</td></tr>
+                                <tr><td><strong>Puerto Descarga:</strong></td><td>{extracted_data.get('port_of_discharge', 'N/A')}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="mb-0"><strong>Descripción:</strong> {extracted_data.get('supplies_detail', 'N/A')}</p>
                 </div>
             """
             
@@ -437,6 +489,52 @@ El documento PDF está adjunto a este mensaje."""
                 message_type='comment',
                 subtype_xmlid='mail.mt_note',
             )
+
+        # === NUEVOS CAMPOS LOGÍSTICOS ===
+        if extracted_data.get('booking_number'):
+            self.booking_number = extracted_data['booking_number']
+
+        if extracted_data.get('seal_number'):
+            self.seal_number = extracted_data['seal_number']
+
+        if extracted_data.get('type_move'):
+            self.type_move_fcl_lcl = extracted_data['type_move']
+
+        if extracted_data.get('total_weight'):
+            self.total_gross_weight = extracted_data['total_weight']
+
+        if extracted_data.get('total_packages'):
+            self.total_packages_count = extracted_data['total_packages']
+
+        if extracted_data.get('on_board_date'):
+            try:
+                self.on_board_date = extracted_data['on_board_date']
+            except:
+                _logger.warning("No se pudo aplicar on_board_date: %s", extracted_data['on_board_date'])
+
+        # Buscar Consignatario
+        if extracted_data.get('consignee'):
+            consignee = self.env['res.partner'].search([
+                ('name', 'ilike', extracted_data['consignee']),
+                ('is_company', '=', True)
+            ], limit=1)
+            if consignee:
+                self.consignee_id = consignee.id
+
+        # Buscar Puertos (Mapeo a maestros de Odoo)
+        if extracted_data.get('port_of_loading'):
+            port_l = self.env['ek.res.world.seaports'].search([
+                ('name', 'ilike', extracted_data['port_of_loading'])
+            ], limit=1)
+            if port_l and hasattr(self, 'ek_res_world_seaports_id'):
+                self.ek_res_world_seaports_id = port_l.id
+
+        if extracted_data.get('port_of_discharge'):
+            port_d = self.env['ek.res.world.seaports'].search([
+                ('name', 'ilike', extracted_data['port_of_discharge'])
+            ], limit=1)
+            if port_d and hasattr(self, 'ek_res_world_seaports_d_id'):
+                self.ek_res_world_seaports_d_id = port_d.id
 
         # Buscar línea naviera
         if extracted_data.get('shipping_line'):

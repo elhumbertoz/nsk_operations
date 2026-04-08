@@ -95,6 +95,20 @@ class EkBoatsInformation(models.Model):
 
     rcd = fields.Datetime(string="Return Container Date", copy=False, tracking=True)
 
+    # Nuevos campos para extracción extendida de BL
+    booking_number = fields.Char("Booking Number", tracking=True)
+    seal_number = fields.Char("Seal Number", tracking=True)
+    consignee_id = fields.Many2one("res.partner", string="Consignee", tracking=True)
+    on_board_date = fields.Date("On Board Date", tracking=True)
+    total_gross_weight = fields.Float("Total Gross Weight (BL)", tracking=True)
+    total_packages_count = fields.Integer("Total Packages (BL)", tracking=True)
+    type_move_fcl_lcl = fields.Selection([
+        ('fcl_fcl', 'FCL/FCL'),
+        ('fcl_lcl', 'FCL/LCL'),
+        ('lcl_lcl', 'LCL/LCL'),
+        ('lcl_fcl', 'LCL/FCL'),
+    ], string="Type of Move (FCL/LCL)", tracking=True)
+    
     # Campos de IA (Redefinidos para evitar conflictos de M2M y asegurar persistencia)
     bl_attachment_ids = fields.Many2many(
         'ir.attachment',
@@ -192,6 +206,11 @@ class EkBoatsInformation(models.Model):
             'supplies_detail': self.supplies_detail or self.load_number,
             'container_return_date': self.rcd.date() if self.rcd else False,
             'eta': self.eta,
+            'booking_number': self.booking_number,
+            'seal_number': self.seal_number,
+            'consignee_id': self.consignee_id.id if self.consignee_id else False,
+            'on_board_date': self.on_board_date,
+            'type_move_fcl_lcl': self.type_move_fcl_lcl,
             'ek_res_world_seaport_id_origin': self.ek_res_world_seaports_id.id if self.ek_res_world_seaports_id else False,
             'ek_res_world_seaport_id_destination': self.ek_res_world_seaports_d_id.id if self.ek_res_world_seaports_d_id else False,
         }

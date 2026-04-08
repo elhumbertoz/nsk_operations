@@ -59,20 +59,27 @@
               <field name="type_move_container"/>
               <field name="load_number"/>
               <field name="number_container"/>
+              <field name="seal_number"/>
               <field name="bl_number"/>
+              <field name="booking_number"/>
+              <field name="type_move_fcl_lcl"/>
+              <field name="consignee_id" options="{'no_create': True}"/>
               <field name="value_of_container" invisible="1" />
             </group>
           </group>
 
           <group>
-            <group string="Date Origin">
-              <field name="ek_res_world_seaports_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" string="Origin Location"/>
+            <group string="Logística Portuaria">
+              <field name="ek_res_world_seaports_id" required="1" readonly="state in ['process','done','cancelled']" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" string="Origin Location (POL)"/>
+              <field name="ek_res_world_seaports_d_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" string="Destination Location (POD)"/>
+              <field name="on_board_date"/>
               <field name="eta" string="Departure Port Of Origin"/>
               <field name="ata" string="Arrival of Date"/>
             </group>
 
-            <group string="Date Destination">
-              <field name="ek_res_world_seaports_d_id" string="Origin Destination"/>
+            <group string="Cantidades y Totales">
+              <field name="total_gross_weight" readonly="1"/>
+              <field name="total_packages_count" readonly="1"/>
               <field name="etd" string="Transfer Date"/>
               <field name="atd" string="Desconsolidation Date"/>
               <field name="rcd" string="Return Container Date"/>

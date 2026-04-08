@@ -135,6 +135,19 @@ class EkOperationRequest(models.Model):
     tracking=True
   )
 
+  # NUEVOS CAMPOS LOGÍSTICOS (REQ-008B)
+  bl_number = fields.Char(related="number_bl", string="Número BL", readonly=False, store=True)
+  booking_number = fields.Char("Booking Number", tracking=True)
+  seal_number = fields.Char("Seal Number", tracking=True)
+  consignee_id = fields.Many2one("res.partner", string="Consignatario", tracking=True)
+  on_board_date = fields.Date("On Board Date", tracking=True)
+  type_move_fcl_lcl = fields.Selection([
+      ('fcl_fcl', 'FCL/FCL'),
+      ('fcl_lcl', 'FCL/LCL'),
+      ('lcl_lcl', 'LCL/LCL'),
+      ('lcl_fcl', 'LCL/FCL'),
+  ], string="Tipo Movimiento (FCL/LCL)", tracking=True)
+
   transfer_date = fields.Datetime(
     string="Fecha de Traslado",
     help="Fecha de traslado al depósito aduanero",
