@@ -107,6 +107,7 @@
             </group>
             <button name="action_open_wizard_export" type="object" class="btn btn-primary oe_inline justify-self-end" icon="fa-upload" invisible="ek_produc_packages_goods_ids" height="33px" />
             <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
+            <button name="action_open_ai_goods_update_wizard" type="object" class="btn btn-secondary oe_inline justify-self-end" icon="fa-magic" title="Actualizar Paquetes y Mercancía con IA" invisible="fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
           </div>
           <!-- estadísticos de los paquetes y mercancías -->
           <group col="1" class="d-flex" invisible="not ek_produc_packages_goods_ids">

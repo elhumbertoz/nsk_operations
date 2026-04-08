@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_ai_goods_update_wizard_form" model="ir.ui.view">
+        <field name="name">ek.ai.goods.update.wizard.form</field>
+        <field name="model">ek.ai.goods.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asistente IA - Actualización de Mercancías">
+                <field name="processing_status" invisible="1"/>
+                <field name="has_pending_changes" invisible="1"/>
+                <field name="has_deletions" invisible="1"/>
+                
+                <!-- FASE 1: INPUT -->
+                <div invisible="processing_status != 'idle'">
+                    <group>
+                        <field name="operation_request_id" readonly="1" force_save="1"/>
+                        <field name="user_text" placeholder="Ej: 'Actualiza el peso de la línea 42 a 15kg' o 'Sincroniza los precios con la factura adjunta'"/>
+                    </group>
+                    <group string="Material de Referencia">
+                        <field name="attachment_ids" widget="many2many_binary" string="Adjuntos (PDF/Imágenes)"/>
+                    </group>
+                    <div class="alert alert-info py-2 mb-0" role="status">
+                        <i class="fa fa-info-circle mr-1"/> La IA analizará sus instrucciones y documentos comparándolos con el estado actual de la tabla.
+                    </div>
+                </div>
+
+                <!-- FASE 2a: RESPUESTA INFORMATIVA -->
+                <div invisible="processing_status != 'response'">
+                    <div class="mb-3">
+                        <field name="ai_response_text" readonly="1"/>
+                    </div>
+                    <div class="alert alert-secondary py-2" role="alert">
+                        <i class="fa fa-info-circle mr-1"/> La IA ha respondido con información pero no ha propuesto cambios técnicos en la tabla.
+                    </div>
+                </div>
+
+                <!-- FASE 2b: PREVIEW DE CAMBIOS -->
+                <div invisible="processing_status != 'changes_ready'">
+                    <div class="mb-3">
+                        <field name="ai_response_preview" readonly="1"/>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3" invisible="not has_deletions">
+                        <div class="d-flex align-items-center">
+                            <field name="deletion_confirmed" class="mr-2"/>
+                            <label for="deletion_confirmed" string="Confirmo que deseo ELIMINAR las líneas marcadas en rojo." class="mb-0 text-danger font-weight-bold"/>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info py-2" invisible="has_deletions">
+                        <i class="fa fa-question-circle mr-1"/> Revise la propuesta arriba. Si está conforme, pulse 'Aplicar Cambios'.
+                    </div>
+                </div>
+
+                <footer>
+                    <!-- Botones Fase 1 -->
+                    <button name="action_process" string="⚡ Procesar con IA" type="object" class="btn-primary" invisible="processing_status != 'idle'"/>
+                    
+                    <!-- Botones Fase 2a (Informativa) -->
+                    <button name="action_back_to_input" string="← Volver a editar" type="object" class="btn-secondary" invisible="processing_status != 'response'"/>
+                    
+                    <!-- Botones Fase 2b (Cambios) -->
+                    <button name="action_apply_pending_changes" string="✅ Aplicar Cambios" type="object" class="btn-primary" 
+                            invisible="processing_status != 'changes_ready'"
+                            readonly="has_deletions and not deletion_confirmed"/>
+                    <button name="action_back_to_input" string="← Volver / Refinar" type="object" class="btn-secondary" invisible="processing_status != 'changes_ready'"/>
+                    
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ek_ai_goods_update_wizard" model="ir.actions.act_window">
+        <field name="name">Actualizar Mercancías con IA</field>
+        <field name="res_model">ek.ai.goods.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

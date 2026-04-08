@@ -24,6 +24,7 @@
     'wizard/ek_packages_goods_clear_wizard_view.xml',
 
     'wizard/ek_ship_assignment_wizard_view.xml',
+    'wizard/ek_ai_goods_update_wizard_view.xml',
     # 4. Vistas de modelos principales
     'views/ek_ship_registration_views.xml',
     'views/ek_boats_information_views.xml',

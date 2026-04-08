@@ -1284,6 +1284,42 @@ class EkOperationRequest(models.Model):
 
     return errors
 
+  def action_open_ai_goods_update_wizard(self):
+    """Abre el asistente IA para actualización de paquetes y mercancías"""
+    self.ensure_one()
+    return {
+      'name': _('Actualizar Mercancías con IA'),
+      'type': 'ir.actions.act_window',
+      'res_model': 'ek.ai.goods.update.wizard',
+      'view_mode': 'form',
+      'target': 'new',
+      'context': {
+        'default_operation_request_id': self.id,
+      },
+    }
+
+  def _get_regime_70_catalog_prompt(self):
+    """
+    Genera un string con el catálogo actual de productos Régimen 70 para el prompt de la IA
+    """
+    category = self.env.ref('ek_l10n_shipping_operations_charging_regimes.product_category_regime_70', raise_if_not_found=False)
+    domain = [('categ_id', '=', category.id)] if category else []
+    products = self.env['product.product'].search(domain)
+
+    if not products:
+      return "No hay productos registrados actualmente en el catálogo de Régimen 70."
+
+    catalog_lines = [
+      "A continuación se presenta el catálogo de REGIMEN 70 existente.",
+      "Si el producto de la factura coincide con uno de estos, devuelve su ID.",
+      "ID | CÓDIGO | NOMBRE"
+    ]
+    for p in products:
+      code = p.default_code or 'S/N'
+      catalog_lines.append(f"{p.id} | {code} | {p.name}")
+
+    return "\n".join(catalog_lines)
+
 
 class bl_import_export(models.Model):
   _name = 'bl.import.export'
