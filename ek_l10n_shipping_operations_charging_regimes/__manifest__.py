@@ -32,7 +32,7 @@
     'views/views_ek_operation_request.xml',
     'views/ek_operation_request_kanban_view.xml',
     'views/views_regime_70_fields.xml',
-    # 'views/res_config_settings_views.xml',
+    'views/res_config_settings_views.xml',
     'views/mail_template_views.xml',
     # 5. Reportes (al final porque pueden depender de otros elementos)
     'report/kardex_container.xml',

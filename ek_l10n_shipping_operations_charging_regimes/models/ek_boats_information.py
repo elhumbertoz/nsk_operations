@@ -200,9 +200,9 @@ class EkBoatsInformation(models.Model):
         request = self.env['ek.operation.request'].create(vals)
 
         # MIGRAR productos del contenedor a la solicitud
-        # Cada producto se copia manteniendo la trazabilidad al contenedor original
+        # Solo se copian los productos que sí vinieron (is_not_dispatched = False)
         products_copied = 0
-        for item in self.ek_produc_packages_goods_ids:
+        for item in self.ek_produc_packages_goods_ids.filtered(lambda p: not p.is_not_dispatched):
             item.copy({
                 'ek_operation_request_id': request.id,
                 'ek_boats_information_id': self.id,  # Mantener trazabilidad al contenedor
