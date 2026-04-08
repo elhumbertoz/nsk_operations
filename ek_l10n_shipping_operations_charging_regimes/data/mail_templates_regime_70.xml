@@ -4,15 +4,15 @@
     <record id="mail_template_regime_70_customs_agent" model="mail.template">
         <field name="name">Régimen 70 - Solicitud a Agente de Aduanas</field>
         <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
-        <field name="subject">RÉGIMEN 70: NAVIERA SANTA KATALINA // BL ${object.id_bl or ''} (CONT. ${object.number_container or ''})</field>
+        <field name="subject">RÉGIMEN 70: NAVIERA SANTA KATALINA // BL ${object.number_bl or ''} (CONT. ${object.number_container or ''})</field>
         <field name="email_from">${object.company_id.email or ''}</field>
-        <field name="email_to">${object.shipping_agent_id.email or ''}</field>
+        <field name="email_to">${object.agent_customs_id.email or ''}</field>
         <field name="body_html" type="html">
             <div style="font-family: Arial, sans-serif; font-size: 14px;">
-                <p>Buenas tardes Estimado equipo ${object.shipping_agent_id.name or 'Agente de Aduanas'},</p>
+                <p>Buenas tardes Estimado ${object.agent_customs_id.name or 'Agente de Aduanas'},</p>
 
                 <p>Vuestra gentil ayuda con la gestión y trámite para la carga que ingresará a régimen 70:</p>
-                <p><strong>BL ${object.id_bl or 'N/A'} (CONTENEDOR ${object.number_container or 'N/A'})</strong>, Adjunto:</p>
+                <p><strong>BL ${object.number_bl or 'N/A'} (CONTENEDOR ${object.number_container or 'N/A'})</strong>, Adjunto:</p>
 
                 <ul>
                     <li>BL</li>
@@ -26,6 +26,8 @@
                 <p>Saludos cordiales,</p>
                 <p>${object.user_id.name or user.name}</p>
                 <p>${object.company_id.name or ''}</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin-top: 20px;"/>
+                <p style="font-size: 11px; color: #999999;">Este correo fue generado automáticamente por el sistema. Por favor no responda directamente a este mensaje.</p>
             </div>
         </field>
     </record>
@@ -34,20 +36,22 @@
     <record id="mail_template_regime_70_warehouse" model="mail.template">
         <field name="name">Régimen 70 - Solicitud a Almacenera</field>
         <field name="model_id" ref="ek_l10n_shipping_operations.model_ek_operation_request"/>
-        <field name="subject">RÉGIMEN 70: BL ${object.id_bl or ''} - ${object.number_container or ''} - LUBRICANTES Y BOYAS</field>
+        <field name="subject">RÉGIMEN 70: BL ${object.number_bl or ''} - ${object.number_container or ''} - LUBRICANTES Y BOYAS</field>
         <field name="email_from">${object.company_id.email or ''}</field>
         <field name="email_to">${object.res_partner_id.email or ''}</field>
         <field name="body_html" type="html">
             <div style="font-family: Arial, sans-serif; font-size: 14px;">
                 <p>Buenas tardes Estimado ${object.res_partner_id.name or 'Almacenera'},</p>
 
-                <p>Sírvanse encontrar nota de pedido referente al <strong>BL ${object.id_bl or 'N/A'} (CONT. ${object.number_container or 'N/A'})</strong>
+                <p>Sírvanse encontrar nota de pedido referente al <strong>BL ${object.number_bl or 'N/A'} (CONT. ${object.number_container or 'N/A'})</strong>
                 que estará ingresando a depósito en los próximos días, su ayuda con la generación de la
                 solicitud previa y demás documentación para el trámite correspondiente.</p>
 
                 <p>Saludos cordiales,</p>
                 <p>${object.user_id.name or user.name}</p>
                 <p>${object.company_id.name or ''}</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin-top: 20px;"/>
+                <p style="font-size: 11px; color: #999999;">Este correo fue generado automáticamente por el sistema. Por favor no responda directamente a este mensaje.</p>
             </div>
         </field>
     </record>
@@ -64,7 +68,7 @@
                 <p>Buenas tardes Estimado ${object.res_partner_id.name or 'Almacenera'},</p>
 
                 <p>Detallo información de vehículo y chofer que ingresará al depósito para la entrega de
-                la carga del cont. <strong>${object.number_container or 'N/A'}</strong> - BL <strong>${object.id_bl or 'N/A'}</strong>
+                la carga del cont. <strong>${object.number_container or 'N/A'}</strong> - BL <strong>${object.number_bl or 'N/A'}</strong>
                 (${object.supplies_detail or 'Carga general'}) el día de mañana
                 <strong>${object.transfer_date.strftime('%d/%m/%Y') if object.transfer_date else 'N/A'}</strong>
                 aproximadamente con ingreso en la Almacenera sobre las 16h00 pm.</p>
@@ -80,6 +84,8 @@
                 <p>Saludos Cordiales,</p>
                 <p>${object.user_id.name or user.name}</p>
                 <p>${object.company_id.name or ''}</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin-top: 20px;"/>
+                <p style="font-size: 11px; color: #999999;">Este correo fue generado automáticamente por el sistema. Por favor no responda directamente a este mensaje.</p>
             </div>
         </field>
     </record>
@@ -92,7 +98,7 @@
         <field name="email_from">${object.company_id.email or ''}</field>
         <field name="body_html" type="html">
             <div style="font-family: Arial, sans-serif; font-size: 14px;">
-                <p>Buenas tardes Estimados Sres. CUPORT,</p>
+                <p>Buenas tardes,</p>
 
                 <p>Solicito vuestra gentil ayuda con <strong>1 servicio de custodia (una patrulla)</strong> para 1 contenedor
                 con las siguientes condiciones:</p>
@@ -122,6 +128,8 @@
                 <p>Saludos cordiales,</p>
                 <p>${object.user_id.name or user.name}</p>
                 <p>${object.company_id.name or ''}</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin-top: 20px;"/>
+                <p style="font-size: 11px; color: #999999;">Este correo fue generado automáticamente por el sistema. Por favor no responda directamente a este mensaje.</p>
             </div>
         </field>
     </record>
@@ -134,7 +142,7 @@
         <field name="email_from">${object.company_id.email or ''}</field>
         <field name="body_html" type="html">
             <div style="font-family: Arial, sans-serif; font-size: 14px;">
-                <p>Buenos días Estimada Alejandra,</p>
+                <p>Buenos días,</p>
 
                 <p>Sírvanse encontrar la aplicación <strong>(Nro: ${object.number_mrn or 'N/A'})</strong> generada a través del sistema
                 para carga que será transportada. A su vez adjunto documentación complementaria.</p>
@@ -144,6 +152,8 @@
                 <p>Saludos cordiales,</p>
                 <p>${object.user_id.name or user.name}</p>
                 <p>${object.company_id.name or ''}</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin-top: 20px;"/>
+                <p style="font-size: 11px; color: #999999;">Este correo fue generado automáticamente por el sistema. Por favor no responda directamente a este mensaje.</p>
             </div>
         </field>
     </record>

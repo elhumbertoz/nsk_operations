@@ -230,7 +230,7 @@
         <field name="res_model">mail.template</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('name', 'ilike', 'Régimen 70')]</field>
-        <field name="context">{'default_model_id': %(ek_l10n_shipping_operations.model_ek_operation_request)d, 'search_default_filter_regime_70': 1}</field>
+        <field name="context" eval="{'default_model_id': ref('ek_l10n_shipping_operations.model_ek_operation_request'), 'search_default_filter_regime_70': 1}"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Crear una nueva plantilla de notificación

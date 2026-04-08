@@ -1303,6 +1303,31 @@ class EkOperationRequest(models.Model):
       'title': _('Correo Enviado'), 'message': _('Póliza MRN: %s enviada') % self.number_mrn, 'type': 'success',
     }}
 
+  def action_requeired_stage_fields(self, stage):
+    """Override para agregar validaciones de notificación en etapas de Régimen 70."""
+    errors = super().action_requeired_stage_fields(stage)
+
+    if self.regime != '70' or not stage:
+      return errors
+
+    seq = stage.sequence
+
+    # Al salir de Notificación (seq 11) → debe haberse enviado correo al agente
+    if seq == 11 and not self.mail_sent_customs_agent:
+      errors.append(_('Régimen 70: Debe enviar la notificación al Agente de Aduanas antes de avanzar.'))
+
+    # Al salir de Arribo (seq 13) → debe haberse enviado correo a la almacenera
+    if seq == 13 and not self.mail_sent_warehouse:
+      errors.append(_('Régimen 70: Debe enviar la notificación a la Almacenera antes de avanzar.'))
+
+    # Al salir de Traslado (seq 22) → datos de chofer y custodia
+    if seq == 22 and not self.mail_sent_driver_info:
+      errors.append(_('Régimen 70: Debe enviar los Datos del Chofer antes de avanzar.'))
+    if seq == 22 and not self.mail_sent_custody:
+      errors.append(_('Régimen 70: Debe enviar la Solicitud de Custodia antes de avanzar.'))
+
+    return errors
+
 
 class bl_import_export(models.Model):
   _name = 'bl.import.export'
