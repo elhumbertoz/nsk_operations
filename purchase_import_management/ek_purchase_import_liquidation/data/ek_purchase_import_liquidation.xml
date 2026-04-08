@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="decimal_fob" model="decimal.precision">
+            <field name="name">FOB</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_expenses" model="decimal.precision">
+            <field name="name">Import Expenses</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_costs" model="decimal.precision">
+            <field name="name">Importation Costs</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_factor" model="decimal.precision">
+            <field name="name">Importation Factor</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_others" model="decimal.precision">
+            <field name="name">Importation Others</field>
+            <field name="digits">2</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_total_costs" model="decimal.precision">
+            <field name="name">Total Costs of Import</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_total_costs_rule" model="decimal.precision">
+            <field name="name">Total Costs of Rule</field>
+            <field name="digits">3</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_tributes_rule" model="decimal.precision">
+            <field name="name">Importation Tributes</field>
+            <field name="digits">3</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_total_fob" model="decimal.precision">
+            <field name="name">Total FOB</field>
+            <field name="digits">6</field>
+        </record>
+
+        <record id="seq_ek_import_liquidation" model="ir.sequence">
+            <field name="name">Liquidación de Importación</field>
+            <field name="code">ek.import.liquidation</field>
+            <field name="prefix">LIQ-</field>
+            <field name="padding">6</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="ek_purchase_import_liquidation.ec_dt_110" model="l10n_latam.document.type">
+			<field name="code">110</field>
+			<field name="name">Nota de Crédito del Exterior</field>
+			<field name="doc_code_prefix">NCE</field>
+			<field name="report_name">Nota de Crédito del Exterior</field>
+			<field name="internal_type">credit_note</field>
+            <field name="country_id" ref='base.ec'/>
+		</record>
+    </data>
+</odoo>

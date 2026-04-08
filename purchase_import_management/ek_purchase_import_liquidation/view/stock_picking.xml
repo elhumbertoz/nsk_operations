@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_picking_landing_costs_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.product.line</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="code_picking" invisible="1"/>
+                <newline/>
+                <!--attrs="{'invisible':[('code_picking','!=','incoming')]}"-->
+                <label for="allow_landed_cost" invisible="code_picking != 'incoming'"/>
+                <!--attrs="{'invisible':[('code_picking','!=','incoming')]}"-->
+                <field name="allow_landed_cost" string="¿Permite el costo de importación?" invisible="code_picking != 'incoming'"/>
+            </xpath>
+            <xpath expr="//field[@name='move_lines']" position="before">
+                <!--attrs="{'invisible':[('allow_landed_cost','=',False)], 'readonly':[('state','in',['done','cancel'])]}"-->
+                <button name='action_update_landed_cost' type="object" string="Actualizar costes de importación"
+                        invisible="not allow_landed_cost" readonly="state in ['done', 'cancel']" class="oe_right"/>
+            </xpath>
+            <notebook position="inside">
+                <!--attrs="{'invisible':[('allow_landed_cost','!=',True)]}"-->
+                <page string="Costos de Importación" invisible="not allow_landed_cost">
+                    <group colspan="2">
+                        <field name="account_landed_cost_id" colspan="2"/>
+                        <div colspan="2" class="oe_grey">Utilice esta selección para distribuir los costos de importación GLOBALMENTE a todos los
+                            productos, distribuidos por valor, peso, volumen o cantidad
+                        </div>
+                        <!--attrs="{'readonly':[('state','in',['done','cancel'])]}"-->
+                        <field name="landing_cost_ids" options="{'no_create_edit': True}" nolabel="1" colspan="2"
+                               readonly="state in ['done', 'cancel']">
+                            <tree editable="top" nolabel="1">
+                                <field name="invoice_line_id" options="{'no_create_edit': True}" style="max-width: 100px"
+                                       domain="[('type', '=', 'in_invoice'), ('state', 'in', ['open', 'paid'])]"/>
+                                <field name="date"/>
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="original_amount"/>
+                                <field name="partner_id"/>
+                                <field name="amount"/>
+                                <field name="amount_type"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_move_picking_landing_cost_tree" model="ir.ui.view">
+        <field name="name">stock.move.tree.distribution.landing.cost</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="location_dest_id" position="after">
+                <field name="allow_landed_cost" invisible="1"/>
+                <!--attrs="{'invisible': [('allow_landed_cost','=',False)]}"-->
+                <field name="price_unit" string='Precio unitario sin costes de importación'
+                       invisible="not allow_landed_cost" readonly="1"
+                />
+                <!--attrs="{'invisible': [('allow_landed_cost','=',False)]}"-->
+                <field name="s_without_landing_costs" invisible="not allow_landed_cost"/>
+                <!--attrs="{'invisible': [('allow_landed_cost','=',False)]}"-->
+                <field name="unit_price_landing" invisible="not allow_landed_cost"/>
+                <!--attrs="{'invisible': [('allow_landed_cost','=',False)]}"-->
+                <field name="s_with_landing_costs" invisible="not allow_landed_cost"/>
+            </field>
+        </field>
+    </record>
+</odoo>

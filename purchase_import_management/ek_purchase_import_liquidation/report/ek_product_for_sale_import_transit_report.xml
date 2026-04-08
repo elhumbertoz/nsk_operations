@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ek_product_for_sale_import_transit_pivot" model="ir.ui.view">
+             <field name="name">ek.product.for.sale.import.transit.pivot</field>
+             <field name="model">ek.product.for.sale.import.transit</field>
+             <field name="arch" type="xml">
+                 <pivot string="Productos en Transito" disable_linking="True" sample="1">
+                     <field name="product_id" type="row"/>
+                     <field name="product_qty" type="measure"/>
+                     <field name="qty_in_transit" type="measure"/>
+                 </pivot>
+             </field>
+        </record>
+
+    <record id="view_ek_product_for_sale_import_transit_graph" model="ir.ui.view">
+         <field name="name">ek.product.for.sale.import.transit.graph</field>
+         <field name="model">ek.product.for.sale.import.transit</field>
+         <field name="arch" type="xml">
+             <graph string="Productos en Transito" sample="1" disable_linking="True">
+                 <field name="product_id"/>
+                 <field name="qty_in_transit" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_ek_product_for_sale_import_transit_tree" model="ir.ui.view">
+        <field name="name">ek.product.for.sale.import.transit.tree</field>
+        <field name="model">ek.product.for.sale.import.transit</field>
+        <field name="arch" type="xml">
+            <tree string="Productos en Transito" create="0" delete="0" edit="0"
+                  decoration-success="liquidation_order_id != False and days_late == 0"
+                  decoration-danger="days_late != 0">
+                <field name="order_id"/>
+                <field name="product_id"/>
+                <field name="date_approve" invisible="1"/>
+                <field name="product_qty"/>
+                <field name="liquidation_order_id"/>
+                <field name="arrival_date"/>
+                <field name="qty_in_transit"/>
+                <field name="days_late" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_ek_product_for_sale_import_transit_search" model="ir.ui.view">
+        <field name="name">ek.product.for.sale.import.transit.search</field>
+        <field name="model">ek.product.for.sale.import.transit</field>
+        <field name="arch" type="xml">
+            <search string="Productos en Transito">
+                <field name="date_approve"/>
+                <filter name="filter_date" date="date_approve" default_period="this_month"/>
+                <filter string="Últimos 365 dias" name="year" domain="[('date_approve', '&gt;=', (context_today() + relativedelta(days=-365)).strftime('%Y-%m-%d')),('date_approve', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <field name="product_id"/>
+                <field name="name"/>
+                <field name="partner_ref"/>
+                <field name="partner_id"/>
+                <field name="order_id"/>
+                <field name="liquidation_order_id"/>
+                <field name="picking_type_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Pedido" name="order_id" context="{'group_by':'order_id'}"/>
+                    <filter string="Importación" name="liquidation_order_id" context="{'group_by':'liquidation_order_id'}"/>
+                    <filter string="Producto" name="product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Proveedor" name="partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Compañía" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator/>
+                    <filter string="Fecha LLegada" name="arrival_date" context="{'group_by':'arrival_date'}"/>
+                    <filter string="Fecha Pedido" name="date_approve" context="{'group_by':'date_approve'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="ek_product_for_sale_import_transit_action" model="ir.actions.act_window">
+        <field name="name">Productos en Transito</field>
+        <field name="res_model">ek.product.for.sale.import.transit</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="context">{'search_default_year': True}</field>
+        <field name="domain">[('product_id.product_tmpl_id', '=', 0)]</field>
+        <field name="view_id" ref="view_ek_product_for_sale_import_transit_tree"/>
+        <field name="search_view_id" ref="view_ek_product_for_sale_import_transit_search"/>
+    </record>
+
+    <record id="ek_product_for_sale_import_transit_all_action" model="ir.actions.act_window">
+        <field name="name">Productos en Transito</field>
+        <field name="res_model">ek.product.for.sale.import.transit</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="context">{'search_default_year': True}</field>
+        <field name="view_id" ref="view_ek_product_for_sale_import_transit_tree"/>
+        <field name="search_view_id" ref="view_ek_product_for_sale_import_transit_search"/>
+    </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="menu_ek_product_for_sale_import_transit_action" parent="sale.menu_sale_report" action="ek_product_for_sale_import_transit_all_action" sequence="10" groups="sales_team.group_sale_salesman" />
+
+    </data>
+</odoo>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_import_print_liquidation_wizard" model="ir.ui.view">
+        <field name="name">ek.import.print.liquidation.wizard</field>
+        <field name="model">ek.import.print.liquidation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reporte">
+                <div class="alert alert-info" role="alert">
+                    <p>Esta opción le permite exportar el reporte consolidado con varias opciones de selección:</p>
+                    <ul>
+                        <li>
+                            <b>Todos los productos</b>
+                            Genera el reporte de la misma forma que se muestra en el botón imprimir del centro de la pantalla.
+                        </li>
+                        <li>
+                            <b>Partidas seleccionadas</b>
+                            Genera el reporte de las partidas seleccionadas únicamente.
+                        </li>
+                        <li>
+                            <b>Productos seleccionados</b>
+                            Genera el reporte de los productos seleccionados únicamente.
+                        </li>
+                    </ul>
+                </div>
+                <group string="Generar reporte">
+                    <group>
+                        <field name="type"/>
+                        <field name="order_id" invisible="1"/>
+                        <field name="allow_product_ids" invisible="1"/>
+                        <field name="allow_tariff_ids" invisible="1"/>
+                    </group>
+                    <group>
+                        <!--attrs="{'invisible': [('type','=','all')]}"-->
+                        <field name="include_cif" invisible="type == 'all'"/>
+                    </group>
+                </group>
+                <!--attrs="{'invisible': [('type','!=','product')]}"-->
+                <group colspan="4" invisible="type != 'product'">
+                    <field name="select_product_ids" nolabel="1" widget="many2many" domain="[('id', 'in', allow_product_ids)]">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="tariff_id" optional="show"/>
+                            <field name="product_qty" sum="Cantidad total"/>
+                        </tree>
+                    </field>
+                </group>
+                <!--attrs="{'invisible': [('type','!=','tariff')]}"-->
+                <group colspan="4" invisible="type != 'tariff'">
+                    <field name="select_tariff_ids" nolabel="1" widget="many2many" domain="[('id', 'in', allow_tariff_ids)]"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Imprimir" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ek_import_print_liquidation_wizard" model="ir.actions.act_window">
+        <field name="name">Imprimir Reporte Consolidado</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.import.print.liquidation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ek_import_print_liquidation_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <template id="report_consolidate_params_by_tariff">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="element">
+                <t t-set="doc" t-value="element.order_id"/>
+                <t t-set="original_doc" t-value="element"/>
+                <t t-set="include_cif" t-value="element.include_cif"/>
+                <t t-call="ek_purchase_import_liquidation.report_consolidate_by_tariff_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_consolidate_params" model="report.paperformat">
+        <field name="name">Formato de Consolidado por partidas</field>
+        <field name="default" eval="True"/>
+        <field name="format">A3</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">32</field>
+        <field name="margin_left">3</field>
+        <field name="margin_right">3</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="action_report_consolidate_params_by_tariff" model="ir.actions.report">
+        <field name="name">Consolidado por partidas</field>
+        <field name="model">ek.import.print.liquidation.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_purchase_import_liquidation.report_consolidate_params_by_tariff</field>
+        <field name="report_file">ek_purchase_import_liquidation.report_consolidate_params_by_tariff</field>
+        <field name="print_report_name">'Consolidado - %s' % (object.order_id.name)</field>
+        <field name="binding_model_id" ref="model_ek_import_print_liquidation_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ek_import_liquidation_company" model="ir.rule">
+            <field name="name">Importaciones multi-company</field>
+            <field name="model_id" ref="model_ek_import_liquidation"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        </record>
+
+        <record model="ir.module.category" id="module_purchase_import_liquidation">
+            <field name="name">Gestión de importaciones</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="group_user_import_orders" model="res.groups">
+            <field name="name">Pedidos de importaciones</field>
+            <field name="implied_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_purchase_import_liquidation"/>
+        </record>
+
+        <record id="group_confirm_import_operator" model="res.groups">
+            <field name="name">Operador de importaciones</field>
+            <field name="implied_ids" eval="[(4, ref('ek_purchase_import_liquidation.group_user_import_orders'))]"/>
+            <field name="category_id" ref="module_purchase_import_liquidation"/>
+        </record>
+
+        <record id="group_admin_purchase_import_liquidation" model="res.groups">
+            <field name="name">Gerente de importaciones</field>
+            <field name="implied_ids" eval="[(4, ref('ek_purchase_import_liquidation.group_confirm_import_operator'))]"/>
+            <field name="category_id" ref="module_purchase_import_liquidation"/>
+        </record>
+    </data>
+</odoo>

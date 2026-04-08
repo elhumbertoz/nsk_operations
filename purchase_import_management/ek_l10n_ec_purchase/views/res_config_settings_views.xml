@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='purchase_setting_container']" position="inside">
+                <setting id="apply_taxes_cost" name="apply_taxes_cost" help="Aplica el valor de los impuestos al costo del producto, generalmente esta practica es usada por empresas que venden con iva 0% pero que sus compras de bienes son castigadas con el iva 12%. Existe una norma del SRI que permite esta figura y el sistema permite su aplicación.">
+                    <field name="apply_taxes_cost"/>
+                </setting>
+                <setting name="procurement_purchase_grouping_settings" id="procurement_purchase_grouping_settings">
+                    <span class="o_form_label">Grouping</span>
+                    <span
+                        class="fa fa-lg fa-object-group"
+                        title="Value to be used if individual category is set to 'System default'"
+                        aria-label="Value set here is default. Specific values are set per category."
+                        role="img"
+                    >
+                    </span>
+                    <div class="text-muted">
+                        Set the default procurement purchase grouping type
+                    </div>
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label
+                                for="procured_purchase_grouping"
+                                class="col-3 col-lg-3 o_light_label"
+                            >
+                                Grouping
+                            </label>
+                            <field
+                                name="procured_purchase_grouping"
+                                class="oe_inline"
+                                required="1"
+                            >
+                            </field>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

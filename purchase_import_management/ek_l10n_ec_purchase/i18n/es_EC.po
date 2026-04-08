@@ -1,0 +1,499 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ek_l10n_ec_purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-28 04:32+0000\n"
+"PO-Revision-Date: 2024-05-27 23:39-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid ""
+"<span class=\"o_form_label\">Grouping</span>\n"
+"                    <span class=\"fa fa-lg fa-object-group\" title=\"Value to be used if individual category is set to 'System default'\" aria-"
+"label=\"Value set here is default. Specific values are set per category.\" role=\"img\">\n"
+"                    </span>"
+msgstr ""
+"<span class='o_form_label'>Agrupación</span>\n"
+" <span class='fa fa-lg fa-object-group' title='Valor que se utilizará si la categoría individual está configurada como 'Predeterminada del sistema'"
+"aria-label='El valor establecido aquí es el predeterminado. Los valores específicos se establecen por categoría'. rol='img'>\n"
+" </span>"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_company__apply_taxes_cost
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_config_settings__apply_taxes_cost
+msgid ""
+"Aplica el valor de los impuestos al costo del producto, generalmente esta practica es usada por empresas \n"
+"que venden con iva 0% pero que sus compras de bienes son castigadas con el iva 12%. \n"
+"Existe una norma del SRI que permite esta figura y el sistema permite su aplicación."
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid ""
+"Aplica el valor de los impuestos al costo del producto, generalmente esta practica es usada por empresas que venden con iva 0% pero que sus "
+"compras de bienes son castigadas con el iva 12%. Existe una norma del SRI que permite esta figura y el sistema permite su aplicación."
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_company__apply_taxes_cost
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_config_settings__apply_taxes_cost
+msgid "Aplicar impuestos al costo"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.purchase_merge_automatic_wizard_form
+msgid "Automatic Merge Wizard"
+msgstr "Asistente de fusión automática"
+
+#. module: ek_l10n_ec_purchase
+#: model:res.groups,name:ek_l10n_ec_purchase.group_invoice_method_oc
+msgid "Cambiar metodo de facturación en ordenes de compra"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__can_review
+msgid "Can Review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.purchase_merge_automatic_wizard_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_product_customerinfo__partner_id
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_product_customerinfo__partner_id
+msgid "Customer of this product"
+msgstr "Cliente de este producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__dst_purchase_id
+msgid "Destination"
+msgstr "Destino"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid "Grouping"
+msgstr "Agrupado"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__has_comment
+msgid "Has Comment"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__hide_reviews
+msgid "Hide Reviews"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_partner__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_users__use_only_supplied_product
+msgid ""
+"If checked, by default you will only be able to select products that can be supplied by this supplier when creating a supplier invoice or "
+"purchase for it. This value can be changed by invoice or purchase."
+msgstr ""
+"Si está marcada, de forma predeterminada solo podrá seleccionar productos que este proveedor puede suministrar al crear una factura o pedido. "
+"Este valor puede modificarse en la factura o en el pedido."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_bank_statement_line__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_move__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_payment__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_purchase_order__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_supplied_product_mixin__use_only_supplied_product
+msgid "If checked, only the products provided by this supplier will be shown."
+msgstr "Si se marca, solo se mostrarán los productos proporcionados por este proveedor."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__invoice_method
+msgid "Invoice Method"
+msgstr "Método de Facturación"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__is_user_id_editable
+msgid "Is User Id Editable"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Modificado por"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__write_date
+msgid "Last Updated on"
+msgstr "Modificado en"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.purchase_merge_automatic_wizard_form
+msgid "Merge Purchase"
+msgstr "Fusionar Compras"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.actions.act_window,name:ek_l10n_ec_purchase.action_purchase_merge
+msgid "Merge Selected Purchase"
+msgstr "Fusionar Compras Seleccionadas"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "Merge purchase order"
+msgstr "Fusionar orden de compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_supplied_product_mixin
+msgid "Mixin for documents that want to restrict products"
+msgstr "Mezclador para documentos que desean restringir productos"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "My Purchases to review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "Necesita mi revisión"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__next_review
+msgid "Next Review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__line
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__line
+msgid "No line grouping"
+msgstr "Sin agrupación de líneas"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__order
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__order
+msgid "No order grouping"
+msgstr "Sin agrupación de pedidos"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_partner__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_users__use_only_supplied_product
+msgid "Order and invoice only supplied products"
+msgstr "Comprar y facturar solo los productos suministrados"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "POs validated and ready to be confirmed"
+msgstr "PO validados y listos para ser confirmados"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_product_category__procured_purchase_grouping
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_company__procured_purchase_grouping
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_config_settings__procured_purchase_grouping
+msgid "Procured Purchase Grouping"
+msgstr "Agrupación de la Compra Abastecida"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_category
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_product
+msgid "Product Variant"
+msgstr "Variantes de producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__product_category
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__product_category
+msgid "Product category grouping"
+msgstr "Agrupación por categoría de producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_merge_automatic_wizard__purchase_ids
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.purchase_merge_automatic_wizard_form
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Orden de compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea pedido de compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__rejected
+msgid "Rejected"
+msgstr "Rechazada"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__rejected_message
+msgid "Rejected Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__reviewer_ids
+msgid "Reviewers"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "Revisiones Validadas"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_product_category__procured_purchase_grouping
+msgid ""
+"Select the behaviour for grouping procured purchases for the the products of this category:\n"
+"* Standard grouping (default): Procurements will generate purchase orders as always, grouping lines and orders when possible.\n"
+"* No line grouping: If there are any open purchase order for the same supplier, it will be reused, but lines won't be merged.\n"
+"* No order grouping: This option will prevent any kind of grouping.\n"
+"* <empty>: If no value is selected, system-wide default will be used.\n"
+"* Product category grouping: This option groups products in the same purchase order that belongs to the same product category."
+msgstr ""
+"Seleccione el comportamiento para agrupar las compras adquiridas para los productos de esta categoría:\n"
+"* Agrupación estándar (por defecto): Las adquisiciones generarán pedidos de compra como siempre, agrupando líneas y pedidos cuando sea "
+"posible.\n"
+"* Sin agrupación de líneas: Si hay algún pedido abierto para el mismo proveedor, se reutilizará, pero las líneas no se agruparán.\n"
+"* Sin agrupación de pedidos: Esta opción impedirá cualquier tipo de agrupación.\n"
+"<vacío>: Si no se selecciona ningún valor, se utilizará el valor por defecto del sistema.\n"
+"* Agrupación por categorías de productos: Esta opción agrupa los productos de un mismo pedido que pertenezcan a la misma categoría de producto."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_company__procured_purchase_grouping
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_config_settings__procured_purchase_grouping
+msgid ""
+"Select the behaviour for grouping procured purchases for the the products of this category:\n"
+"* Standard grouping: Procurements will generate purchase orders as always, grouping lines and orders when possible.\n"
+"* No line grouping: If there are any open purchase order for the same supplier, it will be reused, but lines won't be merged.\n"
+"* No order grouping: This option will prevent any kind of grouping.\n"
+"* <empty>: If no value is selected, system-wide default will be used.\n"
+"* Product category grouping: This option groups products in the same purchase order that belongs to the same product category."
+msgstr ""
+"Seleccione el comportamiento para agrupar las compras adquiridas para los productos de esta categoría:\n"
+"* Agrupación estándar: Las adquisiciones generarán pedidos de compra como siempre, agrupando líneas y pedidos cuando sea posible.\n"
+"* Sin agrupación de líneas: Si hay algún pedido abierto para el mismo proveedor, se reutilizará, pero las líneas no se agruparán.\n"
+"* Sin agrupación de pedidos: Esta opción impedirá cualquier tipo de agrupación.\n"
+"<vacío>: Si no se selecciona ningún valor, se utilizará el valor por defecto del sistema.\n"
+"* Agrupación por categorías de productos: Esta opción agrupa los productos de un mismo pedido que pertenezcan a la misma categoría de producto."
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.purchase_merge_automatic_wizard_form
+msgid "Selected purchase will be merged together."
+msgstr "La compra seleccionada se fusionará."
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid "Set the default procurement purchase grouping type"
+msgstr "Establecer el tipo de agrupación de compras de adquisiciones predeterminada"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__standard
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__standard
+msgid "Standard grouping"
+msgstr "Agrupación estándar"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regla de inventario"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Precio provedor"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "This purchase order lines have been merged {way} : {po_names}"
+msgstr "Estas líneas de orden de compra se han fusionado {way}: {po_names}"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_tier_definition
+msgid "Tier Definition"
+msgstr "Definición de nivel"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__to_validate_message
+msgid "To Validate Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_bank_statement_line__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_move__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_payment__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_supplied_product_mixin__use_only_supplied_product
+msgid "Use only allowed products"
+msgstr "Usar solo los productos permitidos"
+
+#. module: ek_l10n_ec_purchase
+#: model:res.groups,name:ek_l10n_ec_purchase.group_purchase_own_orders
+msgid "Usuario (sus propios pedidos)"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validated
+msgid "Validated"
+msgstr "Validado"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validated_message
+msgid "Validated Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validation_status
+msgid "Validation Status"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__review_ids
+msgid "Validations"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_product_supplierinfo__partner_id
+msgid "Vendor"
+msgstr "Vendedor"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders that aren't in draft state like: {}"
+msgstr "No puede fusionar órdenes de compra que no estén en estado de borrador como: {}"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different currencies: %s"
+msgstr "No puedes fusionar órdenes de compra con diferentes monedas: %s"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different fiscal positions: %s"
+msgstr "No se pueden fusionar órdenes de compra con diferentes posiciones fiscales: %s"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different incoterms: %s"
+msgstr "No se pueden fusionar órdenes de compra con diferentes incoterms: %s"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__force_invoiced
+msgid "Force Invoiced"
+msgstr "Forzar estado a Cerrado"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_purchase_order__force_invoiced
+msgid ""
+"When you set this field, the purchase order will be considered as fully "
+"billed, even when there may be ordered or delivered quantities pending to "
+"bill. To use this field, the order must be in 'Locked' state"
+msgstr ""
+"Cuando se marca este campo, el pedido de compra se considera como totalmente "
+"facturado, aunque haya cantidades pedidas o entregadas pendientes de "
+"facturar. Para usar este campo, el pedido debe estar en estado 'Bloqueado'"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different payment terms: %s"
+msgstr "No puedes fusionar órdenes de compra con diferentes condiciones de pago: %s"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different picking types: %s"
+msgstr "No puedes fusionar órdenes de compra con diferentes tipos de selección: %s"
+
+#. module: ek_l10n_ec_purchase
+#. odoo-python
+#: code:addons/ek_l10n_ec_purchase/wizard/purchase_merge.py:0
+#, python-format
+msgid "You can't merge purchase orders with different suppliers: %s"
+msgstr "No puedes fusionar órdenes de compra con diferentes proveedores: %s"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_purchase_merge_automatic_wizard
+msgid "purchase.merge.automatic.wizard"
+msgstr "asistente.de.fusión.automática.de.compras"

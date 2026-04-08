@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_import_root"
+              name="Importaciones"
+              parent="purchase.menu_purchase_root"
+              sequence="3"
+              groups="ek_purchase_import_liquidation.group_user_import_orders"
+    />
+    <menuitem id="menu_liquidation_in_config"
+              name="Importaciones"
+              parent="purchase.menu_purchase_config"
+              sequence="30"
+              groups="ek_purchase_import_liquidation.group_admin_purchase_import_liquidation"
+    />
+</odoo>

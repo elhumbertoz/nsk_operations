@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_ek_asigned_purchase_order_wizard" model="ir.ui.view">
+            <field name="name">ek.suggest.add.purchase.order.line.wizard.form</field>
+            <field name="model">ek.suggest.add.purchase.order.line.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Pedidos de Compra">
+                    <group colspan="4" name="info_group">
+                        <div class="alert alert-info mb-0" role="alert" name="info_div" colspan="2">
+                            <ul colspan="4" name="info_ul">
+                                <li invisible="type != 'add'" name="info_li01">
+                                    Si selecciona la acción <b>Asignar a orden existente</b> solo podrá escoger las órdenes en borrador del proveedor que seleccione.
+                                </li>
+                                <li invisible="type != 'multi'"  name="info_li02">
+                                    Si selecciona la acción <b>Generar ordenes masivas</b> se creará una orden por cada proveedor que se encuentren en las líneas de sugerido
+                                </li>
+                                <li invisible="type != 'multi'"  name="info_li03">
+                                    Si selecciona la acción <b>Generar ordenes masivas</b> y la línea no contiene un proveedor asociado no será tomada en cuenta
+                                </li>
+                                <li invisible="type != 'one'"  name="info_li04">
+                                    Si selecciona la acción <b>Generar orden de compra</b> se creará una única orden para el proveedor seleccionado
+                                </li>
+                                <li  name="info_li04">
+                                    Solo se asignarán las líneas donde el sugerido sea mayor a cero.
+                                </li>
+                                <li  name="info_li05">
+                                    Si marca la opción <b>Eliminar lines del sugerido</b> se eliminarán todas las líneas que agreguen a una orden de compra
+                                </li>
+                            </ul>
+                        </div>
+                    </group>
+                    <group>
+                         <group name="action_group">
+                            <field name="type" required="1"/>
+                            <field name="delete_suggest_line"/>
+                        </group>
+                        <group name="data_group">
+                            <field name="partner_id" 
+                                invisible="type=='multi'"
+                                required="type!='multi'"
+                             />
+                            <field name="order_id" 
+                                invisible="type!='add'"
+                                required="type =='add'"
+                                domain="[('state','=','draft'),('partner_id','=',partner_id)]"/>
+                            <field name="date_order" 
+                                invisible="order_id != False"
+                                required="order_id == False"/>
+                            <field name="kit_id" invisible="1"/>
+                        </group>
+
+                    </group>
+                    <footer>
+                        <button name="action_add_purchase" string="Crear y Ver Orden de Compra" type="object" class="oe_highlight"
+                                confirm="Esta seguro que la información está correcta." data-hotkey="w"  context="{'open_purchase': True}"/>
+                        <button name="action_add_purchase" string="Crear Orden de Compra" type="object"
+                        confirm="Esta seguro que la información está correcta."  data-hotkey="q" />
+                        <button string="Cancelar" class="oe_link" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_asigned_purchase_order_wizard" model="ir.actions.act_window">
+            <field name="name">Asignar a Pedido de Compra</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ek.suggest.add.purchase.order.line.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ek_asigned_purchase_order_wizard"/>
+            <field name="target">new</field>
+            <!-- TODO: check if we need this -->
+            <field name="binding_model_id" ref="base_suggested_purchase.model_ek_suggested_purchase" />
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

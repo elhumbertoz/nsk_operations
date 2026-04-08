@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_category_utility_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="utility_percent" groups="ek_purchase_import_liquidation.group_confirm_import_operator"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_cif_fob_product_template_form" model="ir.ui.view">
+        <field name="name">fob.cif.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[1]" position="inside">
+                <page string="Importaciones" name="import_page"
+                      invisible="type != 'product'"
+                      groups="ek_purchase_import_liquidation.group_confirm_import_operator">
+                    <group>
+                        <group string="Configuración" name="config_cost">
+                            <field name="tariff_heading_id"/>
+                        </group>
+                        <group string="Costos" name="import_cost">
+                            <field name="amount_fob" string="Valor FOB"/>
+                            <field name="amount_cif" string="Valor CIF"/>
+                            <field name="last_cost" string="Último costo"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tariff_heading_product_form" model="ir.ui.view">
+        <field name="name">tariff_heading.product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tariff_heading_id']" position="after">
+                <field name="ref_import"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tariff_heading_product_tree" model="ir.ui.view">
+        <field name="name">tariff_heading.product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="tariff_heading_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_form_view_import_transit_button">
+        <field name="name">ek.product.for.sale.import.transit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_import_transit"
+                        type="object" icon="fa-ship" invisible="not sale_ok and not qty_in_ordered">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="qty_in_ordered" digits="[42,2]" help="Cantidad pedida/cantidad en tránsito"/>/
+                            <field name="qty_in_transit" digits="[42,2]"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Pedido/Tránsito
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_form_view_import_transit_button">
+        <field name="name">ek.product.template.for.sale.import.transit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_import_transit"
+                        type="object" icon="fa-ship" invisible="not sale_ok and not qty_in_ordered">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="qty_in_ordered" digits="[42,2]" help="Cantidad pedida/cantidad en tránsito"/>/
+                            <field name="qty_in_transit" digits="[42,2]"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Pedido/Tránsito
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

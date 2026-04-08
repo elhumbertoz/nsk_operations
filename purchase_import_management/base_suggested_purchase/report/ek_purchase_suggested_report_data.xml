@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+    
+    
+    <record id="action_ek_purchase_suggested_report" model="ir.actions.client">
+            <field name="name">Purchase Suggested</field>
+            <field name="tag">suggested_reports</field>
+            <field name="context" eval="{'model': 'account.general.suggested'}" />
+    </record>
+
+
+
+	
+	<menuitem id="menu_action_ek_purchase_suggested_report_id" name="Compra sugerida"
+        action="action_ek_purchase_suggested_report"
+	    parent="account_reports.account_reports_partners_reports_menu" />
+        
+
+
+
+    </data>
+</odoo>

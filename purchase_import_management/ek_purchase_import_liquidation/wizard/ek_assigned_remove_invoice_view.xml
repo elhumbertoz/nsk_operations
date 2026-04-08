@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_assigned_remove_invoice_wizard" model="ir.ui.view">
+        <field name="name">ek.assigned.remove.invoice.wizard</field>
+        <field name="model">ek.assigned.remove.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Generar facturas">
+                <group>
+                    <!--attrs="{'invisible':[('type','=','del')],'required':[('type','!=','del')]}"-->
+                    <field name="invoice_id" domain="[('state','=','draft')]"
+                           invisible="type == 'del'" required="state == 'draft'"/>
+                    <field name="type" invisible="1"/>
+                </group>
+                <!--attrs="{'invisible':[('type','=','del')]}"-->
+                <group colspan="4" invisible="type == 'del'">
+                    <!--attrs="{'invisible':[('type','=','del')]}"-->
+                    <div colspan="4" invisible="type == 'del'">
+                        <h3 class="oe_grey">Notas</h3>
+                    </div>
+                    <!--attrs="{'invisible':[('type','=','del')]}"-->
+                    <ul class="oe_grey" colspan="4" invisible="type == 'del'">
+                        <li>
+                            Los ítems solo se agregarán a la factura seleccionada si la orden de compra de la que provienen tiene el mismo proveedor
+                            que la factura seleccionada.
+                        </li>
+                        <li>
+                            Solo serán añadidos aquellos items que no se encuentren dentro de factura alguna.
+                        </li>
+                    </ul>
+                </group>
+                <!--attrs="{'invisible':[('type','=','add')]}"-->
+                <group colspan="4" invisible="type == 'add'">
+                    <!--attrs="{'invisible':[('type','=','add')]}"-->
+                    <div colspan="4" invisible="type == 'add'">
+                        <h3 class="oe_grey">Notas</h3>
+                    </div>
+                    <!--attrs="{'invisible':[('type','=','add')]}"-->
+                    <ul class="oe_grey" colspan="4" invisible="type == 'add'">
+                        <li>
+                            Solo se eliminarán los ítems que se encuentren dentro de una factura.
+                        </li>
+                    </ul>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"
+                            confirm="¿Está seguro de que la información está correcta?"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_assigned_remove_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Eliminar de Factura</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.assigned.remove.invoice</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ek_assigned_remove_invoice_wizard"/>
+        <field name="target">new</field>
+        <!-- TODO: check if we need this -->
+        <field name="binding_model_id" ref="ek_purchase_import_liquidation.model_ek_import_liquidation_line"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+         <record id="suggest_history_master_multicompany_rule" model="ir.rule">
+            <field name="name">Maestro Histórico de Ventas Multi-Company</field>
+            <field ref="model_ek_suggested_purchase_history_master" name="model_id"/>
+            <field name="domain_force">['|', '|', ('product_id', '=', False),('product_id.company_id', '=', False), ('product_id.company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

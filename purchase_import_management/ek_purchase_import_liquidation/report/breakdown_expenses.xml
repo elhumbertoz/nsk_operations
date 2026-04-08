@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="breakdown_expenses_view_tree" model="ir.ui.view">
+            <field name="name">breakdown.expenses.view.tree</field>
+            <field name="model">ek.import.liquidation.breakdown.expenses</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0" delete="0">
+                   <field name="order_id" readonly="1"/>
+                   <field name="terms_id" readonly="1"/>
+                    <field name="code" readonly="1"/>
+                    <field name="amount" sum="Total de Gastos" readonly="1"/>
+                    <field name="type" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="breakdown_expenses_view_pivot" model="ir.ui.view">
+            <field name="name">breakdown.expenses.view.pivot</field>
+            <field name="model">ek.import.liquidation.breakdown.expenses</field>
+            <field name="arch" type="xml">
+                <pivot string="Pivot">
+                    <field name="order_id" type="row"/>
+                    <field name="terms_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_breakdown_expenses_view">
+            <field name="name">Valores de Importación</field>
+            <field name="res_model">ek.import.liquidation.breakdown.expenses</field>
+            <field name="view_mode">pivot,tree</field>
+            <field name="view_id" ref="breakdown_expenses_view_pivot"/>
+            <field name="help" type="html">
+                <p>
+                    Valores de importación Precio CIF,Ajuste de Valores y Otros.
+                </p>
+            </field>
+        </record>
+
+         <menuitem id="menu_finance_categ_import" name="Importaciones" parent="account.menu_finance_reports" sequence="25"/>
+         <menuitem id="menu_action_breakdown_expenses_view" parent="menu_finance_categ_import" action="action_breakdown_expenses_view" sequence="100"/>
+
+    </data>
+</odoo>
