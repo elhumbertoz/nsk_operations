@@ -102,6 +102,13 @@ class EkOperationRequest(models.Model):
     help='Total number of lines in packages and goods table',
   )
 
+  total_packages_count = fields.Integer(
+    string='Total Packages',
+    compute='_compute_packages_goods_totals',
+    store=True,
+    help='Total number of packages/bultos',
+  )
+
   # ============================================================
   # CAMPOS NUEVOS REQ-008: Régimen 70 - Contenedores
   # ============================================================
@@ -309,6 +316,7 @@ class EkOperationRequest(models.Model):
     'ek_produc_packages_goods_ids.gross_weight',
     'ek_produc_packages_goods_ids.fob',
     'ek_produc_packages_goods_ids.total_fob',
+    'ek_produc_packages_goods_ids.packages_count',
   )
   def _compute_packages_goods_totals(self):
     for record in self:
@@ -318,6 +326,15 @@ class EkOperationRequest(models.Model):
       record.total_fob = sum(packages_goods.mapped('fob'))
       record.total_total_fob = sum(packages_goods.mapped('total_fob'))
       record.total_lines = len(packages_goods)
+
+      # Suma segura de bultos (campo Char)
+      total_p = 0
+      for pg in packages_goods:
+        try:
+          total_p += int(float(pg.packages_count or 0))
+        except (ValueError, TypeError):
+          pass
+      record.total_packages_count = total_p
 
   @api.depends(
     'ek_produc_packages_goods_ids.ship_id',
@@ -339,7 +356,10 @@ class EkOperationRequest(models.Model):
 
       for line in record.ek_produc_packages_goods_ids:
         ship_name = line.ship_id.name if line.ship_id else "Stock General"
-        packages = line.packages_count or 0
+        try:
+          packages = int(float(line.packages_count or 0))
+        except (ValueError, TypeError):
+          packages = 0
 
         if ship_name not in summary:
           summary[ship_name] = {'packages': 0, 'products': 0}

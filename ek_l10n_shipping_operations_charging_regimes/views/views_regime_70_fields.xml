@@ -213,6 +213,7 @@
                     </group>
 
                     <group string="Resumen de Bultos por Buque" invisible="not total_packages_by_vessel">
+                        <field name="total_packages_count" readonly="1"/>
                         <field name="total_packages_by_vessel"
                                widget="text"
                                readonly="1"

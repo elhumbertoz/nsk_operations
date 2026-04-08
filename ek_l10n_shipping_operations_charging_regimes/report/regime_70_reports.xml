@@ -71,7 +71,7 @@
                                 <tr>
                                     <th colspan="2" class="text-right">TOTALES:</th>
                                     <th class="text-right"><span t-field="o.total_quantity"/></th>
-                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th class="text-right"><span t-field="o.total_packages_count"/></th>
                                     <th class="text-right"><span t-field="o.total_gross_weight"/></th>
                                     <th class="text-right"><span t-field="o.total_total_fob"/></th>
                                     <th></th>
@@ -168,7 +168,7 @@
                                 <tr>
                                     <th colspan="2" class="text-right">TOTALES:</th>
                                     <th class="text-right"><span t-field="o.total_quantity"/></th>
-                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th class="text-right"><span t-field="o.total_packages_count"/></th>
                                     <th></th>
                                     <th class="text-right"><span t-field="o.total_total_fob"/></th>
                                     <th colspan="2"></th>
@@ -272,7 +272,7 @@
                                 <tr>
                                     <th class="text-right">TOTALES:</th>
                                     <th class="text-right"><span t-field="o.total_quantity"/></th>
-                                    <th class="text-right"><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/></th>
+                                    <th class="text-right"><span t-field="o.total_packages_count"/></th>
                                     <th class="text-right"><span t-field="o.total_gross_weight"/></th>
                                     <th class="text-right"><span t-field="o.total_total_fob"/></th>
                                     <th colspan="2"></th>
@@ -294,7 +294,7 @@
                             </div>
                             <div class="col-6">
                                 <p><strong>Cantidad Total de Bultos:</strong></p>
-                                <h4><span t-esc="sum(o.ek_produc_packages_goods_ids.mapped('packages_count'))"/> bultos</h4>
+                                <h4><span t-field="o.total_packages_count"/> bultos</h4>
                             </div>
                         </div>
 
