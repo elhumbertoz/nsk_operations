@@ -66,6 +66,47 @@ class EkOperationRequest(models.Model):
   movement_date = fields.Datetime(string='Movement Date')
   max_regime_date = fields.Datetime(string='Max Regime Date')
 
+  # ============================================================
+  # CAMPOS NUEVOS: DAE, Días en Depósito, Póliza
+  # ============================================================
+  dae_regularized = fields.Boolean(
+    string='DAE Regularizada',
+    default=False,
+    tracking=True,
+    help='Indica si la DAE de exportación fue regularizada'
+  )
+
+  days_in_deposit = fields.Integer(
+    string='Días en Depósito',
+    compute='_compute_days_in_deposit',
+    store=True,
+    help='Días transcurridos entre la fecha de ingreso y devolución del contenedor'
+  )
+
+  insurance_contract_date = fields.Date(
+    string='Fecha Contrato Póliza',
+    tracking=True
+  )
+
+  insurance_renewal_from = fields.Date(
+    string='Renovación Desde',
+    tracking=True
+  )
+
+  insurance_renewal_to = fields.Date(
+    string='Renovación Hasta',
+    tracking=True
+  )
+
+  @api.depends('transfer_date', 'container_return_date')
+  def _compute_days_in_deposit(self):
+    for rec in self:
+      if rec.transfer_date and rec.container_return_date:
+        delta = rec.container_return_date - rec.transfer_date.date()
+        rec.days_in_deposit = delta.days
+      else:
+        rec.days_in_deposit = 0
+
   # Campos computados para totales de paquetes y mercancías
   total_quantity = fields.Float(
     string='Total Quantity',
