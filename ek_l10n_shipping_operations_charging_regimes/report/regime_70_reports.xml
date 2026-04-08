@@ -18,87 +18,135 @@
 
     <template id="report_regime_70_deposit_cargo">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <div class="text-center">
-                            <h2>REPORTE DE CARGAS EN DEPÓSITO TEMPORAL</h2>
-                            <h4>Régimen 70 - Almacén Temporal</h4>
-                        </div>
-
-                        <div class="row mt32 mb32">
-                            <div class="col-6">
-                                <strong>Solicitud:</strong> <span t-field="o.name"/><br/>
-                                <strong>Contenedor:</strong> <span t-field="o.number_container"/><br/>
-                                <strong>ID CONTENEDOR:</strong> <span t-field="o.id_bl"/><br/>
-                                <strong>Depósito:</strong> <span t-field="o.deposit_description"/><br/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Fecha Ingreso:</strong> <span t-field="o.transfer_date"/><br/>
-                                <strong>Fecha Devolución:</strong> <span t-field="o.container_return_date"/><br/>
-                                <strong>Autorización:</strong> <span t-field="o.authorization_number"/><br/>
-                                <strong>Cliente:</strong> <span t-field="o.client_partner_id.name"/><br/>
-                            </div>
-                        </div>
-
-                        <h4>Detalle de Mercancía</h4>
-                        <table class="table table-sm table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Subpartida</th>
-                                    <th>Descripción</th>
-                                    <th class="text-center">Cant.</th>
-                                    <th class="text-center">Bultos</th>
-                                    <th class="text-center">Peso (kg)</th>
-                                    <th class="text-center">FOB USD</th>
-                                    <th>Buque Destino</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="line">
-                                    <tr>
-                                        <td class="text-center"><span t-field="line.tariff_item"/></td>
-                                        <td><span t-field="line.name"/></td>
-                                        <td class="text-right"><span t-field="line.quantity"/></td>
-                                        <td class="text-right"><span t-field="line.packages_count"/></td>
-                                        <td class="text-right"><span t-field="line.gross_weight"/></td>
-                                        <td class="text-right"><span t-field="line.total_fob"/></td>
-                                        <td><span t-field="line.ship_id.name"/></td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="2" class="text-right">TOTALES:</th>
-                                    <th class="text-right"><span t-field="o.total_quantity"/></th>
-                                    <th class="text-right"><span t-field="o.total_packages_count"/></th>
-                                    <th class="text-right"><span t-field="o.total_gross_weight"/></th>
-                                    <th class="text-right"><span t-field="o.total_total_fob"/></th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <div class="row mt32">
-                            <div class="col-12">
-                                <h5>Resumen por Buque</h5>
-                                <pre t-field="o.total_packages_by_vessel"/>
-                            </div>
-                        </div>
-
-                        <div class="row mt32">
-                            <div class="col-6">
-                                <strong>Observaciones:</strong><br/>
-                                <span t-field="o.description_name"/>
-                            </div>
-                        </div>
-
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="text-center mb16">
+                        <h3>RÉGIMEN 70 - NAVIERA SANTA KATALINA - <t t-esc="docs[0].transfer_date.year if docs and docs[0].transfer_date else ''"/></h3>
+                        <h5>Reporte de Cargas Ingresadas a Depósito / Exportaciones</h5>
                     </div>
-                </t>
+
+                    <table class="table table-sm table-bordered" style="font-size: 10px;">
+                        <thead style="background-color: #1f4e79; color: white;">
+                            <tr>
+                                <th rowspan="2" class="text-center">SOLICITUD PREVIA</th>
+                                <th rowspan="2" class="text-center">NAVIEP</th>
+                                <th rowspan="2" class="text-center"># CONTENEDOR</th>
+                                <th rowspan="2" class="text-center">DETALLE</th>
+                                <th rowspan="2" class="text-center">TIPO CARGA</th>
+                                <th colspan="3" class="text-center" style="background-color: #2e75b6;">IMPORTACIÓN</th>
+                                <th rowspan="2" class="text-center">BUQUE</th>
+                                <th colspan="5" class="text-center" style="background-color: #2e75b6;">EXPORTACIÓN</th>
+                                <th rowspan="2" class="text-center">ESTADO</th>
+                                <th rowspan="2" class="text-center">FACT. ALMACENERA</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">BL-AWB INGRESO</th>
+                                <th class="text-center">DAI-IMPORT</th>
+                                <th class="text-center"># MATRÍCULA</th>
+                                <th class="text-center">FECHA INGRESO DEPÓSITO</th>
+                                <th class="text-center">DAE-EXP</th>
+                                <th class="text-center">FECHA SALIDA DEPÓSITO</th>
+                                <th class="text-center">BL EXPORTACIÓN</th>
+                                <th class="text-center">DAE REGULARIZADA</th>
+                                <th class="text-center">DÍAS EN DEPÓSITO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr>
+                                    <td class="text-center"><span t-field="o.authorization_number"/></td>
+                                    <td class="text-center"><span t-field="o.shipping_lines.name"/></td>
+                                    <td class="text-center"><span t-field="o.number_container"/></td>
+                                    <td><span t-field="o.detail_supplies_spare_parts"/></td>
+                                    <td class="text-center"><span t-field="o.type_move_fcl_lcl"/></td>
+                                    <td class="text-center"><span t-field="o.number_bl"/></td>
+                                    <td class="text-center"><span t-field="o.number_dai"/></td>
+                                    <td class="text-center"><span t-field="o.deposit_description"/></td>
+                                    <td class="text-center"><span t-field="o.transfer_date" t-options='{"widget": "date"}'/></td>
+                                    <td class="text-center"><span t-field="o.ek_ship_registration_id.name"/></td>
+                                    <td class="text-center"><span t-field="o.number_dae"/></td>
+                                    <td class="text-center"><span t-field="o.container_return_date"/></td>
+                                    <td class="text-center"><span t-field="o.bl_import_export_id.name"/></td>
+                                    <td class="text-center">
+                                        <t t-if="o.dae_regularized">SÍ</t>
+                                        <t t-else="">NO</t>
+                                    </td>
+                                    <td class="text-center"><span t-field="o.days_in_deposit"/></td>
+                                    <td class="text-center"><span t-field="o.stage_id.name"/></td>
+                                    <td class="text-center"><span t-field="o.number_invoice"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
             </t>
         </t>
     </template>
 
+
+    <!-- REPORTE RÉGIMEN 60: Salidas -->
+    <record id="action_report_regime_60_exits" model="ir.actions.report">
+        <field name="name">Régimen 60 - Salidas</field>
+        <field name="model">ek.operation.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_regime_60_exits</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_regime_60_exits</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_regime_60_exits">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="text-center mb16">
+                        <h3>RÉGIMEN 60 - NAVIERA SANTA KATALINA</h3>
+                        <h5>Reporte de Salidas</h5>
+                    </div>
+
+                    <table class="table table-sm table-bordered" style="font-size: 10px;">
+                        <thead style="background-color: #375623; color: white;">
+                            <tr>
+                                <th class="text-center">FECHA SOLICITUD</th>
+                                <th class="text-center">FECHA MOVIMIENTO</th>
+                                <th class="text-center">BUQUE</th>
+                                <th class="text-center">CONTENEDOR</th>
+                                <th class="text-center">BL RELACIONADO</th>
+                                <th class="text-center">SUBPARTIDA</th>
+                                <th class="text-center">DESCRIPCIÓN</th>
+                                <th class="text-center">FECHA MAX RÉGIMEN</th>
+                                <th class="text-center">CANTIDAD</th>
+                                <th class="text-center">FOB UNITARIO</th>
+                                <th class="text-center">TOTAL FOB</th>
+                                <th class="text-center">DAE</th>
+                                <th class="text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <t t-foreach="o.ek_table_regimen_60_ids" t-as="line">
+                                    <tr>
+                                        <td class="text-center"><span t-field="o.create_date" t-options='{"widget": "date"}'/></td>
+                                        <td class="text-center"><span t-field="o.movement_date" t-options='{"widget": "date"}'/></td>
+                                        <td class="text-center"><span t-field="o.ek_ship_registration_id.name"/></td>
+                                        <td class="text-center"><span t-field="o.journey_crew_id.name"/></td>
+                                        <td class="text-center"><span t-field="o.id_bl_70.name"/></td>
+                                        <td class="text-center"><span t-field="line.tariff_item"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-center"><span t-field="o.max_regime_date" t-options='{"widget": "date"}'/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/></td>
+                                        <td class="text-right"><span t-field="line.fob"/></td>
+                                        <td class="text-right"><span t-field="line.total_fob"/></td>
+                                        <td class="text-center"><span t-field="o.number_dae"/></td>
+                                        <td class="text-center"><span t-field="o.stage_id.name"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
 
     <!-- REQ-023: Reporte de Exportaciones Vinculadas -->
     <record id="action_report_regime_70_linked_exports" model="ir.actions.report">
@@ -212,103 +260,65 @@
 
     <template id="report_regime_70_insurance_applications">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <div class="text-center">
-                            <h2>APLICACIÓN DE PÓLIZA DE TRANSPORTE</h2>
-                            <h4>Régimen 70 - Traslado a Depósito Temporal</h4>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Cabecera póliza (usa datos del primer registro) -->
+                    <t t-set="first" t-value="docs[0] if docs else None"/>
+                    <div class="row mb16" t-if="first">
+                        <div class="col-6">
+                            <h4>DETALLE DE APLICACIONES - <t t-esc="first.insurance_company_id.name or 'ZURICH'"/></h4>
+                            <strong>PÓLIZA MADRE:</strong> <span t-field="first.warranty_number"/><br/>
+                            <strong>FECHA DE CONTRATO:</strong> <span t-field="first.insurance_contract_date"/><br/>
                         </div>
-
-                        <div class="row mt32 mb32">
-                            <div class="col-6">
-                                <strong>Solicitud:</strong> <span t-field="o.name"/><br/>
-                                <strong>Contenedor:</strong> <span t-field="o.number_container"/><br/>
-                                <strong>Autorización:</strong> <span t-field="o.authorization_number"/><br/>
-                                <strong>Depósito:</strong> <span t-field="o.deposit_description"/><br/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Fecha Traslado:</strong> <span t-field="o.transfer_date"/><br/>
-                                <strong>Línea Naviera:</strong> <span t-field="o.shipping_line_id.name"/><br/>
-                                <strong>Cliente:</strong> <span t-field="o.client_partner_id.name"/><br/>
-                                <strong>Valor Declarado:</strong> USD <span t-field="o.total_total_fob"/><br/>
-                            </div>
+                        <div class="col-6 text-right">
+                            <strong>RENOVACIÓN DESDE:</strong> <span t-field="first.insurance_renewal_from"/><br/>
+                            <strong>HASTA:</strong> <span t-field="first.insurance_renewal_to"/><br/>
                         </div>
-
-                        <h4>Información del Traslado</h4>
-                        <div class="row">
-                            <div class="col-12">
-                                <pre t-field="o.transfer_explanation"/>
-                            </div>
-                        </div>
-
-                        <h4 class="mt32">Detalle de Carga Asegurada</h4>
-                        <table class="table table-sm table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Descripción</th>
-                                    <th class="text-center">Cantidad</th>
-                                    <th class="text-center">Bultos</th>
-                                    <th class="text-center">Peso (kg)</th>
-                                    <th class="text-center">Valor FOB USD</th>
-                                    <th>Factura</th>
-                                    <th>Proveedor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="o.ek_produc_packages_goods_ids" t-as="line">
-                                    <tr>
-                                        <td><span t-field="line.name"/></td>
-                                        <td class="text-right"><span t-field="line.quantity"/></td>
-                                        <td class="text-right"><span t-field="line.packages_count"/></td>
-                                        <td class="text-right"><span t-field="line.gross_weight"/></td>
-                                        <td class="text-right"><span t-field="line.total_fob"/></td>
-                                        <td><span t-field="line.invoice_number"/></td>
-                                        <td><span t-field="line.supplier"/></td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th class="text-right">TOTALES:</th>
-                                    <th class="text-right"><span t-field="o.total_quantity"/></th>
-                                    <th class="text-right"><span t-field="o.total_packages_count"/></th>
-                                    <th class="text-right"><span t-field="o.total_gross_weight"/></th>
-                                    <th class="text-right"><span t-field="o.total_total_fob"/></th>
-                                    <th colspan="2"></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <div class="row mt32">
-                            <div class="col-12">
-                                <h5>Suministros a Transportar</h5>
-                                <p><span t-field="o.supplies_detail"/></p>
-                            </div>
-                        </div>
-
-                        <div class="row mt32">
-                            <div class="col-6">
-                                <p><strong>Valor Total Asegurado:</strong></p>
-                                <h4>USD <span t-field="o.total_total_fob"/></h4>
-                            </div>
-                            <div class="col-6">
-                                <p><strong>Cantidad Total de Bultos:</strong></p>
-                                <h4><span t-field="o.total_packages_count"/> bultos</h4>
-                            </div>
-                        </div>
-
-                        <div class="row mt32">
-                            <div class="col-12">
-                                <p class="text-muted" style="font-size: 10px;">
-                                    * Este documento sirve como base para la aplicación de la póliza de transporte
-                                    correspondiente al traslado de mercancía bajo Régimen 70 (Almacén Temporal).
-                                </p>
-                            </div>
-                        </div>
-
                     </div>
-                </t>
+
+                    <table class="table table-sm table-bordered" style="font-size: 9px;">
+                        <thead style="background-color: #1f4e79; color: white;">
+                            <tr>
+                                <th class="text-center">FECHA</th>
+                                <th class="text-center">NSK</th>
+                                <th class="text-center">TIPO TRANSPORTE</th>
+                                <th class="text-center">PROCEDENCIA</th>
+                                <th class="text-center">DESTINO</th>
+                                <th class="text-center">Pto. EMBARQUE</th>
+                                <th class="text-center">Pto. DESEMBARQUE</th>
+                                <th class="text-center">VALOR PÓLIZA</th>
+                                <th class="text-center">FECHA EMBARQUE</th>
+                                <th class="text-center">CONTENEDOR</th>
+                                <th class="text-center">BUQUE</th>
+                                <th class="text-center">BL CERTIFICADO</th>
+                                <th class="text-center">PRIMA</th>
+                                <th class="text-center">FACTURA</th>
+                                <th class="text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr>
+                                    <td class="text-center"><span t-field="o.transfer_date" t-options='{"widget": "date"}'/></td>
+                                    <td class="text-center"><span t-field="o.company_id.name"/></td>
+                                    <td class="text-center"><span t-field="o.type_move_fcl_lcl"/></td>
+                                    <td class="text-center"><span t-field="o.ek_res_world_seaport_id_origin.name"/></td>
+                                    <td class="text-center"><span t-field="o.ek_res_world_seaport_id_destination.name"/></td>
+                                    <td class="text-center"><span t-field="o.ek_res_world_seaport_id_origin.name"/></td>
+                                    <td class="text-center"><span t-field="o.ek_res_world_seaport_id_destination.name"/></td>
+                                    <td class="text-right"><span t-field="o.insurance_amount"/></td>
+                                    <td class="text-center"><span t-field="o.on_board_date"/></td>
+                                    <td class="text-center"><span t-field="o.number_container"/></td>
+                                    <td class="text-center"><span t-field="o.ek_ship_registration_id.name"/></td>
+                                    <td class="text-center"><span t-field="o.number_bl"/></td>
+                                    <td class="text-right"><span t-field="o.insurance_prime"/></td>
+                                    <td class="text-center"><span t-field="o.sale_order_id.name"/></td>
+                                    <td class="text-center"><span t-field="o.stage_id.name"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
             </t>
         </t>
     </template>

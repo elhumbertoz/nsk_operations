@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_wizard_regime70_report_form" model="ir.ui.view">
+        <field name="name">ek.wizard.regime70.report.form</field>
+        <field name="model">ek.wizard.regime70.report</field>
+        <field name="arch" type="xml">
+            <form string="Generar Reporte">
+                <group>
+                    <field name="report_type" invisible="1"/>
+                    <group string="Filtros">
+                        <field name="ship_id" options="{'no_create': True}"/>
+                        <field name="container_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="stage_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_report"
+                            string="Generar Reporte"
+                            type="object"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Cancelar" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Régimen 70 -->
+    <record id="action_ek_wizard_regime70" model="ir.actions.act_window">
+        <field name="name">Reporte Régimen 70 - Cargas en Depósito</field>
+        <field name="res_model">ek.wizard.regime70.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'regime_70'}</field>
+    </record>
+
+    <!-- Régimen 60 -->
+    <record id="action_ek_wizard_regime60" model="ir.actions.act_window">
+        <field name="name">Reporte Régimen 60 - Salidas</field>
+        <field name="res_model">ek.wizard.regime70.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'regime_60'}</field>
+    </record>
+
+    <!-- Pólizas -->
+    <record id="action_ek_wizard_insurance" model="ir.actions.act_window">
+        <field name="name">Reporte Pólizas de Transporte</field>
+        <field name="res_model">ek.wizard.regime70.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'insurance'}</field>
+    </record>
+
+    <menuitem id="menu_ek_wizard_regime70"
+        parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+        action="action_ek_wizard_regime70"
+        name="Reporte Régimen 70"
+        sequence="20"/>
+
+    <menuitem id="menu_ek_wizard_regime60"
+        parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+        action="action_ek_wizard_regime60"
+        name="Reporte Régimen 60"
+        sequence="21"/>
+
+    <menuitem id="menu_ek_wizard_insurance"
+        parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+        action="action_ek_wizard_insurance"
+        name="Reporte Pólizas"
+        sequence="22"/>
+</odoo>

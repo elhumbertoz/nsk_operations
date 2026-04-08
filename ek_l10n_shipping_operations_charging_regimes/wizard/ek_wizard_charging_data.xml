@@ -5,20 +5,24 @@
         <field name="name">ek.wizard.charging.data.tree</field>
         <field name="model">ek.wizard.charging.data</field>
         <field name="arch" type="xml">
-            <tree   >
-                <field name="date_request"/>
-                <field name="movement_date"/>
-                <field name="regimen"/>
-                <field name="ship_registration_id"/>
+            <tree string="Kardex Régimen 70 / 60"
+                  decoration-info="regimen == '70'"
+                  decoration-warning="regimen == '60'">
                 <field name="boats_information_id"/>
+                <field name="movement_date" widget="date"/>
+                <field name="regimen"/>
                 <field name="related_document"/>
                 <field name="tariff_item"/>
                 <field name="product_description"/>
-                <field name="max_regime_date"/>
-                <field name="unds"/>
-                <field name="unit_cost"/>
-                <field name="total_cost"  />
-                <field name="customs_document"/>
+                <field name="max_regime_date" widget="date" optional="hide"/>
+                <field name="unds_in" sum="Total Entradas"/>
+                <field name="unds_out" sum="Total Salidas"/>
+                <field name="balance"/>
+                <field name="unit_cost" optional="show"/>
+                <field name="total_cost" sum="Total FOB" optional="show"/>
+                <field name="customs_document" optional="show"/>
+                <field name="ship_registration_id" optional="hide"/>
+                <field name="date_request" widget="date" optional="hide"/>
             </tree>
         </field>
     </record>

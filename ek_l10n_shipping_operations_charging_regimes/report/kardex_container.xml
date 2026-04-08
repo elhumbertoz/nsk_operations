@@ -121,4 +121,140 @@
             </t>
         </t>
     </template>
+
+    <!-- ═══ KARDEX 70/60 - Reporte sobre ek.wizard.charging.data ═══ -->
+    <record id="action_report_kardex_70_60" model="ir.actions.report">
+        <field name="name">Kardex Régimen 70 / 60</field>
+        <field name="model">ek.wizard.charging.data</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ek_l10n_shipping_operations_charging_regimes.report_template_kardex_70_60</field>
+        <field name="report_file">ek_l10n_shipping_operations_charging_regimes.report_template_kardex_70_60</field>
+        <field name="paperformat_id" ref="ek_l10n_shipping_operations_charging_regimes.paperformat_kardex_shipping"/>
+    </record>
+
+    <template id="report_template_kardex_70_60">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <h4 class="text-center" style="margin-bottom:12px;">
+                        <strong>KARDEX RÉGIMEN 70 / 60</strong>
+                    </h4>
+
+                    <table class="table table-sm" style="font-size:8px; width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background-color:#1F4E79; color:white; text-align:center;">
+                                <th style="border:1px solid #ccc; padding:3px;">Fecha Mov.</th>
+                                <th style="border:1px solid #ccc; padding:3px;">Rég.</th>
+                                <th style="border:1px solid #ccc; padding:3px;">BL</th>
+                                <th style="border:1px solid #ccc; padding:3px;">Subpartida</th>
+                                <th style="border:1px solid #ccc; padding:3px;">Descripción</th>
+                                <th style="border:1px solid #ccc; padding:3px;">F.Max Rég.</th>
+                                <th style="border:1px solid #ccc; padding:3px; text-align:right;">Entrada</th>
+                                <th style="border:1px solid #ccc; padding:3px; text-align:right;">Salida</th>
+                                <th style="border:1px solid #ccc; padding:3px; text-align:right;">Saldo</th>
+                                <th style="border:1px solid #ccc; padding:3px; text-align:right;">FOB Unit.</th>
+                                <th style="border:1px solid #ccc; padding:3px; text-align:right;">Total FOB</th>
+                                <th style="border:1px solid #ccc; padding:3px;">Doc. Aduana</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_in" t-value="0"/>
+                            <t t-set="total_out" t-value="0"/>
+                            <t t-set="total_fob" t-value="0"/>
+                            <t t-set="current_container" t-value="0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <t t-if="line.boats_information_id.id != current_container">
+                                    <tr style="background-color:#404040; color:white; font-weight:bold;">
+                                        <td colspan="12" style="padding:4px;">
+                                            <span>CONTENEDOR: </span>
+                                            <t t-out="line.boats_information_id.name or 'Sin contenedor'"/>
+                                            <t t-if="line.ship_registration_id">
+                                                <span>   |   BUQUE: </span>
+                                                <t t-out="line.ship_registration_id.name or ''"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <t t-set="current_container" t-value="line.boats_information_id.id"/>
+                                </t>
+
+                                <t t-set="row_color" t-value="'#FCE4D6' if line.regimen == '60' else '#DEEAF1'"/>
+                                <tr t-attf-style="background-color:#{row_color};">
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:center;">
+                                        <t t-if="line.movement_date">
+                                            <span t-field="line.movement_date" t-options='{"widget": "date"}'/>
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:center; font-weight:bold;">
+                                        <t t-out="line.regimen or ''"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px;">
+                                        <t t-out="line.related_document.name or ''"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px;">
+                                        <t t-out="line.tariff_item or ''"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px;">
+                                        <t t-out="line.product_description.name or ''"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:center;">
+                                        <t t-if="line.max_regime_date">
+                                            <span t-field="line.max_regime_date" t-options='{"widget": "date"}'/>
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:right;">
+                                        <t t-if="line.unds_in">
+                                            <t t-out="'%.2f' % line.unds_in"/>
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:right;">
+                                        <t t-if="line.unds_out">
+                                            <t t-out="'%.2f' % line.unds_out"/>
+                                        </t>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:right; font-weight:bold;">
+                                        <t t-out="'%.2f' % (line.balance or 0)"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:right;">
+                                        <t t-out="'%.2f' % (line.unit_cost or 0)"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px; text-align:right;">
+                                        <t t-out="'%.2f' % (line.total_cost or 0)"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:2px;">
+                                        <t t-out="line.customs_document or ''"/>
+                                    </td>
+                                </tr>
+                                <t t-set="total_in" t-value="total_in + (line.unds_in or 0)"/>
+                                <t t-set="total_out" t-value="total_out + (line.unds_out or 0)"/>
+                                <t t-set="total_fob" t-value="total_fob + (line.total_cost or 0)"/>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background-color:#1F4E79; color:white; font-weight:bold;">
+                                <td colspan="6" style="border:1px solid #ccc; padding:3px; text-align:right;">TOTALES GENERALES</td>
+                                <td style="border:1px solid #ccc; padding:3px; text-align:right;">
+                                    <t t-out="'%.2f' % total_in"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:3px; text-align:right;">
+                                    <t t-out="'%.2f' % total_out"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:3px;"/>
+                                <td style="border:1px solid #ccc; padding:3px;"/>
+                                <td style="border:1px solid #ccc; padding:3px; text-align:right;">
+                                    <t t-out="'%.2f' % total_fob"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:3px;"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div style="margin-top:10px; font-size:8px;">
+                        <span style="background-color:#DEEAF1; padding:2px 6px; margin-right:8px;">Régimen 70 (Entradas)</span>
+                        <span style="background-color:#FCE4D6; padding:2px 6px;">Régimen 60 (Salidas)</span>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
 </odoo>

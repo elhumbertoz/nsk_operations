@@ -146,6 +146,8 @@
                             <field name="seal_number"/>
                             <field name="authorization_number"/>
                             <field name="deposit_description" placeholder="MA-00"/>
+                            <field name="dae_regularized"/>
+                            <field name="days_in_deposit" readonly="1"/>
                         </group>
                         <group>
                             <field name="shipping_line_id"/>
@@ -154,6 +156,16 @@
                             <field name="type_move_fcl_lcl"/>
                             <field name="supplies_detail"/>
 
+                        </group>
+                    </group>
+
+                    <group string="Póliza de Transporte">
+                        <group>
+                            <field name="insurance_contract_date"/>
+                        </group>
+                        <group>
+                            <field name="insurance_renewal_from"/>
+                            <field name="insurance_renewal_to"/>
                         </group>
                     </group>
 

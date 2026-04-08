@@ -5,6 +5,7 @@ access_id_bl_70,id_bl_70_manager,model_id_bl_70,,1,1,1,1
 
 ek_wizard_charging_data,ek_wizard_charging_data,model_ek_wizard_charging_data,,1,1,1,1
 ek_wizard_filter_regimen,ek_wizard_filter_regimen,model_ek_wizard_filter_regimen,,1,1,1,1
+access_ek_wizard_regime70_report,ek.wizard.regime70.report,model_ek_wizard_regime70_report,base.group_user,1,1,1,1
 
 bl_import_export,bl_import_export,model_bl_import_export,,1,1,1,1
 

@@ -18,6 +18,7 @@
     'security/ir.model.access.csv',
     'security/security.xml',
     # 3. Wizards (cargar ANTES de las vistas que los referencian)
+    'wizard/ek_wizard_regime70_report.xml',
     'wizard/ek_wizard_filter_regimen.xml',
     'wizard/ek_wizard_charging_data.xml',
 
