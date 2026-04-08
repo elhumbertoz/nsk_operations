@@ -1,0 +1,347 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ek_l10n_ec_purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e-20231128\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-25 07:18+0000\n"
+"PO-Revision-Date: 2024-03-25 07:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid ""
+"<span class=\"o_form_label\">Grouping</span>\n"
+"                    <span class=\"fa fa-lg fa-object-group\" title=\"Value to be used if individual category is set to 'System default'\" aria-label=\"Value set here is default. Specific values are set per category.\" role=\"img\">\n"
+"                    </span>"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_company__apply_taxes_cost
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_config_settings__apply_taxes_cost
+msgid ""
+"Aplica el valor de los impuestos al costo del producto, generalmente esta practica es usada por empresas \n"
+"que venden con iva 0% pero que sus compras de bienes son castigadas con el iva 12%. \n"
+"Existe una norma del SRI que permite esta figura y el sistema permite su aplicación."
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid ""
+"Aplica el valor de los impuestos al costo del producto, generalmente esta "
+"practica es usada por empresas que venden con iva 0% pero que sus compras de"
+" bienes son castigadas con el iva 12%. Existe una norma del SRI que permite "
+"esta figura y el sistema permite su aplicación."
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_company__apply_taxes_cost
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_config_settings__apply_taxes_cost
+msgid "Aplicar impuestos al costo"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:res.groups,name:ek_l10n_ec_purchase.group_invoice_method_oc
+msgid "Cambiar metodo de facturación en ordenes de compra"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__can_review
+msgid "Can Review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid "Grouping"
+msgstr "Agrupado"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__has_comment
+msgid "Has Comment"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__hide_reviews
+msgid "Hide Reviews"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_partner__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_users__use_only_supplied_product
+msgid ""
+"If checked, by default you will only be able to select products that can be "
+"supplied by this supplier when creating a supplier invoice or purchase for "
+"it. This value can be changed by invoice or purchase."
+msgstr ""
+"Si está marcada, de forma predeterminada solo podrá seleccionar productos "
+"que este proveedor puede suministrar al crear una factura o pedido. Este "
+"valor puede modificarse en la factura o en el pedido."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_bank_statement_line__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_move__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_account_payment__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_purchase_order__use_only_supplied_product
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_supplied_product_mixin__use_only_supplied_product
+msgid "If checked, only the products provided by this supplier will be shown."
+msgstr ""
+"Si se marca, solo se mostrarán los productos proporcionados por este "
+"proveedor."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__invoice_method
+msgid "Invoice Method"
+msgstr "Método de Facturación"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__is_user_id_editable
+msgid "Is User Id Editable"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_supplied_product_mixin
+msgid "Mixin for documents that want to restrict products"
+msgstr "Mezclador para documentos que desean restringir productos"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "My Purchases to review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "Necesita mi revisión"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__need_validation
+msgid "Need Validation"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__next_review
+msgid "Next Review"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__line
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__line
+msgid "No line grouping"
+msgstr "Sin agrupación de líneas"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__order
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__order
+msgid "No order grouping"
+msgstr "Sin agrupación de pedidos"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_partner__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_users__use_only_supplied_product
+msgid "Order and invoice only supplied products"
+msgstr "Comprar y facturar solo los productos suministrados"
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "POs validated and ready to be confirmed"
+msgstr "PO validados y listos para ser confirmados"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_product_category__procured_purchase_grouping
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_company__procured_purchase_grouping
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_res_config_settings__procured_purchase_grouping
+msgid "Procured Purchase Grouping"
+msgstr "Agrupación de la Compra Abastecida"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_category
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_product
+msgid "Product Variant"
+msgstr "Variante del producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__product_category
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__product_category
+msgid "Product category grouping"
+msgstr "Agrupación por categoría de producto"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Orden de compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea de la orden de compra"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__rejected
+msgid "Rejected"
+msgstr "Rechazada"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__rejected_message
+msgid "Rejected Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__reviewer_ids
+msgid "Reviewers"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.view_purchase_order_filter
+msgid "Revisiones Validadas"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_product_category__procured_purchase_grouping
+msgid ""
+"Select the behaviour for grouping procured purchases for the the products of this category:\n"
+"* Standard grouping (default): Procurements will generate purchase orders as always, grouping lines and orders when possible.\n"
+"* No line grouping: If there are any open purchase order for the same supplier, it will be reused, but lines won't be merged.\n"
+"* No order grouping: This option will prevent any kind of grouping.\n"
+"* <empty>: If no value is selected, system-wide default will be used.\n"
+"* Product category grouping: This option groups products in the same purchase order that belongs to the same product category."
+msgstr ""
+"Seleccione el comportamiento para agrupar las compras adquiridas para los productos de esta categoría:\n"
+"* Agrupación estándar (por defecto): Las adquisiciones generarán pedidos de compra como siempre, agrupando líneas y pedidos cuando sea posible.\n"
+"* Sin agrupación de líneas: Si hay algún pedido abierto para el mismo proveedor, se reutilizará, pero las líneas no se agruparán.\n"
+"* Sin agrupación de pedidos: Esta opción impedirá cualquier tipo de agrupación.\n"
+"<vacío>: Si no se selecciona ningún valor, se utilizará el valor por defecto del sistema.\n"
+"* Agrupación por categorías de productos: Esta opción agrupa los productos de un mismo pedido que pertenezcan a la misma categoría de producto."
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_company__procured_purchase_grouping
+#: model:ir.model.fields,help:ek_l10n_ec_purchase.field_res_config_settings__procured_purchase_grouping
+msgid ""
+"Select the behaviour for grouping procured purchases for the the products of this category:\n"
+"* Standard grouping: Procurements will generate purchase orders as always, grouping lines and orders when possible.\n"
+"* No line grouping: If there are any open purchase order for the same supplier, it will be reused, but lines won't be merged.\n"
+"* No order grouping: This option will prevent any kind of grouping.\n"
+"* <empty>: If no value is selected, system-wide default will be used.\n"
+"* Product category grouping: This option groups products in the same purchase order that belongs to the same product category."
+msgstr ""
+"Seleccione el comportamiento para agrupar las compras adquiridas para los productos de esta categoría:\n"
+"* Agrupación estándar: Las adquisiciones generarán pedidos de compra como siempre, agrupando líneas y pedidos cuando sea posible.\n"
+"* Sin agrupación de líneas: Si hay algún pedido abierto para el mismo proveedor, se reutilizará, pero las líneas no se agruparán.\n"
+"* Sin agrupación de pedidos: Esta opción impedirá cualquier tipo de agrupación.\n"
+"<vacío>: Si no se selecciona ningún valor, se utilizará el valor por defecto del sistema.\n"
+"* Agrupación por categorías de productos: Esta opción agrupa los productos de un mismo pedido que pertenezcan a la misma categoría de producto."
+
+#. module: ek_l10n_ec_purchase
+#: model_terms:ir.ui.view,arch_db:ek_l10n_ec_purchase.res_config_settings_view_form_purchase
+msgid "Set the default procurement purchase grouping type"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_category__procured_purchase_grouping__standard
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__res_company__procured_purchase_grouping__standard
+msgid "Standard grouping"
+msgstr "Agrupación estándar"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regla de inventario"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Tarifa de proveedor"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model,name:ek_l10n_ec_purchase.model_tier_definition
+msgid "Tier Definition"
+msgstr "Definición de nivel"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__to_validate_message
+msgid "To Validate Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_bank_statement_line__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_move__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_account_payment__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__use_only_supplied_product
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_supplied_product_mixin__use_only_supplied_product
+msgid "Use only allowed products"
+msgstr "Usar solo los productos permitidos"
+
+#. module: ek_l10n_ec_purchase
+#: model:res.groups,name:ek_l10n_ec_purchase.group_purchase_own_orders
+msgid "Usuario (sus propios pedidos)"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validated
+msgid "Validated"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validated_message
+msgid "Validated Message"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__validation_status
+msgid "Validation Status"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_purchase_order__review_ids
+msgid "Validations"
+msgstr ""
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields,field_description:ek_l10n_ec_purchase.field_product_supplierinfo__partner_id
+msgid "Vendor"
+msgstr "Vendedor"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__purchase_order__invoice_method__purchase
+msgid "On ordered quantities"
+msgstr "Sobre cantidades pedidas"
+
+#. module: ek_l10n_ec_purchase
+#: model:ir.model.fields.selection,name:ek_l10n_ec_purchase.selection__product_template__purchase_method__receive
+msgid "On received quantities"
+msgstr "Sobre cantidades recibidas"

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ek_suggested_purchase_history_master,ek.suggested.purchase.history.master,model_ek_suggested_purchase_history_master,purchase.group_purchase_user,1,1,1,1

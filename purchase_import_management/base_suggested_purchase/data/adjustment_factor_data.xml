@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="adjustment_AAA" model="ek.purchase.adjustment.factor">
+          <field name="name">AAA</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.35],["qty_stock","&gt;",0],["sample_months","&gt;=",9],["check_sales","=","equal"]]</field>
+        </record>
+
+        <record id="adjustment_AAB" model="ek.purchase.adjustment.factor">
+          <field name="name">AAB</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.25],["qty_stock","=",0],["sample_months","&gt;=",9],["check_sales","=","equal"]]</field>
+        </record>
+
+        <record id="adjustment_ABA" model="ek.purchase.adjustment.factor">
+          <field name="name">ABA</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.20],["qty_stock","&gt;",0],["sample_months","&gt;=",9],["check_sales","=","equal"]]</field>
+        </record>
+
+        <record id="adjustment_ABB" model="ek.purchase.adjustment.factor">
+          <field name="name">ABB</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.15],["turnover",">=",0.35],["qty_stock","=",0],["sample_months","&gt;=",9],["check_sales","=","equal"]]</field>
+        </record>
+
+        <record id="adjustment_ACA" model="ek.purchase.adjustment.factor">
+          <field name="name">ACA</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.10],["qty_stock","&gt;",0],["sample_months","&gt;=",9],["sample_months","&lt;=",12],["check_sales","=","higher"]]</field>
+        </record>
+
+        <record id="adjustment_ACB" model="ek.purchase.adjustment.factor">
+          <field name="name">ACB</field>
+          <field name="factor">1</field>
+          <field name="filter">["&amp;","&amp;","&amp;",["turnover","&gt;=",0.08],["qty_stock","=",0],["sample_months","&gt;=",9],["sample_months","&lt;=",12],["check_sales","=","higher"]]</field>
+        </record>
+
+        <record id="adjustment_BAA" model="ek.purchase.adjustment.factor">
+          <field name="name">BAA</field>
+          <field name="factor">0.65</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_BAB" model="ek.purchase.adjustment.factor">
+          <field name="name">BAB</field>
+          <field name="factor">0.70</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_BBA" model="ek.purchase.adjustment.factor">
+          <field name="name">BBA</field>
+          <field name="factor">0.60</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_BBB" model="ek.purchase.adjustment.factor">
+          <field name="name">BBB</field>
+          <field name="factor">0.65</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_BCA" model="ek.purchase.adjustment.factor">
+          <field name="name">BCA</field>
+          <field name="factor">0.50</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_BCB" model="ek.purchase.adjustment.factor">
+          <field name="name">BCB</field>
+          <field name="factor">0.55</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_CAA" model="ek.purchase.adjustment.factor">
+          <field name="name">CAA</field>
+          <field name="factor">0.40</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+         <record id="adjustment_CAB" model="ek.purchase.adjustment.factor">
+          <field name="name">CAB</field>
+          <field name="factor">0.45</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+         <record id="adjustment_CBA" model="ek.purchase.adjustment.factor">
+          <field name="name">CBA</field>
+          <field name="factor">0.30</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+        <record id="adjustment_CBB" model="ek.purchase.adjustment.factor">
+          <field name="name">CBB</field>
+          <field name="factor">0.35</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+         <record id="adjustment_CCA" model="ek.purchase.adjustment.factor">
+          <field name="name">CCA</field>
+          <field name="factor">0.20</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+         <record id="adjustment_CCB" model="ek.purchase.adjustment.factor">
+          <field name="name">CCB</field>
+          <field name="factor">0.25</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+         <record id="adjustment_Nuevo_A3" model="ek.purchase.adjustment.factor">
+          <field name="name">Nuevo A3</field>
+          <field name="factor">1</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+        <record id="adjustment_Nuevo_A2" model="ek.purchase.adjustment.factor">
+          <field name="name">Nuevo A2</field>
+          <field name="factor">0.75</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+        <record id="adjustment_Nuevo_A1" model="ek.purchase.adjustment.factor">
+          <field name="name">Nuevo A1</field>
+          <field name="factor">0.50</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+        <record id="adjustment_Nuevo_AB" model="ek.purchase.adjustment.factor">
+          <field name="name">Nuevo B</field>
+          <field name="factor">0.40</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="adjustment_Nuevo_X" model="ek.purchase.adjustment.factor">
+          <field name="name">Nuevo X</field>
+          <field name="factor">1</field>
+          <field name="filter">[['qty_stock', '&gt;', 0]]</field>
+        </record>
+
+        <record id="seq_suggested_purchase" model="ir.sequence">
+            <field name="name">Sugerido de compras</field>
+            <field name="code">ek.suggested.purchase</field>
+            <field name="padding" eval="5" />
+            <field name="prefix">PUSG</field>
+        </record>
+    </data>
+</odoo>

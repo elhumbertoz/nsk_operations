@@ -1,0 +1,1032 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_suggested_purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e-20220628\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-16 08:31+0000\n"
+"PO-Revision-Date: 2023-03-16 08:31+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid "(días desde el último movimiento)"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__round_type__half-up
+msgid "A LA MITAD"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__type
+msgid "Acción"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Agregar a pedido de compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_suggest_add_purchase_order_line_wizard
+msgid "Agregar linea de sugerido a pedido de compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Agrupar por..."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__warehouse_ids
+msgid "Almacenes"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__arrival_date
+msgid "Arrival Date"
+msgstr "Fecha de llegada"
+
+#. module: base_suggested_purchase
+#: model:ir.actions.act_window,name:base_suggested_purchase.action_asigned_purchase_order_wizard
+msgid "Asignar a Pedido de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggest_add_purchase_order_line_wizard__type__add
+msgid "Asignar a orden existente"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__type__sale
+msgid "Basado en Ventas"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Buscar Reporte Sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid "Cancelar"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__quantity
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__quantity
+msgid "Cantidad"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__qty_pending_deliver
+msgid "Cantidad de items por entregar"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__sample_months
+msgid "Cantidad de meses de datos históricos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__qty_stock
+msgid "Cantidad disponible en inventario"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__qty_stock_related
+msgid "Cantidad disponible en inventario relacionado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_product_product__multiplicity
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_product_template__multiplicity
+msgid "Cantidad x Venta"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__categ_ids
+msgid "Categorías"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.ek_suggested_purchase_related_view_form
+msgid "Cerrar"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__check_sales
+msgid "Check Sale"
+msgstr "Comprar Ventas (Mes Actual vs Mes Anterior)"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__method
+msgid "Clasificación de proveedores"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__default_code
+msgid "Code"
+msgstr "Código"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__factor_name
+msgid "Code factor"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__company_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Con Movimientos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Con Stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Con Stock Relacionado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Con sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.ui.menu,name:base_suggested_purchase.suggest_purchase_config
+msgid "Configuraciones"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__cost
+msgid "Cost"
+msgstr "Costo"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Costo Promedio"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__cost_sale_inventory
+msgid "Costo de Venta"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid "Crear Orden de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid "Crear y Ver Orden de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__create_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__create_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Código"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__day_not_stock
+msgid "Day not stock"
+msgstr "Día sin stock"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__line_ids
+msgid "Detalle"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__days
+msgid "Dias"
+msgstr "Días"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__day_transit
+msgid "Dias de Transito"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__day_with_last_date
+msgid "Dias de movimiento"
+msgstr "Días de movimiento"
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_days_out_of_stock
+msgid "Dias sin stock"
+msgstr "Día sin stock"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__display_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__display_name
+msgid "Display Name"
+msgstr "Nombre"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__precision_digits
+msgid "Dígitos de Precisión"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__round_type__up
+msgid "EXCESO"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Eliminar"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Eliminar Grupo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__delete_suggest_line
+msgid "Eliminar lineas del sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "En transito"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggested_purchase__check_sales__equal
+msgid "Equal"
+msgstr "Igual"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid "Esta seguro que la información está correcta."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__f_x
+msgid "F(x) Value"
+msgstr "Valor F(x)"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__f_y
+msgid "F(y) Value"
+msgstr "Valor F(y)"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "FOB"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__factor
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__factor
+msgid "Factor"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__date
+msgid "Fecha de Corte"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__date_order
+msgid "Fecha de Pedido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__date_order
+msgid "Fecha límite de pedido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__filter
+msgid "Filter"
+msgstr "Filtro"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Filtros"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_account_general_suggested
+msgid "General suggested Report"
+msgstr "Informe general sugerido de compra"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid "Generar Sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.actions.act_window,name:base_suggested_purchase.action_generate_suggest_wizard
+#: model:ir.ui.menu,name:base_suggested_purchase.menu_action_asigned_purchase_order_wizardn
+msgid "Generar Sugerido de Compras"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_generate_purchase_suggest_wizard
+msgid "Generar Sugerido de compras"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggest_add_purchase_order_line_wizard__type__one
+msgid "Generar orden de compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggest_add_purchase_order_line_wizard__type__multi
+msgid "Generar ordenes masivas"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggested_purchase__check_sales__higher
+msgid "Higher"
+msgstr "Mas alto"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__id
+msgid "ID"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.ui.menu,name:base_suggested_purchase.suggest_purchase_report
+msgid "Informes"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Inversión Total"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__investment
+msgid "Investment"
+msgstr "Inversión"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__kit_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__kit_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__name
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Kit"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_suggested_purchase_kit
+msgid "Kit de Sugerido de Compras Base"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"La <b>Fecha de Corte</b> indica desde cuando se obtendrán los datos de "
+"ventas para el cálculo del sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"La <b>Fecha de pedido</b> indica tentativamente cuando se realizaría el "
+"pedido al proveedor, basado en esta se calcula la fecha de llegada estimada"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"La <b>clasificación de proveedores</b> es usada para identificar o sugerir "
+"el mejor proveedor en caso de que un mismo producto posea más de un "
+"proveedor"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__last_date
+msgid "Last Date"
+msgstr "Última Venta"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales____last_update
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__write_uid
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__write_date
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualización"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__method__cost
+msgid "Menor Costo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__method__time
+msgid "Menor Tiempo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sample_months
+msgid "Meses de Ejemplo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__month_security
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__month_security
+msgid "Meses de Seguridad"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__month_transit
+msgid "Meses de Transito"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__minimum
+msgid "Minimo"
+msgstr "Mínimo"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_suggested_purchase__check_sales__minor
+msgid "Minor"
+msgstr "Menor"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__multiplicity
+#: model:ir.model.fields,help:base_suggested_purchase.field_product_product__multiplicity
+#: model:ir.model.fields,help:base_suggested_purchase.field_product_template__multiplicity
+msgid ""
+"Multiplicada de venta, ejemplo sirve para identificar que este producto se "
+"vende de 2 en 2"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__multiplicity
+msgid "Multiplo de"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__maximum
+msgid "Máximo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__number
+msgid "No"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "No."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__round_type__down
+msgid "POR DEFECTO"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__order_id
+msgid "Pedido de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid "Pedidos de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Pendientes de Entrega"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__weight
+msgid "Peso"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Peso Total"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__total_weight
+msgid "Peso total"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__product_tmpl_id
+msgid "Plantilla"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields.selection,name:base_suggested_purchase.selection__ek_generate_purchase_suggest_wizard__method__balanced
+msgid "Ponderado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__qty_pending_deliver
+msgid "Por Entregar"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__previous_date
+msgid "Primera Venta"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_days_out_of_stock__product_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__product_name
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__product_name
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Producto"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__product_base
+msgid "Producto Base"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__product_with_suggested
+msgid "Productos Sugeridos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__product_with_last_date
+msgid "Productos con movimientos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__product_out_of_stock
+msgid "Productos sin stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__partner_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggest_add_purchase_order_line_wizard__partner_id
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Proveedor"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__only_partner
+msgid "Proveedor Estricto"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.actions.act_window,help:base_suggested_purchase.action_ek_purchase_adjustment_factor_act_id
+#: model_terms:ir.actions.act_window,help:base_suggested_purchase.action_ek_purchase_suggested_report_act_id
+msgid "Pulse aquí para añadir un nuevo documento"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.actions.act_window,name:base_suggested_purchase.action_ek_purchase_adjustment_factor_act_id
+#: model:ir.model,name:base_suggested_purchase.model_ek_purchase_adjustment_factor
+#: model:ir.ui.menu,name:base_suggested_purchase.menu_action_ek_purchase_adjustment_factor_act_id_tree
+msgid "Purchase Adjustment Factor"
+msgstr "Factor de ajuste de compra"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__purchase_local
+msgid "Purchase local"
+msgstr "Compra local"
+
+#. module: base_suggested_purchase
+#: model:ir.actions.act_window,name:base_suggested_purchase.action_ek_purchase_suggested_report_act_id
+#: model:ir.ui.menu,name:base_suggested_purchase.menu_action_ek_purchase_suggested_report_act_id_tree
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_adjustment_factor_tree
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_tree
+msgid "Reporte Sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__based_in_liquidation
+msgid ""
+"Revisa los pedidos en transito que sean solamente importaciones y obtiene "
+"los valores pendientes."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__turnover
+msgid "Rotación"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_esp
+msgid "Sales ESP"
+msgstr "Ventas ESP"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_month
+msgid "Sales Month"
+msgstr "Ventas Mes"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_year_old
+msgid "Sales year Old"
+msgstr "Ventas año pasado"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_year_old_month
+msgid "Sales year Old Month"
+msgstr "Ventas mes año pasado"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_purchase_adjustment_factor__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid ""
+"Si marca la opción <b>Eliminar lines del sugerido</b> se eliminarán todas "
+"las líneas que agreguen a una orden de compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si marca la opción <b>Productos Sugeridos</b> se mostrarán solo los "
+"productos que el sugerido calculado sea mayor a cero"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si marca la opción <b>Productos con movimientos</b> se mostrarán todos los "
+"productos que han tenido movimientos en la cantidad de dias especificada"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si marca la opción <b>Productos sin stock</b> se mostrarán solo los "
+"productos que se encuentren si stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si marca la opción <b>Todos los productos</b> se mostrarán todos los "
+"productos existentes"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid ""
+"Si selecciona la acción <b>Asignar a orden existente</b> solo podrá escoger "
+"las órdenes en borrador del proveedor que seleccione."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid ""
+"Si selecciona la acción <b>Generar orden de compra</b> se creará una única "
+"orden para el proveedor seleccionado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid ""
+"Si selecciona la acción <b>Generar ordenes masivas</b> se creará una orden "
+"por cada proveedor que se encuentren en las líneas de sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid ""
+"Si selecciona la acción <b>Generar ordenes masivas</b> y la línea no "
+"contiene un proveedor asociado no será tomada en cuenta"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si selecciona un proveedor en específico solo se calculara el sugerido para "
+"los productos donde se encuentre detallo el proveedor indicado."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid ""
+"Si selecciona una categoría de producto solo se mostraran aquellos productos"
+" que pertenezcan a la misma"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Sin Movimientos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Sin Stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Sin sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Sin transito"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_suggested_report_filter
+msgid "Sobre Stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__over_stock
+msgid "Sobre-Stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_asigned_purchase_order_wizard
+msgid "Solo se asignarán las líneas donde el sugerido sea mayor a cero."
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__only_partner
+msgid ""
+"Solo se mostraran los productos que tengan seleccionada en la variante el "
+"proveedor seleccionado y/o cualquiera de sus contactos relacionados"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__qty_stock
+msgid "Stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.actions.act_window,name:base_suggested_purchase.ek_suggested_purchase_related_action
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__qty_stock_related
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__related_stock_ids
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.ek_suggested_purchase_related_view_form
+msgid "Stock Relacionado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__required_qty_stock
+msgid "Stock Requerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_suggested_purchase_related_stock
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.ek_suggested_purchase_related_view_form
+msgid "Stock de productos relacionados"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__required_qty_stock
+msgid "Stock requerido hasta el próximo pedido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_product_product__allow_suggested
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_product_template__allow_suggested
+msgid "Sugerencia de Compras?"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_sales__suggested_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_related_stock__suggested_id
+msgid "Sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_generate_purchase_suggest_wizard
+msgid "Sugerido de Compra"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.ui.menu,name:base_suggested_purchase.suggest_purchase_root
+msgid "Sugerido de Compras"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_suggested_purchase
+msgid "Sugerido de Compras Base"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__qty_suggested
+msgid "Suggested"
+msgstr "Sugerido"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__partner_id
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase_kit__partner_id
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__round_type
+msgid "Tipo de Redondeo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__type
+msgid "Tipo de Sugerido"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__all_product
+msgid "Todos los productos"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.ek_suggested_purchase_related_view_form
+msgid "Total Relacionado"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__sale_avg_month
+msgid "Total de ventas promedios por mes"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__transit
+msgid "Transito"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_generate_purchase_suggest_wizard__based_in_liquidation
+msgid "Transito basado en Importaciones"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__last_cost
+msgid "Ultimo Costo"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__product_uom_id
+msgid "Uom"
+msgstr "Unidad"
+
+#. module: base_suggested_purchase
+#: model_terms:ir.actions.act_window,help:base_suggested_purchase.action_ek_purchase_adjustment_factor_act_id
+#: model_terms:ir.actions.act_window,help:base_suggested_purchase.action_ek_purchase_suggested_report_act_id
+msgid "Use esta opción para reporte"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__related_sales_ids
+msgid "Venta relacionadas"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_ytd
+msgid "Ventas Anuales"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_1_month
+msgid "Ventas Mes Anterior"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sale_avg_month
+msgid "Ventas Prom. Mes"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__projected_sales
+msgid "Ventas Proyectadas"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,field_description:base_suggested_purchase.field_ek_suggested_purchase__sales_related
+msgid "Ventas Relacionadas"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__sales_related
+msgid "Ventas de productos de la misma plantilla"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model,name:base_suggested_purchase.model_ek_suggested_purchase_related_sales
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.ek_suggested_purchase_related_view_form
+msgid "Ventas de productos relacionados"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.model.fields,help:base_suggested_purchase.field_ek_suggested_purchase__sales_ytd
+msgid "Ventas del ultimo año calendario"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model:ir.actions.server,name:base_suggested_purchase.cron_days_out_of_stock_suggested_purchase_ir_actions_server
+#: model:ir.cron,cron_name:base_suggested_purchase.cron_days_out_of_stock_suggested_purchase
+#: model:ir.cron,name:base_suggested_purchase.cron_days_out_of_stock_suggested_purchase
+msgid "[Sugerido de compra] - Cálculo de dias sin stock"
+msgstr ""
+
+#. module: base_suggested_purchase
+#: model_terms:ir.ui.view,arch_db:base_suggested_purchase.view_ek_purchase_adjustment_factor_form
+msgid "purchase_adjustment_factor"
+msgstr ""

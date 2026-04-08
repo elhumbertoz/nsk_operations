@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+         <record id="suggest_multicompany_rule" model="ir.rule">
+            <field name="name">Sugerido de Comrpas Multi-Company</field>
+            <field ref="model_ek_suggested_purchase" name="model_id"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

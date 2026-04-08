@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+         <record id="action_account_report_payable_transit_ifrs" model="ir.actions.client">
+            <field name="name">Cuentas por Pagar + Transito</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'ek.account.aged.payable.transit'}" />
+        </record>
+
+
+        <menuitem id="menu_account_report_payable_transit_ifrs" name="Cuentas por Pagar + Transito" action="action_account_report_payable_transit_ifrs" parent="account_reports.account_reports_partners_reports_menu"/>
+
+
+    </data>
+</odoo>

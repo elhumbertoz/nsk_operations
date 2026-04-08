@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="suggested_purchases_history_master_view_search" model="ir.ui.view">
+           <field name="name">suggested_purchases_history_master_view_search</field>
+           <field name="model">ek.suggested.purchase.history.master</field>
+            <field name="arch" type="xml">
+                <search string="">
+                  <field name="product_id"/>
+                    <group expand="0" string="Agrupar por..." colspan="4" col="10">
+                        <filter string="Producto" name="terp-product_id" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Año" name="terp-sales_year" domain="[]" context="{'group_by':'sales_year'}"/>
+                      </group>
+                </search>
+           </field>
+        </record>
+
+        <record id="suggested_purchases_history_master_view_tree" model="ir.ui.view">
+            <field name="name">suggested_purchases_history_master_view_tree</field>
+            <field name="model">ek.suggested.purchase.history.master</field>
+            <field name="arch" type="xml">
+                <tree string="suggested_purchases_history_master_tree" editable="bottom">
+                    <field name="sales_year"/>
+                    <field name="product_id"/>
+                    <field name="sale_1" sum="Total"/>
+                    <field name="sale_2" sum="Total"/>
+                    <field name="sale_3" sum="Total"/>
+                    <field name="sale_4" sum="Total"/>
+                    <field name="sale_5" sum="Total"/>
+                    <field name="sale_6" sum="Total"/>
+                    <field name="sale_7" sum="Total"/>
+                    <field name="sale_8" sum="Total"/>
+                    <field name="sale_9" sum="Total"/>
+                    <field name="sale_10" sum="Total"/>
+                    <field name="sale_11" sum="Total"/>
+                    <field name="sale_12" sum="Total"/>
+                    <field name="sale_total" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="suggested_purchases_history_master_action" model="ir.actions.act_window">
+            <field name="name">Suggested Purchase History Master</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ek.suggested.purchase.history.master</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+
+        <menuitem id="suggested_purchases_history_master_menu" parent="base_suggested_purchase.suggest_purchase_config" action="suggested_purchases_history_master_action" sequence="1"/>
+
+        <record id="res_config_settings_view_form_inherit_suggest" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.suggest</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="100"/>
+            <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='matrix_setting_container']" position="inside">
+                    <setting id="date_init_sales" help="Fecha hasta la que se debe considerar la matriz de maestra de ventas (Matriz Maestra de Ventas (Sugerido))">
+                        <field name="date_init_sales"/>                        
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

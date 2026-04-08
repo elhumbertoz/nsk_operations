@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_ek_purchase_adjustment_factor_form" model="ir.ui.view">
+            <field name="name">view.name.ek.purchase.adjustment.factor.form</field>
+            <field name="model">ek.purchase.adjustment.factor</field>
+            <field name="arch" type="xml">
+                <form string="purchase_adjustment_factor">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="factor"/>
+                                <field name="month_security"/>
+                            </group>
+                        </group>
+                        <group colspan="4">
+                            <field name="filter" widget="domain" options="{'model': 'ek.suggested.purchase'}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ek_purchase_adjustment_factor_tree" model="ir.ui.view">
+            <field name="name">view.name.ek.purchase.adjustment.factor.tree</field>
+            <field name="model">ek.purchase.adjustment.factor</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Reporte Sugerido" sample="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="factor"/>
+                    <field name="month_security"/>
+                    <field name="filter" widget="domain" options="{'model': 'ek.suggested.purchase'}"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+    <record id="action_ek_purchase_adjustment_factor_act_id" model="ir.actions.act_window">
+      <field name="name">Purchase Adjustment Factor</field>
+      <field name="res_model">ek.purchase.adjustment.factor</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[]</field>
+      <field name="view_id" ref="view_ek_purchase_adjustment_factor_tree"/>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Pulse aquí para añadir un nuevo documento
+              </p><p>
+               Use esta opción para reporte
+              </p>
+        </field>
+    </record>
+
+    <menuitem action="action_ek_purchase_adjustment_factor_act_id" sequence="100"
+              id="menu_action_ek_purchase_adjustment_factor_act_id_tree"
+              parent="suggest_purchase_config" />
+    </data>
+</odoo>

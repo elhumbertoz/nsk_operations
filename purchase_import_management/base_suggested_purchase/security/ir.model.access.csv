@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ek_days_out_of_stock,ek.days.out.of.stock,model_ek_days_out_of_stock,purchase.group_purchase_user,1,1,1,1
+access_ek_suggested_purchase,ek.suggested.purchase,model_ek_suggested_purchase,purchase.group_purchase_user,1,1,1,1
+access_ek_suggested_purchase_kit,ek.suggested.purchase.kit,model_ek_suggested_purchase_kit,purchase.group_purchase_user,1,1,1,1
+access_ek_suggest_add_purchase_order_line_wizard,ek.suggest.add.purchase.order.line.wizard,model_ek_suggest_add_purchase_order_line_wizard,purchase.group_purchase_user,1,1,1,1
+access_generate_purchase_suggest_wizard,ek.generate.purchase.suggest.wizard,model_ek_generate_purchase_suggest_wizard,purchase.group_purchase_user,1,1,1,1
+access_ek_purchase_adjustment_factor,ek.purchase.adjustment.factor,model_ek_purchase_adjustment_factor,purchase.group_purchase_user,1,1,1,1
+access_ek_suggested_purchase_related_stock,ek.suggested.purchase.related.stock,model_ek_suggested_purchase_related_stock,purchase.group_purchase_user,1,1,1,1
+access_ek_suggested_purchase_related_sales,ek.suggested.purchase.related.sales,model_ek_suggested_purchase_related_sales,purchase.group_purchase_user,1,1,1,1
+access_ek_suggested_purchase_related_transit,ek.suggested.purchase.related.transit,model_ek_suggested_purchase_related_transit,purchase.group_purchase_user,1,1,1,1

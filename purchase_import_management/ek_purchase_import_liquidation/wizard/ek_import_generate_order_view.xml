@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ek_import_generate_order_wizard" model="ir.ui.view">
+        <field name="name">ek.import.generate.order.wizard</field>
+        <field name="model">ek.import.generate.order</field>
+        <field name="arch" type="xml">
+            <form string="Asignar lineas a liquidación">
+                <group string="Productos a Importar">
+                    <field name="liq_id" domain="[('type', '=', 'liquidation'), ('state', 'in', ['draft', 'calculate'])]"/>
+                    <field name="collection_ids" options="{'no_create': True}" nolabel="1" col="4" colspan="4">
+                        <tree editable="bottom">
+                            <field name="purchase_order_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="line_id" readonly="1"/>
+                            <field name="product_qty" sum="Total de Productos"/>
+                            <field name="weight" sum="Peso Total" optional="hide"/>
+                            <field name="total_weight" sum="Peso Total" optional="hide"/>
+                            <field name="product_qty_import" sum="Total a importar"/>
+                            <field name="total_ctdad_pending_weight" sum="Peso total" optional="hide"/>
+                        </tree>
+                    </field>
+                </group>
+                <group>
+                    <hr/>
+                    <field name="assigned_to_invoice" colspan="4"/>
+                    <!--attrs="{'invisible':[('assigned_to_invoice','=',False)],'required':[('assigned_to_invoice','=',True)]}"-->
+                    <field colspan="4" name="invoice_id" invisible="not assigned_to_invoice" required="assigned_to_invoice"/>
+                    <!--attrs="{'invisible':[('assigned_to_invoice','=',False)]}"-->
+                    <div colspan="4" invisible="not assigned_to_invoice">
+                        <h3 class="oe_grey">Notas</h3>
+                    </div>
+                    <!--attrs="{'invisible':[('assigned_to_invoice','=',False)]}"-->
+                    <ul class="oe_grey" colspan="4" invisible="not assigned_to_invoice">
+                        <li>
+                            Los item solo se agregaran a la factura seleccionada si la orden de compra de la que provienen tiene el mismo proveedor
+                            que la factura seleccionada, los item que no sean añadidos a una factura pueden ser colocados manualmente desde la
+                            liquidación de importación
+                        </li>
+                    </ul>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirmar operación" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ek_import_generate_order_wizard" model="ir.actions.act_window">
+        <field name="name">Asignar a Importación</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.import.generate.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ek_import_generate_order_wizard"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

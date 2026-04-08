@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_category_config" model="ek.tariff.rule.category">
+            <field name="name">CONFIGURACION</field>
+            <field name="code">CONFIG</field>
+        </record>
+
+        <record id="rule_category_tax" model="ek.tariff.rule.category">
+            <field name="name">RUBROS IMPUESTOS</field>
+            <field name="code">IMP</field>
+        </record>
+
+        <record id="rule_category_params" model="ek.tariff.rule.category">
+            <field name="name">PARAMETROS FIJOS</field>
+            <field name="code">PARAM</field>
+        </record>
+
+        <record id="rule_category_total" model="ek.tariff.rule.category">
+            <field name="name">TOTALES</field>
+            <field name="code">TOTAL</field>
+        </record>
+
+        <record id="ek_incoterms_terms_01" model="ek.incoterms.terms">
+            <field name="name">Seguro 1%</field>
+            <field name="code">Seguro 1%</field>
+            <field name="type">insurance</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_02" model="ek.incoterms.terms">
+            <field name="name">Bodegaje</field>
+            <field name="code">Bodegaje</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_03" model="ek.incoterms.terms">
+            <field name="name">Transporte Interno</field>
+            <field name="code">Transporte Interno</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_04" model="ek.incoterms.terms">
+            <field name="name">Gastos en Origen</field>
+            <field name="code">Gastos en Origen</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_05" model="ek.incoterms.terms">
+            <field name="name">ADVALOREM</field>
+            <field name="code">ADVALOREM</field>
+            <field name="type">calculate</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_06" model="ek.incoterms.terms">
+            <field name="name">FODINFA</field>
+            <field name="code">FODINFA</field>
+            <field name="type">calculate</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_07" model="ek.incoterms.terms">
+            <field name="name">DIFERENCIA IMP</field>
+            <field name="code">DIFERENCIA IMP</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_08" model="ek.incoterms.terms">
+            <field name="name">ISD</field>
+            <field name="code">ISD</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_09" model="ek.incoterms.terms">
+            <field name="name">Tramites Aduana</field>
+            <field name="code">Tramites Aduana</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_10" model="ek.incoterms.terms">
+            <field name="name">Descarga / desmontaje</field>
+            <field name="code">Descarga / desmontaje</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_11" model="ek.incoterms.terms">
+            <field name="name">Flete Aduanero</field>
+            <field name="code">Flete Aduanero</field>
+            <field name="type">freight</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_12" model="ek.incoterms.terms">
+            <field name="name">Ajuste Flete Aduanero</field>
+            <field name="code">Ajuste Flete Aduanero</field>
+            <field name="type">freight</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_13" model="ek.incoterms.terms">
+            <field name="name">Otros Gastos Locales</field>
+            <field name="code">Otros Gastos Locales</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_14" model="ek.incoterms.terms">
+            <field name="name">GUIA</field>
+            <field name="code">GUIA</field>
+            <field name="type">expense</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_15" model="ek.incoterms.terms">
+            <field name="name">Inspector</field>
+            <field name="code">Aforador</field>
+            <field name="type">other</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <record id="ek_incoterms_terms_16" model="ek.incoterms.terms">
+            <field name="name">Seguro</field>
+            <field name="code">Seguro</field>
+            <field name="type">insurance</field>
+            <field name="sequence" eval="1"/>
+            <field name="is_considered_total" eval="True"/>
+            <field name="is_provider_assumed" eval="False"/>
+        </record>
+
+        <!--Reglas-->
+        <record id="ek_tariff_rule_cif" model="ek.tariff.rule">
+            <field name="name">VALOR EN ADUANA (CIF)</field>
+            <field name="code">CIF</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="2"/>
+            <field name="category_id" ref="rule_category_params"/>
+            <field name="param" eval="True"/>
+            <field name="condition_python"><![CDATA[
+SEG = line.insurance_subtotal or 0.00
+result = (line.price_subtotal + line.freight_subtotal + SEG)
+#if line.insurance_subtotal > 0:
+#    result = (line.price_subtotal + line.freight_subtotal + line.insurance_subtotal)
+#else:
+#    #result = (line.price_subtotal + line.freight_subtotal + SEG)
+#    result = (line.price_subtotal + line.freight_subtotal)
+
+            ]]>
+            </field>
+            <field name="amount_python_compute"><![CDATA[
+SEG = line.insurance_subtotal or 0.00
+result = (line.price_subtotal + line.freight_subtotal + SEG)# + line.expenses_abroad
+#if line.insurance_subtotal > 0:
+#    result = (line.price_subtotal + line.freight_subtotal + line.insurance_subtotal)
+#else:
+#    #result = (line.price_subtotal + line.freight_subtotal + SEG)
+#    result = (line.price_subtotal + line.freight_subtotal)
+
+            ]]>
+            </field>
+        </record>
+
+        <record id="ek_tariff_rule_seg" model="ek.tariff.rule">
+            <field name="name">SEGURO</field>
+            <field name="code">SEG</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="3"/>
+            <field name="category_id" ref="rule_category_params"/>
+            <field name="param" eval="True"/>
+            <field name="condition_python"><![CDATA[
+# Available variables:
+#----------------------
+# payslip: object containing the payslips
+# employee: hr.employee object
+# contract: hr.contract object
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
+# worked_days: object containing the computed worked days
+# inputs: object containing the computed inputs
+
+# Note: returned value have to be set in the variable 'result'
+
+result = rules.NET > categories.NET * 0.10
+            ]]>
+            </field>
+            <field name="amount_python_compute">result = line.insurance_subtotal and line.insurance_subtotal or 0.00</field>
+        </record>
+
+        <record id="ek_tariff_rule_fodinfa" model="ek.tariff.rule">
+            <field name="name">FODINFA</field>
+            <field name="code">FODINFA</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="4"/>
+            <field name="category_id" ref="rule_category_tax"/>
+            <field name="terms_id" ref="ek_incoterms_terms_06"/>
+            <field name="param" eval="True"/>
+            <field name="amount_python_compute">result = CIF* 0.005</field>
+        </record>
+
+        <record id="ek_tariff_rule_adv" model="ek.tariff.rule">
+            <field name="name">ADVALOREM</field>
+            <field name="code">ADV</field>
+            <field name="condition_select">python</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="5"/>
+            <field name="category_id" ref="rule_category_tax"/>
+            <field name="terms_id" ref="ek_incoterms_terms_05"/>
+            <field name="param" eval="True"/>
+            <field name="condition_python">result =  tariff.tariff_percent > 0</field>
+            <field name="amount_python_compute"><![CDATA[
+if line.adv_manual == -1:
+    result = CIF * tariff.tariff_percent
+else:
+    result = CIF * (line.adv_manual/100)
+            ]]>
+            </field>
+        </record>
+
+        <record id="ek_tariff_rule_liq" model="ek.tariff.rule">
+            <field name="name">TOTAL DE TRIBUTOS</field>
+            <field name="code">LIQ</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="7"/>
+            <field name="category_id" ref="rule_category_total"/>
+            <field name="param" eval="False"/>
+            <field name="amount_python_compute">result = categories.IMP</field>
+        </record>
+
+        <record id="ek_tariff_rule_vat" model="ek.tariff.rule">
+            <field name="name">IVA 12%</field>
+            <field name="code">IVA</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="6"/>
+            <field name="category_id" ref="rule_category_total"/>
+            <field name="param" eval="False"/>
+            <field name="amount_python_compute">result = categories.IMP * 0.12</field>
+        </record>
+
+        <record id="ek_tariff_rule_pvp" model="ek.tariff.rule">
+            <field name="name">PVP Sugerido</field>
+            <field name="code">PVP</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="sequence" eval="20"/>
+            <field name="category_id" ref="rule_category_config"/>
+            <field name="param" eval="True"/>
+            <field name="amount_python_compute">result = (line.price_unit * 2) + line.unit_cost</field>
+        </record>
+
+        <record id="liquidation_type_01" model="ek.import.liquidation.type">
+            <field name="code">01</field>
+            <field name="name">Marítimo (Contenedores)</field>
+        </record>
+
+        <record id="liquidation_type_02" model="ek.import.liquidation.type">
+            <field name="code">02</field>
+            <field name="name">Marítimo (Carga Suelta)</field>
+        </record>
+
+        <record id="liquidation_type_03" model="ek.import.liquidation.type">
+            <field name="code">03</field>
+            <field name="name">Aéreo</field>
+        </record>
+
+        <record id="liquidation_type_04" model="ek.import.liquidation.type">
+            <field name="code">04</field>
+            <field name="name">Terrestre</field>
+        </record>
+    </data>
+</odoo>

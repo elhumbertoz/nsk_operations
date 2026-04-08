@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_incoterms_terms_form" model="ir.ui.view">
+        <field name="name">stock.incoterms.terms.form</field>
+        <field name="model">account.incoterms</field>
+        <field name="arch" type="xml">
+            <form string="Incoterms">
+                <sheet>
+                    <label for="code" class="oe_edit_only" string="Código"/>
+                    <h1>
+                        <field name="code" class="oe_inline" placeholder="Código" style="width: 229px !important"/> -
+                        <field name="name" class="oe_inline" placeholder="Nombre"/>
+                    </h1>
+                    <notebook>
+                        <page name="incoterms_terms" string="Términos">
+                            <field name="incoterms_terms_ids" nolabel="1">
+                                <tree nolabel="1" editable="bottom">
+                                    <field name="terms_id" domain="[('type','!=','calculate')]"/>
+                                    <field name="code" readonly="1"/>
+                                    <field name="sequence" readonly="1"/>
+                                    <field name="type" readonly="1"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_incoterms_terms_tree" model="ir.ui.view">
+        <field name="name">account.incoterms.tree</field>
+        <field name="model">account.incoterms</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="stock_incoterms_terms_search" model="ir.ui.view">
+        <field name="name">account.incoterms.search</field>
+        <field name="model">account.incoterms</field>
+        <field name="arch" type="xml">
+            <search string="Incoterms">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Incoterms"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_incoterms_terms" model="ir.actions.act_window">
+        <field name="name">Incoterms</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.incoterms</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="stock_incoterms_terms_search"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Haga clic para agregar un incoterms.
+          </p>
+        </field>
+    </record>
+
+    <record id="action_stock_incoterms_terms_tree_x2" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="stock_incoterms_terms_tree"/>
+        <field name="act_window_id" ref="action_stock_incoterms_terms"/>
+    </record>
+
+     <record id="action_stock_incoterms_terms_form_x2" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="stock_incoterms_terms_form"/>
+        <field name="act_window_id" ref="action_stock_incoterms_terms"/>
+    </record>
+
+    <menuitem id="menu_stock_incoterms_terms"
+              action="action_stock_incoterms_terms"
+              parent="menu_liquidation_in_config"
+              groups="ek_purchase_import_liquidation.group_admin_purchase_import_liquidation"
+    />
+
+
+    <record id="ek_incoterms_terms_form_view" model="ir.ui.view">
+        <field name="name">ek.incoterms.terms.form</field>
+        <field name="model">ek.incoterms.terms</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="is_provider_assumed"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="type"/>
+                            <field name="is_considered_total"/>
+                        </group>
+                    </group>
+                    <div class="oe_clear"/>
+                    <field name="note" class="oe_inline" placeholder="Descripción..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ek_incoterms_terms_tree_view" model="ir.ui.view">
+        <field name="name">ek.incoterms.terms.tree</field>
+        <field name="model">ek.incoterms.terms</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="is_considered_total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ek_incoterms_terms_search" model="ir.ui.view">
+        <field name="name">stock.incoterms.terms.search</field>
+        <field name="model">ek.incoterms.terms</field>
+        <field name="arch" type="xml">
+            <search string="Términos">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Partida"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Tipo" name="filter_type" domain="" context="{'group_by':'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+     <record id="action_ek_incoterms_terms" model="ir.actions.act_window">
+        <field name="name">Términos y Totales</field>
+        <field name="res_model">ek.incoterms.terms</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="ek_incoterms_terms_search"/>
+        <field name="view_id" ref="ek_incoterms_terms_tree_view"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Haga clic para agregar un término incoterms.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_incoterms_terms_and_totals"
+              action="action_ek_incoterms_terms"
+              parent="menu_liquidation_in_config"
+              groups="ek_purchase_import_liquidation.group_admin_purchase_import_liquidation"
+    />
+</odoo>

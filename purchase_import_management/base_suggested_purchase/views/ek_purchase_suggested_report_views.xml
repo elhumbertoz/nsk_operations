@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- This Menu Item Must have a parent -->
+        <menuitem id="suggest_purchase_root" name="Sugerido de Compras" parent="purchase.menu_purchase_root" sequence="10"/>
+        <menuitem id="suggest_purchase_report" name="Informes" parent="suggest_purchase_root" sequence="100"/>
+        <menuitem id="suggest_purchase_config" name="Configuraciones" parent="suggest_purchase_root" sequence="200"/>
+
+        <record id="view_ek_purchase_suggested_report_filter" model="ir.ui.view">
+          <field name="name">ek.suggested.purchase</field>
+          <field name="model">ek.suggested.purchase</field>
+          <field name="type">search</field>
+          <field name="arch" type="xml">
+            <search string="Buscar Reporte Sugerido">
+              <group col='8' colspan='4' string="Filtros" >
+                    <field name="default_code" filter_domain="['|','|', ('default_code','ilike',self), ('default_code2','ilike',self), ('default_code3','ilike',self)]" string="Código"/>
+                    <field name="product_id" />
+                    <field name="partner_id" />
+                    <separator/>
+                    <filter string="Con Stock" name="with_stock" domain="[('qty_stock', '&gt;', 0)]"/>
+                    <filter string="Sin Stock" name="out_of_stock" domain="[('qty_stock', '&lt;=', 0)]"/>
+                    <filter string="Con Stock Relacionado" name="qty_stock_related" domain="[('qty_stock_related', '&gt;', 0)]"/>
+                    <filter string="Sobre Stock" name="out_of_stock" domain="[('over_stock', '=', True)]"/>
+                    <separator/>
+                     <filter string="Pendientes de Entrega" name="out_of_stock" domain="[('qty_pending_deliver', '&gt;', 0)]"/>
+                    <separator/>
+                   <filter string="En transito" name="transit" domain="[('transit', '&gt;', 0)]"/>
+                   <filter string="Sin transito" name="transit" domain="[('transit', '=', 0)]"/>
+                    <separator/>
+                    <filter string="Con Movimientos" name="with_last_date" domain="[('last_date', '!=', False)]"/>
+
+                    <filter string="Sin Movimientos" name="out_of_last_date" domain="[('last_date', '=', False)]"/>
+                    <separator/>
+                    <filter string="Con sugerido" name="with_suggested" domain="[('qty_suggested', '&gt;', 0)]"/>
+                    <filter string="Sin sugerido" name="out_of_suggested" domain="[('qty_suggested', '&lt;=', 0)]"/>
+
+              </group>
+              <group expand="0" string="Agrupar por..." colspan="4" col="10">
+                    <filter name="my_partner_id" string="Proveedor" context="{'group_by':'partner_id'}"/>
+                    <filter name="factor_name" string="Código" context="{'group_by':'factor_name'}"/>
+                    <filter name="filter_no" string="No." context="{'group_by':'number'}"/>
+                    <filter name="my_kit_id" string="Kit" context="{'group_by':'kit_id'}" invisible="1"/>
+                    <filter name="my_product_id" string="Producto" context="{'group_by':'product_id'}"/>
+              </group>
+            </search>
+          </field>
+        </record>
+
+
+       <record id="view_ek_purchase_suggested_report_tree" model="ir.ui.view">
+            <field name="name">view.name.ek.suggested.purchase.tree</field>
+            <field name="model">ek.suggested.purchase</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Reporte Sugerido" expand="context.get('expand', True)" multi_edit="1" editable="bottom" create="0" sample="1"
+                decoration-bf="product_base == True and kit_id != False" decoration-success="product_base == True and kit_id != False">
+                    <field name="number"  optional="hide"/>
+                    <field name="default_code"/>
+                    <field name="default_code2" optional="hide"/>
+                    <field name="default_code3" optional="hide"/>
+                    <field name="name"/>
+                    <field name="qty_suggested"  readonly="not product_base and kit_id != False" force_save="1"/>
+                    <field name="transit" decoration-warning="transit &gt; 0"  widget="badge"  optional="show"/>
+                    <field name="transit_related" optional="show"/>
+                    <button name="action_show_relate_transit" type="object"
+                            invisible="transit_related == 0"
+                            icon="fa-ship text-success"
+                              />
+                    <field name="qty_stock"/>
+                    <field name="qty_stock_related"/>
+                    <button name="action_show_relate_qty" type="object"
+                            invisible="qty_stock_related == 0"
+                            icon="fa-cube text-success"
+                              />
+                    <field  name="calendar_yearly_qty" string="Ventas YTD"/>
+                    <field name="sales_year_old_month" optional="hide"/>
+                    <field name="sales_year_old" optional="hide"/>
+                    <field name="sales_1_month"  optional="show"/>
+                    <field name="sales_month"  optional="show"/>
+                    <field name="sales_ytd" optional="show" string="Ventas 365"/>
+                    <field name="sales_related" optional="show"/>
+                    <button name="action_show_relate_sales_qty" type="object"
+                            invisible="sales_related == 0"
+                            icon="fa-bar-chart text-success"
+                              />
+                    <field name="sales_esp" column_invisible="1"/>
+                    <field name="sale_avg_month" optional="show"/>
+                    <field name="projected_sales" optional="show"/>
+                    <field name="minimum"  optional="hide"/>
+                    <field name="maximum"  optional="hide"/>
+                    <field name="cost"  optional="show" string="Costo Promedio"/>
+                    <field name="last_cost"  optional="show" string="FOB"/>
+                    <field name="weight" optional="hide"/>
+                    <field name="product_tmpl_id"  optional="hide"/>
+                    <field name="product_uom_id"  optional="hide"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="qty_pending_deliver" optional="show"/>
+
+                  <field name="turnover"  optional="hide" widget="percentage"
+                  decoration-success="turnover &gt; 50"
+                  decoration-info="turnover &gt; 0 and turnover &lt; 50"
+                  decoration-muted="turnover == 0"
+                  />
+                  <field name="over_stock" widget="boolean_toggle"/>
+                  <field name="previous_date" optional="hide"/>
+                  <field name="last_date" optional="hide"/>
+                  <field name="last_purchase" optional="hide"/>
+                  <field name="sample_months" optional="hide"/>
+                  <field name="purchase_local" optional="hide"/>
+                  <field name="day_not_stock"  optional="show"/>
+                  <field name="multiplicity"  optional="show"/>
+                  <field name="day_transit"  optional="hide"/>
+                    <field name="month_transit"  optional="hide"/>
+                    <field name="month_security"  optional="hide"/>
+                    <field name="product_id"  optional="hide"/>
+                    <field name="factor_name" optional="hide"/>
+                    <field name="factor" optional="hide"/>
+                  <field name="required_qty_stock" optional="hide"/>
+                  <field name="arrival_date"  optional="hide"/>
+                    <field name="cost_sale_inventory"  column_invisible="1"/>
+                  <field name="investment" sum="Inversión Total"  optional="show"/>
+                  <field name="total_weight" sum="Peso Total"  optional="show"/>
+                    <field name="company_id" optional="hide"/>
+                    <field name="product_base" column_invisible="1"/>
+                    <field name="kit_id" column_invisible="1"/>
+                    <button name="action_unlink" icon="fa-trash" title="Eliminar" type="object" invisible="product_base"/>
+                    <groupby name="kit_id">
+                        <!--<field name="name" invisible="1"/>-->
+
+                        <button name="action_unlink" icon="fa-trash" title="Eliminar Grupo" type="object" data-hotkey="x"/>
+                        <button
+                        name="%(action_asigned_purchase_order_wizard)d"
+                        type="action"
+                        icon="fa-file-archive-o"
+                        title="Agregar a pedido de compra"
+                        context="{'default_kit_id': id, 'default_type': 'add'}"
+                        data-hotkey="d"
+                       />
+
+                    </groupby>
+                     <groupby name="partner_id">
+                        <field name="name" invisible="1"/>
+                        <button
+                        name="%(action_asigned_purchase_order_wizard)d"
+                        type="action"
+                        icon="fa-file-archive-o"
+                        title="Agregar a pedido de compra"
+                         context="{'default_partner_id': id, 'default_type': 'one'}"
+                        data-hotkey="d"
+                       />
+                    </groupby>
+                </tree>
+            </field>
+        </record>
+
+
+
+    <record id="action_ek_purchase_suggested_report_act_id" model="ir.actions.act_window">
+      <field name="name">Reporte Sugerido</field>
+      <field name="res_model">ek.suggested.purchase</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('product_id','!=',False)]</field>
+      <field name="view_id" ref="view_ek_purchase_suggested_report_tree"/>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Pulse aquí para añadir un nuevo documento
+              </p><p>
+               Use esta opción para reporte
+              </p>
+        </field>
+    </record>
+
+
+
+    <menuitem action="action_ek_purchase_suggested_report_act_id" sequence="100"
+              id="menu_action_ek_purchase_suggested_report_act_id_tree"
+              parent="suggest_purchase_report" />
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="product_template_common_allow_suggested_form" model="ir.ui.view">
+            <field name="name">product.template.common.allow.suggested.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+
+            <field name="arch" type="xml">
+
+                <xpath expr="//group[@name='bill']" position="inside">
+                    <!-- Add your fields or attributes here -->
+
+                     <field name="allow_suggested" invisible="1"/>
+                     <field name="multiplicity" invisible="not allow_suggested"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="product_product_common_allow_suggested_form" model="ir.ui.view">
+            <field name="name">product.product.common.allow.suggested.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='purchase_method']" position="after">
+                    <!-- Add your fields or attributes here -->
+                     <field name="allow_suggested_product"/>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="ek_suggested_purchase_related_view_form" model="ir.ui.view">
+            <field name="name">view.ek.suggested.purchase.related.form</field>
+            <field name="model">ek.suggested.purchase</field>
+            <field name="arch" type="xml">
+                <form string="Stock Relacionado">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="default_code" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="qty_stock"/>
+                                <field name="sales_related" invisible="1"/>
+                                <field name="qty_stock_related" invisible="1"/>
+                                <field name="transit_related" invisible="1"/>
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="stock_related" string="Stock de productos relacionados" invisible="qty_stock_related == 0">
+                                <field name="related_stock_ids" readonly="1" nolabel="1">
+                                    <tree>
+                                        <field name="product_name"/>
+                                        <field name="quantity" sum="Total Relacionado"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="sale_related" string="Ventas de productos relacionados" invisible="sales_related==0">
+                                <field name="related_sales_ids" readonly="1" nolabel="1">
+                                    <tree>
+                                        <field name="product_name"/>
+                                        <field name="quantity" sum="Total Relacionado"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="transit_related" string="Transito de productos relacionados" invisible="transit_related == 0">
+                                <field name="related_transit_ids" readonly="1" nolabel="1">
+                                    <tree>
+                                        <field name="product_name"/>
+                                        <field name="quantity" sum="Total Relacionado"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Cerrar" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="ek_suggested_purchase_related_action" model="ir.actions.act_window">
+            <field name="name">Stock Relacionado</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ek.suggested.purchase</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ek_suggested_purchase_related_view_form"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
