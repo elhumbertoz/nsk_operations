@@ -94,41 +94,7 @@
 
                 <page string="Régimen 70" invisible="not regime in ['70']">
 
-                    <!-- SECCIÓN: Extracción con IA (AHORA EN EL CONTENEDOR) -->
-                    <group string="🤖 Extracción Automática con IA (Gestionado en Contenedor)">
-                        <group>
-                            <label for="container_id" string="Los bultos y facturas ahora se procesan directamente en el Contenedor."/>
-                            <button name="%(ek_l10n_shipping_operations_charging_regimes.ek_boats_container_information_act)d"
-                                    string="Abrir Contenedor para procesar"
-                                    type="action"
-                                    class="btn-link"
-                                    icon="fa-arrow-right"
-                                    context="{'res_id': container_id}"/>
-                        </group>
-                    </group>
-
-                    <field name="ai_extraction_status" invisible="1"/>
-                    <!-- Estado de extracción IA (Copiado del contenedor) -->
-                    <group string="Resumen de Extracción" invisible="ai_extraction_status == 'pending'">
-                        <group>
-                            <field name="ai_extraction_status_bl" widget="badge"
-                                   decoration-success="ai_extraction_status_bl=='completed'"
-                                   decoration-warning="ai_extraction_status_bl=='processing'"
-                                   decoration-danger="ai_extraction_status_bl=='error'"/>
-                            <field name="ai_extraction_status_fc" widget="badge"
-                                   decoration-success="ai_extraction_status_fc=='completed'"
-                                   decoration-warning="ai_extraction_status_fc=='processing'"
-                                   decoration-danger="ai_extraction_status_fc=='error'"/>
-                            <field name="ai_extraction_status_np" widget="badge"
-                                   decoration-success="ai_extraction_status_np=='completed'"
-                                   decoration-warning="ai_extraction_status_np=='processing'"
-                                   decoration-danger="ai_extraction_status_np=='error'"/>
-                        </group>
-                        <group>
-                            <field name="ai_extraction_log" widget="text" readonly="1"
-                                   invisible="not ai_extraction_log"/>
-                        </group>
-                    </group>
+                    <!-- SECCIÓN: Notificaciones y Seguimiento -->
 
                     <!-- SECCIÓN: Estado de Notificaciones -->
                     <group string="📊 Estado de Notificaciones Enviadas">
@@ -259,8 +225,7 @@
                               decoration-danger="not is_validated"
                               decoration-muted="is_validated and validation_status=='pending'">
                             <field name="product_id" string="Producto Odoo"/>
-                            <field name="extracted_name" string="En Factura"/>
-                            <field name="match_confidence" widget="progressbar"/>
+
                             <field name="quantity"/>
                             <field name="ship_id" string="Buque Destino"/>
                             <field name="packages_count" string="Bultos"/>
@@ -279,15 +244,7 @@
                        string="Buque Destino"
                        optional="show"
                        invisible="not parent.regime in ['70']"/>
-                <field name="extracted_name"
-                       string="Descripción Factura"
-                       optional="show"
-                       invisible="not parent.regime in ['70']"/>
-                <field name="match_confidence"
-                       string="% IA"
-                       widget="progressbar"
-                       optional="show"
-                       invisible="not parent.regime in ['70']"/>
+
                 <field name="packages_count"
                        string="Bultos"
                        optional="show"

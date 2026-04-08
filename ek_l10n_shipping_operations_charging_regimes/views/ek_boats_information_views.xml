@@ -128,10 +128,31 @@
                   <field name="id_bl" optional="hide"/>
                 </tree>
               </field>
+
+              <group>
+                <group string="Carga de Facturas">
+                  <field name="invoice_attachment_ids"
+                         widget="many2many_binary"/>
+                  <label for="action_extract_invoices_with_ai" string=" "/>
+                  <button name="action_extract_invoices_with_ai"
+                          string="Extraer Facturas con IA"
+                          type="object"
+                          class="btn-success"
+                          icon="fa-file-pdf-o"
+                          invisible="not invoice_attachment_ids"/>
+                </group>
+                <group string="Estado">
+                  <field name="ai_extraction_status_fc" widget="badge"
+                         string="Estado Facturas"
+                         decoration-success="ai_extraction_status_fc=='completed'"
+                         decoration-warning="ai_extraction_status_fc=='processing'"
+                         decoration-danger="ai_extraction_status_fc=='error'"/>
+                </group>
+              </group>
             </page>
-            <page string="Extracción con IA">
+            <page string="BL">
                 <group>
-                    <group string="Carga de Documentos">
+                    <group string="Carga de BL">
                         <field name="bl_attachment_ids"
                                widget="many2many_binary"
                                string="Bill of Lading"/>
@@ -143,49 +164,13 @@
                                 class="btn-primary"
                                 icon="fa-magic"
                                 invisible="not bl_attachment_ids"/>
-
-                        <separator/>
-                        
-                        <field name="invoice_attachment_ids"
-                               widget="many2many_binary"/>
-                        <label for="action_extract_invoices_with_ai" string=" "/>
-                        <button name="action_extract_invoices_with_ai"
-                                string="Extraer Facturas con IA"
-                                type="object"
-                                class="btn-success"
-                                icon="fa-file-pdf-o"
-                                invisible="not invoice_attachment_ids"/>
                     </group>
-                    <group string="Validación Aduanera">
-                        <field name="purchase_order_attachment_ids"
-                               widget="many2many_binary"/>
-                        <label for="action_extract_po_and_compare" string=" "/>
-                        <button name="action_extract_po_and_compare"
-                                string="Validar Nota de Pedido"
-                                type="object"
-                                class="btn-warning"
-                                icon="fa-check-square-o"
-                                invisible="not purchase_order_attachment_ids or not ek_produc_packages_goods_ids"/>
-                        
-                        <separator/>
+                    <group string="Estado BL">
                         <field name="ai_extraction_status_bl" widget="badge"
                                string="Estado BL"
                                decoration-success="ai_extraction_status_bl=='completed'"
                                decoration-warning="ai_extraction_status_bl=='processing'"
                                decoration-danger="ai_extraction_status_bl=='error'"/>
-                        
-                        <field name="ai_extraction_status_fc" widget="badge"
-                               string="Estado Facturas"
-                               decoration-success="ai_extraction_status_fc=='completed'"
-                               decoration-warning="ai_extraction_status_fc=='processing'"
-                               decoration-danger="ai_extraction_status_fc=='error'"/>
-
-                        <field name="ai_extraction_status_np" widget="badge"
-                               string="Estado Nota Pedido"
-                               decoration-success="ai_extraction_status_np=='completed'"
-                               decoration-warning="ai_extraction_status_np=='processing'"
-                               decoration-danger="ai_extraction_status_np=='error'"/>
-
                     </group>
                 </group>
             </page>

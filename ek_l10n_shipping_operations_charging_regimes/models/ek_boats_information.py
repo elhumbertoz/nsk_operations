@@ -133,19 +133,6 @@ class EkBoatsInformation(models.Model):
         help='Adjunte las facturas comerciales para extracción automática'
     )
 
-    purchase_order_attachment_ids = fields.Many2many(
-        'ir.attachment',
-        'ek_container_po_attachment_rel', # Tabla única para este modelo
-        'container_id',
-        'attachment_id',
-        string="Nota de Pedido (PO)",
-        help="Documento proporcionado por el agente aduanero para validación"
-    )
-
-    purchase_order_data = fields.Text(
-        string="Datos Nota de Pedido",
-        help="JSON con datos extraídos de la Nota de Pedido"
-    )
 
     @api.depends('bl_attachment_ids')
     def _compute_bl_attachment_filename(self):

@@ -8,20 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class EkOperationRequest(models.Model):
   _inherit = 'ek.operation.request'
 
-  # AI Extraction fields are now in ek.boats.information (Container)
-  # Keeping related fields for visibility or transitional purposes if needed
-  ai_extraction_status = fields.Selection(related="container_id.ai_extraction_status", string="Estado Extracción IA", readonly=True, store=False)
-  ai_extraction_status_bl = fields.Selection(related="container_id.ai_extraction_status_bl", string="Estado BL", readonly=True, store=False)
-  ai_extraction_status_fc = fields.Selection(related="container_id.ai_extraction_status_fc", string="Estado Facturas", readonly=True, store=False)
-  ai_extraction_status_np = fields.Selection(related="container_id.ai_extraction_status_np", string="Estado Nota Pedido", readonly=True, store=False)
-  ai_extraction_log = fields.Html(related="container_id.ai_extraction_log", string="Log Extracción IA", readonly=True, store=False)
 
-  # Related attachment fields from container for email notifications
-  # NOTA: Estos campos solo funcionan cuando container_id está poblado
-  bl_attachment_ids = fields.Many2many(related="container_id.bl_attachment_ids", string="Bill of Lading (Rel)", readonly=True, store=False)
-  invoice_attachment_ids = fields.Many2many(related="container_id.invoice_attachment_ids", string="Facturas (Rel)", readonly=True, store=False)
-  purchase_order_attachment_ids = fields.Many2many(related="container_id.purchase_order_attachment_ids", string="Nota de Pedido (Rel)", readonly=True, store=False)
-  purchase_order_data = fields.Text(related="container_id.purchase_order_data", string="Datos Nota de Pedido (Rel)", readonly=True, store=False)
 
 
   use_in_regimen_60 = fields.Boolean(
