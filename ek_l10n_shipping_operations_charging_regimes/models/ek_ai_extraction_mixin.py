@@ -144,29 +144,6 @@ class EkAIExtractionMixin(models.AbstractModel):
                             "items": {"type": "string"},
                             "description": "Lista de números de factura mencionados"
                         },
-                        "packages": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "description": {"type": "string"},
-                                    "hs_code": {"type": "string"},
-                                    "quantity": {"type": "number"},
-                                    "weight_kg": {"type": "number"},
-                                    "invoice_number": {"type": "string"},
-                                    "supplier": {"type": "string"},
-                                    "product_id": {
-                                        "type": "integer",
-                                        "description": "ID del producto en el catálogo (similitud > 70%)."
-                                    },
-                                    "match_confidence": {
-                                        "type": "number",
-                                        "description": "Nivel de confianza del matching (0.0 a 1.0)."
-                                    }
-                                }
-                            },
-                            "description": "Lista detallada de productos/paquetes en el contenedor"
-                        },
                     },
                     "required": ["id_bl"]
                 }
@@ -339,22 +316,13 @@ class EkAIExtractionMixin(models.AbstractModel):
             messages = [
                 {
                     "role": "system",
-                    "content": f"""Eres un analista senior de aduanas y logística marítima con más de 20 años de experiencia interpretando Bill of Ladings (BL), facturas comerciales y declaraciones de aduanas.
+                    "content": f"""Eres un analista senior de aduanas y logística marítima con más de 20 años de experiencia interpretando Bill of Ladings (BL).
 
-Tu tarea es extraer datos estructurados del Bill of Lading (BL) adjunto y, cuando sea posible, vincular cada item de carga con el catálogo de productos existente proporcionado a continuación.
+Tu tarea es extraer datos estructurados del Bill of Lading (BL) adjunto. Concéntrate en la información logística del documento (números de BL, contenedor, fechas y descripción general).
 
-## VINCULACIÓN CON CATÁLOGO
-{self._get_regime_70_catalog_prompt()}
-
-Reglas de vinculación:
-- Si un item corresponde claramente a una entrada del catálogo (confianza > 70%), devuelve su `product_id`.
-- Si no existe una coincidencia clara, omite `product_id` — nunca adivines.
-- `description`: copia el texto original exactamente como aparece en el BL (para fines de auditoría).
-- `product_name`: genera un nombre normalizado siguiendo [Tipo] [Marca] [Modelo] [Especificación Clave].
-- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe ser en español.
-  - Ejemplo (Español): "Motor Eléctrico WEG W22 7.5HP"
-  - Ejemplo (Inglés): "Electric Motor WEG W22 7.5HP"
-  - Mantenerlo por debajo de 60 caracteres y omitir terminología legal y texto de relleno.
+Reglas de extracción:
+- `supplies_detail`: resume en una frase corta qué tipo de mercancía se transporta (ej: 'REPUESTOS PARA MOTOR', 'EQUIPOS ELECTRÓNICOS'). 
+- NO extraigas productos individuales uno por uno, ya que esa información será procesada desde las Facturas Comerciales.
 
 Llama siempre a `extract_bl_data` para devolver los resultados estructurados."""
                 },
@@ -362,17 +330,11 @@ Llama siempre a `extract_bl_data` para devolver los resultados estructurados."""
                     "role": "user",
                     "content": """Por favor, extrae la siguiente información del Bill of Lading adjunto:
 
-1. Número de BL / Contenedor
-2. Línea naviera
-3. Fechas ETA y ETD
-4. Descripción general de la carga
-5. TODOS los productos detallados con:
-   - Descripción completa
-   - Código HS (si existe)
-   - Cantidad
-   - Peso
-   - Número de factura
-   - Proveedor
+1. Número de BL o Contenedor (ID)
+2. Línea naviera (Shipping Line)
+3. Fechas estimadas (ETA y ETD)
+4. Descripción general resumida de la carga
+5. Cantidad total de bultos y peso bruto si están indicados.
 
 El documento PDF está adjunto a este mensaje."""
                 }
@@ -403,43 +365,18 @@ El documento PDF está adjunto a este mensaje."""
             self.ai_extraction_status = 'completed'
 
             # Log Elegante (HTML)
-            packages = extracted_data.get('packages', [])
             html_log = f"""
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Extracción de BL Completada</h4>
-                    <p>Se procesó el documento <strong>{attachment.name}</strong>.</p>
+                    <p>Se procesó el documento <strong>{attachment.name}</strong> correctamente.</p>
                     <hr>
                     <table class="table table-sm table-borderless mb-0">
                         <tr><td><strong>BL#:</strong> {getattr(self, 'id_bl', 'N/A') or 'N/A'}</td><td><strong>Contenedor:</strong> {getattr(self, 'number_container', getattr(self, 'container_number', 'N/A')) or 'N/A'}</td></tr>
-                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if hasattr(self, 'shipping_line_id') and self.shipping_line_id else (self.shipping_company.name if hasattr(self, 'shipping_company') and self.shipping_company else 'No encontrada')}</td><td><strong>Productos:</strong> {len(packages)}</td></tr>
+                        <tr><td><strong>Línea:</strong> {self.shipping_line_id.name if hasattr(self, 'shipping_line_id') and self.shipping_line_id else (self.shipping_company.name if hasattr(self, 'shipping_company') and self.shipping_company else 'No encontrada')}</td><td><strong>Peso Total:</strong> {extracted_data.get('total_weight', 0)} kg</td></tr>
+                        <tr><td colspan="2"><strong>Descripción:</strong> {extracted_data.get('supplies_detail', 'N/A')}</td></tr>
                     </table>
                 </div>
-                <div class="mt-3">
-                    <h6>Detalle de Productos Extraídos:</h6>
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Descripción</th>
-                                <th>Cód. HS</th>
-                                <th class="text-end">Cant.</th>
-                                <th class="text-end">Peso (kg)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
             """
-            for pkg in packages[:15]: # Limitar a 15 para no saturar
-                html_log += f"""
-                    <tr>
-                        <td>{pkg.get('description', '')}</td>
-                        <td><span class="badge bg-secondary">{pkg.get('hs_code', '')}</span></td>
-                        <td class="text-end">{pkg.get('quantity') or 0}</td>
-                        <td class="text-end">{pkg.get('weight_kg') or 0}</td>
-                    </tr>
-                """
-            if len(packages) > 15:
-                html_log += f'<tr><td colspan="4" class="text-center text-muted">... y {len(packages) - 15} productos más</td></tr>'
-            
-            html_log += "</tbody></table></div>"
             
             self.ai_extraction_log = html_log
 
@@ -448,9 +385,7 @@ El documento PDF está adjunto a este mensaje."""
                 'tag': 'display_notification',
                 'params': {
                     'title': _('Extracción Completada'),
-                    'message': _('Se extrajeron %s productos del BL') % (
-                        len(extracted_data.get('packages', []))
-                    ),
+                    'message': _('Se extrajeron los datos logísticos del BL'),
                     'type': 'success',
                     'sticky': False,
                     'next': {'type': 'ir.actions.client', 'tag': 'reload'},
@@ -518,23 +453,16 @@ El documento PDF está adjunto a este mensaje."""
             else:
                 _logger.info(f"Línea naviera no encontrada: {extracted_data['shipping_line']}")
 
-        # Crear líneas de productos
-        packages = extracted_data.get('packages', [])
-        if packages:
-            self._create_goods_lines_from_packages(packages)
-
         # Log en chatter
         attachment_name = self.bl_attachment_ids[0].name if self.bl_attachment_ids else 'N/A'
         self.message_post(
             body=Markup(_(
                 '<strong>Extracción de BL completada con IA</strong><br/>'
                 'Documento: %s<br/>'
-                'Productos procesados: %s<br/>'
                 'BL#: %s<br/>'
                 'Contenedor: %s'
             ) % (
                 attachment_name,
-                len(packages),
                 self.id_bl or 'N/A',
                 self.number_container or 'N/A'
             ))
@@ -544,39 +472,6 @@ El documento PDF está adjunto a este mensaje."""
         self._sync_parent_product_ids()
 
 
-    def _create_goods_lines_from_packages(self, packages):
-        """
-        Crea líneas de productos/mercancías desde datos extraídos
-        REQ-003: Creación automática de líneas
-        """
-        goods_model = self.env['ek.product.packagens.goods']
-
-        # Determinar modelo y campo padre
-        is_request = self._name == 'ek.operation.request'
-        parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
-
-        for pkg in packages:
-            # Use normalized product_name for display; keep raw description as audit trail
-            raw_description = pkg.get('description', '')
-            display_name = pkg.get('product_name') or raw_description
-            line_vals = {
-                parent_field: self.id,
-                'name': display_name,
-                'extracted_name': raw_description,
-                'quantity': pkg.get('quantity') or 0,
-                'gross_weight': pkg.get('weight_kg') or 0,
-                'invoice_number': pkg.get('invoice_number', ''),
-                'supplier': pkg.get('supplier', ''),
-                'product_id': pkg.get('product_id'),
-                'match_confidence': (pkg.get('match_confidence') or 0.0) * 100,
-            }
-
-            # HS Code
-            if pkg.get('hs_code'):
-                line_vals['tariff_item'] = pkg['hs_code']
-
-            # Crear línea (el sistema buscará/creará producto automáticamente vía create override)
-            goods_model.create(line_vals)
 
 
     def action_extract_invoices_with_ai(self):
