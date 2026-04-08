@@ -1140,7 +1140,7 @@ class EkOperationRequest(models.Model):
         "Este número es otorgado por la almacenera en la solicitud previa."
       ))
 
-    if not self.date_transfer:
+    if not self.date_return_container:
       raise UserError(_("Debe especificar la fecha de traslado."))
 
     # Usar plantilla configurable
