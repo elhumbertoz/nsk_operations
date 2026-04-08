@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from markupsafe import Markup
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import json
@@ -325,7 +326,7 @@ REGLAS DEL TOOL:
 
             # Log en Chatter
             log_body = f"<strong>IA: Actualización quirúrgica de mercancías</strong><ul>{''.join(applied_summary)}</ul>"
-            self.operation_request_id.message_post(body=log_body)
+            self.operation_request_id.message_post(body=Markup(log_body))
 
             return {'type': 'ir.actions.client', 'tag': 'reload'}
 
