@@ -174,7 +174,7 @@
         </page>
 
         <page string="Mapeo de Facturas" invisible="not regime in ['70']">
-          <div style="width: 100%; height: 1px;" invisible="not customs_agent_data_ids"></div>
+
           <field name="invoice_ship_map_ids" readonly="fold or confirm_stage or canceled_stage or readonly_mass">
             <tree editable="bottom">
               <field name="invoice_number"/>
@@ -184,71 +184,6 @@
           </field>
         </page>
 
-        <page string="Sincronizar productos" invisible="not regime in ['70']">
-          <!-- Importar acrchivo Excel -->
-          <div class="d-flex gap-1" style="width: 100%;">
-            <div class="d-flex gap-1">
-              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;">
-                <button name="%(action_ek_customs_import_wizard)d" type="action" class="btn-primary" icon="fa-upload"/>
-              </div>
-              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;" invisible="not customs_agent_data_ids">
-                <button name="action_clear_customs_data" type="object" class="btn-warning" icon="fa-trash" />
-              </div>
-              <div class="d-flex" style="width: 40px; min-width: 40px; height: 33px;" invisible="not customs_agent_data_ids">
-                <button name="action_clear_customs_data" type="object" class="btn-secondary" icon="fa-download" />
-              </div>
-            </div>
-            <div id="customs_stats_alert" class="alert alert-info alert-dismissible oe-inline pe-2 mb-0" role="alert" style="width: 100%; height: 33px; min-width: 570px; padding-block: 6px;" invisible="not customs_agent_data_ids">
-              <div class="d-inline-block justify-content-between align-items-center m-0 gap-1" style="width: calc(100% - 20px);">
-                <div class="d-flex flex-fill align-items-center px-2 gap-4">
-                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
-                    <span class="oe_inline text-muted">Líneas:</span>
-                    <strong class="oe_inline">
-                      <field name="total_lines" />
-                      <span> líneas</span>
-                    </strong>
-                  </div>
-                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
-                    <span class="oe_inline text-muted">Coincidencias exactas:</span>
-                    <strong class="oe_inline">
-                      <field name="total_lines" />
-                    </strong>
-                  </div>
-                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
-                    <span class="oe_inline text-muted">Tolerantes:</span>
-                    <strong class="oe_inline">
-                      <field name="total_lines" />
-                    </strong>
-                  </div>
-                  <div class="oe_inline d-flex text-nowrap" style="gap: 5px;">
-                    <span class="oe_inline text-muted">Sin match:</span>
-                    <strong class="oe_inline">
-                      <field name="total_lines" />
-                    </strong>
-                  </div>
-                </div>
-              </div>
-              <a href="#" class="close d-inline-flex align-items-center" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none'; return false;">
-                <span aria-hidden="true">&#215;</span>
-              </a>
-            </div>
-          </div>
-          <div style="width: 100%; height: 10px;" invisible="not customs_agent_data_ids"></div>
-          <!-- Lista de datos importados -->
-          <field name="customs_agent_data_ids" nolabel="1">
-            <tree editable="bottom" decoration-success="match_status == 'exact'" decoration-warning="match_status == 'fuzzy'" decoration-danger="match_status == 'no_match'">
-              <field name="icl_pvdr_nm_01" string="Proveedor"/>
-              <field name="icl_item_inv_no" string="Factura"/>
-              <field name="icl_hs_part_cd" string="Subpartida"/>
-              <field name="icl_gds_desc_cn" string="Descripción"/>
-              <field name="icl_item_fobv_pr" string="FOB"/>
-              <field name="icl_phsc_pck_ut_co" string="Cantidad"/>
-              <field name="match_status" string="Estado"/>
-              <field name="match_percentage" string="% Similitud"/>
-              <field name="matched_product_id" string="Producto Matched"/>
-            </tree>
-          </field>
-        </page>
 
         <page string="Acceso Portuario" invisible="not has_access_port">
           <group string="Work Area" colspan="4" col="4" invisible="type_document_access in ['2']">

@@ -224,12 +224,7 @@ class EkOperationRequest(models.Model):
     tracking=True
   )
 
-  invoice_validated = fields.Boolean(
-    string="Factura Validada",
-    default=False,
-    help="Indica si la factura fue validada contra Nota de Pedido",
-    tracking=True
-  )
+
 
   # ============================================================
   # ESTADO DE NOTIFICACIONES (REQ-011 a REQ-015)
@@ -785,66 +780,7 @@ class EkOperationRequest(models.Model):
         record._update_invoice_ship_map()
     return True
 
-  def action_clear_customs_data(self):
-    """Limpiar todos los datos de aduanas"""
-    # Verificar si hay datos para eliminar
-    total_records = sum(len(record.customs_agent_data_ids) for record in self)
 
-    if total_records == 0:
-      return {
-        'type': 'ir.actions.client',
-        'tag': 'display_notification',
-        'params': {
-          'title': _('Información'),
-          'message': _('No hay datos de aduanas para eliminar.'),
-          'type': 'info',
-          'sticky': False,
-        },
-      }
-
-    # Mostrar wizard de confirmación
-    return {
-      'name': _('Confirmar eliminación'),
-      'type': 'ir.actions.act_window',
-      'res_model': 'ek.customs.data.clear.wizard',
-      'view_mode': 'form',
-      'target': 'new',
-      'context': {
-        'default_operation_request_ids': [(6, 0, self.ids)],
-        'default_total_records': total_records,
-      },
-    }
-
-  def action_clear_customs_data_confirmed(self):
-    """Método interno para eliminar los datos tras confirmación"""
-    for record in self:
-      if record.customs_agent_data_ids:
-        record.customs_agent_data_ids.unlink()
-
-    return {
-      'type': 'ir.actions.client',
-      'tag': 'display_notification',
-      'params': {
-        'title': _('Éxito'),
-        'message': _('Los datos de aduanas han sido eliminados correctamente.'),
-        'type': 'success',
-        'sticky': False,
-      },
-    }
-
-  def action_export_final_list(self):
-    """Exportar listado final a Excel"""
-    # TODO: Implementar en el siguiente paso
-    return {
-      'type': 'ir.actions.client',
-      'tag': 'display_notification',
-      'params': {
-        'title': _('Próximamente'),
-        'message': 'Funcionalidad de exportación será implementada en el siguiente paso.',
-        'type': 'info',
-        'sticky': False,
-      },
-    }
 
   # Note: AI extraction methods will be added via mixin composition
   # See ek_operation_request_mixin.py
@@ -981,11 +917,7 @@ class EkOperationRequest(models.Model):
     'ek.invoice.ship.map', 'operation_request_id', string='Mapeo de Facturas'
   )
 
-  customs_agent_data_ids = fields.One2many(
-    'ek.customs.agent.data',
-    'operation_request_id',
-    string='Datos de Aduanas',
-  )
+
 
   def _update_invoice_ship_map(self):
     """Actualiza la tabla de mapeo de facturas basada en los paquetes y mercancías"""
@@ -1306,10 +1238,6 @@ class EkOperationRequest(models.Model):
         "La póliza se aplica sobre los consumos facturados."
       ))
 
-    if not self.invoice_validated:
-      raise UserError(_(
-        "Debe validar la factura contra la Nota de Pedido antes de aplicar la póliza."
-      ))
 
     # Usar plantilla configurable
     if not self.mail_template_insurance:
@@ -1447,68 +1375,3 @@ class EkInvoiceShipMap(models.Model):
   )
 
 
-class CustomsAgentData(models.Model):
-  _name = 'ek.customs.agent.data'
-  _description = 'Datos de Agencia Aduanal'
-
-  operation_request_id = fields.Many2one(
-    'ek.operation.request',
-    string='Operación',
-    required=True,
-  )
-
-  # Campos de importación de Excel (H35, H34, H02, H06, H25, H18)
-  icl_pvdr_nm_01 = fields.Char(
-    string='Proveedor'
-  )  # H35. Nombre/razón social del proveedor
-  icl_item_inv_no = fields.Char(string='Factura')  # H34. Número de factura
-  icl_hs_part_cd = fields.Char(string='Subpartida')  # H02. Subpartida
-  icl_gds_desc_cn = fields.Char(string='Descripción')  # H06. Descripción
-  icl_item_fobv_pr = fields.Float(string='FOB Item')  # H25. FOB - item
-  icl_phsc_pck_ut_co = fields.Float(
-    string='Cantidad'
-  )  # H18. Cantidad de unidades físicas
-
-  # Campos de compatibilidad (mantener los existentes)
-  supplier = fields.Char(
-    string='Proveedor', compute='_compute_supplier', store=True
-  )
-  invoice_number = fields.Char(
-    string='Factura', compute='_compute_invoice_number', store=True
-  )
-  product_name = fields.Char(
-    string='Producto', compute='_compute_product_name', store=True
-  )
-  ship_name_id = fields.Many2one('ek.ship.registration', string='Buque')
-
-  # Estado de matching
-  match_status = fields.Selection(
-    [
-      ('exact', 'Exacto'),
-      ('fuzzy', 'Tolerante'),
-      ('no_match', 'Sin Match'),
-      ('pending', 'Pendiente'),
-    ],
-    string='Estado Match',
-    default='pending',
-  )
-
-  match_percentage = fields.Float(string='% Similitud')
-  matched_product_id = fields.Many2one(
-    'ek.product.packagens.goods', string='Producto Matched'
-  )
-
-  @api.depends('icl_pvdr_nm_01')
-  def _compute_supplier(self):
-    for record in self:
-      record.supplier = record.icl_pvdr_nm_01
-
-  @api.depends('icl_item_inv_no')
-  def _compute_invoice_number(self):
-    for record in self:
-      record.invoice_number = record.icl_item_inv_no
-
-  @api.depends('icl_gds_desc_cn')
-  def _compute_product_name(self):
-    for record in self:
-      record.product_name = record.icl_gds_desc_cn

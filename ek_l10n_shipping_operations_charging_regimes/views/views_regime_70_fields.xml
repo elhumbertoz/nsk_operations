@@ -153,7 +153,7 @@
                             <field name="on_board_date"/>
                             <field name="type_move_fcl_lcl"/>
                             <field name="supplies_detail"/>
-                            <field name="invoice_validated" widget="boolean_toggle"/>
+
                         </group>
                     </group>
 
@@ -193,48 +193,6 @@
                     </group>
                 </page>
 
-                <!-- TAB: Validación de Factura -->
-                <page string="Validación Factura" invisible="not regime in ['70']">
-                    <div class="alert alert-warning" role="alert" invisible="invoice_validated">
-                        <p><i class="fa fa-warning"/> La factura aún no ha sido validada contra la Nota de Pedido del agente aduanero.</p>
-                        <p>Use el botón "Validar contra Nota de Pedido" para iniciar el proceso de validación.</p>
-                    </div>
-
-                    <div class="alert alert-success" role="alert" invisible="not invoice_validated">
-                        <p><i class="fa fa-check-circle"/> La factura ha sido validada exitosamente.</p>
-                    </div>
-
-                    <group>
-                        <group>
-                            <field name="invoice_validated" widget="boolean_toggle"/>
-                        </group>
-                        <group>
-                            <button name="%(action_ek_invoice_validation_wizard)d"
-                                    string="Validar contra Nota de Pedido"
-                                    type="action"
-                                    class="btn-primary"
-                                    icon="fa-check-square-o"/>
-                        </group>
-                    </group>
-
-                    <!-- Líneas de productos con estado de validación -->
-                    <field name="ek_produc_packages_goods_ids"
-                           readonly="1">
-                        <tree decoration-success="is_validated and validation_status=='match'"
-                              decoration-warning="is_validated and validation_status=='manual'"
-                              decoration-danger="not is_validated"
-                              decoration-muted="is_validated and validation_status=='pending'">
-                            <field name="product_id" string="Producto Odoo"/>
-
-                            <field name="quantity"/>
-                            <field name="ship_id" string="Buque Destino"/>
-                            <field name="packages_count" string="Bultos"/>
-                            <field name="is_validated" widget="boolean"/>
-                            <field name="validation_status"/>
-                            <field name="po_line_reference" string="# PO"/>
-                        </tree>
-                    </field>
-                </page>
 
             </xpath>
 
@@ -271,9 +229,6 @@
                         name="filter_regime_70"
                         domain="[('regime', '=', '70')]"/>
 
-                <filter string="Factura Validada"
-                        name="filter_invoice_validated"
-                        domain="[('invoice_validated', '=', True), ('regime', '=', '70')]"/>
 
                 <filter string="Con Orden de Venta"
                         name="filter_with_so"

@@ -100,30 +100,8 @@ class ek_product_packagens_goods(models.Model):
     help="Buque para el cual está destinado este producto/repuesto"
   )
 
-  # REQ-006B: Validación contra Nota de Pedido
-  is_validated = fields.Boolean(
-    string="Validado",
-    default=False,
-    help="Indica si esta línea fue validada contra Nota de Pedido"
-  )
 
-  validation_status = fields.Selection([
-    ('pending', 'Pendiente'),
-    ('match', 'Coincide'),
-    ('mismatch', 'No Coincide'),
-    ('manual', 'Validado Manualmente')
-  ], string="Estado Validación", default='pending',
-     help="Estado de validación contra Nota de Pedido del agente aduanero")
 
-  validation_notes = fields.Text(
-    string="Notas de Validación",
-    help="Diferencias encontradas entre factura y Nota de Pedido"
-  )
-
-  po_line_reference = fields.Char(
-    string="Ref. Nota de Pedido",
-    help="Número de ítem/línea en la Nota de Pedido"
-  )
 
   # REQ-010: Integración de Matching por IA
   extracted_name = fields.Char(

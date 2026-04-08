@@ -20,10 +20,9 @@
     # 3. Wizards (cargar ANTES de las vistas que los referencian)
     'wizard/ek_wizard_filter_regimen.xml',
     'wizard/ek_wizard_charging_data.xml',
-    'wizard/ek_customs_import_wizard.xml',
-    'wizard/ek_customs_data_clear_wizard_view.xml',
+
     'wizard/ek_packages_goods_clear_wizard_view.xml',
-    'wizard/ek_invoice_validation_wizard_view.xml',
+
     'wizard/ek_ship_assignment_wizard_view.xml',
     # 4. Vistas de modelos principales
     'views/ek_ship_registration_views.xml',
