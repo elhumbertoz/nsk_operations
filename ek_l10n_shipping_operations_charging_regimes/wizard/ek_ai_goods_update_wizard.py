@@ -127,6 +127,10 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                 "required": ["action"]
                             }
                         },
+                        "vessel_id": {
+                            "type": "integer",
+                            "description": "ID del nuevo buque a asignar a la solicitud (si el usuario pide cambiar el buque)"
+                        },
                         "summary": {
                             "type": "string",
                             "description": "Resumen general de los cambios realizados en español"
@@ -136,6 +140,17 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                 }
             }
         }
+
+    def _get_vessels_catalog_prompt(self):
+        """Genera un catálogo de buques para el prompt de la IA"""
+        vessels = self.env['ek.ship.registration'].search([])
+        if not vessels:
+            return "No hay buques registrados actualmente."
+        
+        lines = ["Catálogo de Buques (ID | Nombre):"]
+        for v in vessels:
+            lines.append(f"{v.id} | {v.name}")
+        return "\n".join(lines)
 
     def _build_context_snapshot(self):
         """Genera una representación textual de la tabla actual para el prompt"""
@@ -184,6 +199,9 @@ OBLIGATORIO: Usa el LINE_ID para referenciar líneas existentes.
 
 ## CATÁLOGO RÉGIMEN 70
 {catalog_prompt}
+
+## CATÁLOGO DE BUQUES
+{self._get_vessels_catalog_prompt()}
 
 ## TU TAREA
 Analiza la instrucción del usuario.
@@ -243,8 +261,14 @@ REGLAS DEL TOOL:
         """Genera un HTML con el resumen de cambios para el usuario"""
         items = data.get('items', [])
         summary = data.get('summary', 'La IA propone los siguientes cambios:')
+        vessel_id = data.get('vessel_id')
         
         html = f"<div class='ai_preview'><h4>{summary}</h4>"
+
+        if vessel_id:
+            vessel = self.env['ek.ship.registration'].browse(vessel_id)
+            current_vessel = self.operation_request_id.ek_ship_registration_id.name or 'Ninguno'
+            html += f"<div class='alert alert-info'><strong>🚢 CAMBIO DE BUQUE</strong><br/>{current_vessel} &rarr; <strong>{vessel.name}</strong></div>"
         
         # Agrupar acciones
         deletes = [i for i in items if i['action'] == 'delete']
@@ -292,6 +316,13 @@ REGLAS DEL TOOL:
             goods_model = self.env['ek.product.packagens.goods']
             
             applied_summary = []
+
+            # Cambio de buque
+            vessel_id = data.get('vessel_id')
+            if vessel_id:
+                vessel = self.env['ek.ship.registration'].browse(vessel_id)
+                self.operation_request_id.ek_ship_registration_id = vessel.id
+                applied_summary.append(f"<li>Buque actualizado a: <strong>{vessel.name}</strong></li>")
 
             for item in items:
                 action = item['action']
