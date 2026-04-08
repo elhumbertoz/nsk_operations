@@ -205,7 +205,7 @@ class EkBoatsInformation(models.Model):
         for item in self.ek_produc_packages_goods_ids.filtered(lambda p: not p.is_not_dispatched):
             item.copy({
                 'ek_operation_request_id': request.id,
-                'ek_boats_information_id': self.id,  # Mantener trazabilidad al contenedor
+                'ek_boats_information_id': False,
             })
             products_copied += 1
 
