@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+  <t t-name="rowno_in_tree.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="extension" owl="1">
+    <xpath expr="//div/table/tfoot/tr/td" position="before">
+      <td />
+    </xpath>
+  </t>
+
+  <t t-name="rowno_in_tree.add_number" t-inherit="web.ListRenderer.Rows" t-inherit-mode="extension" owl="1">
+    <xpath expr="//t[@t-foreach='list.records']" position="before">
+      <t t-set="RowNumber" t-value="1" />
+    </xpath>
+    <xpath expr="//t[@t-call='{{ constructor.recordRowTemplate }}']" position="after">
+      <t t-set="RowNumber" t-value="RowNumber+1" />
+    </xpath>
+  </t>
+
+  <t t-name="rowno_in_tree.ListRenderer.RecordRowNumber" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension" owl="1">
+    <xpath expr="//tr/td[@t-if='hasSelectors']" position="before">
+      <td tabindex="-1">
+        <span t-esc="RowNumber" />
+      </td>
+    </xpath>
+  </t>
+
+  <t t-name="rowno_in_tree.ListRenderer.Rows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="extension" owl="1">
+    <!-- NO agregamos celda física, solo aumentamos el colspan para que cubra nuestra columna adicional -->
+    <!-- nbCols ya incluye nuestra columna (+1) -->
+    <!-- Con handle column: el handle column ya está antes del link, así que el link debe cubrir nbCols - 1 -->
+    <!-- Sin handle column: el link debe cubrir todas las columnas = nbCols -->
+    <xpath expr="//tr[@t-if='displayRowCreates']/td[@class='o_field_x2many_list_row_add']" position="attributes">
+      <attribute name="t-att-colspan">withHandleColumn ? nbCols - 1 : nbCols</attribute>
+    </xpath>
+
+    <!-- NO agregamos celda física en las filas vacías, solo aumentamos el colspan -->
+    <!-- nbCols ya incluye nuestra columna (+1), así que el colspan debe cubrir todas las columnas -->
+    <xpath expr="//tr[@t-foreach='getEmptyRowIds']/td" position="attributes">
+      <attribute name="t-att-colspan">nbCols</attribute>
+    </xpath>
+  </t>
+</template>

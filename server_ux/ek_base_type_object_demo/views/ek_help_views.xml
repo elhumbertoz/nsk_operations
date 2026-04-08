@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View ek_help View Tree -->
+    <record id="view_ek_help_tree" model="ir.ui.view">
+        <field name="name">view.ek_help.tree</field>
+        <field name="model">ek.help</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View ek_help form -->
+    <record id="ek_base_dinamic_view" model="ir.ui.view">
+        <field name="name">view.ek_help.form</field>
+        <field name="model">ek.help</field>
+        <field name="arch" type="xml">
+            <form string="Ek_help">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': false, 'fold_field': 'fold'}"/>
+                    </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="type_id"/>
+                        <h1>
+                            <field name="type_id" placeholder="Tipo..."/>
+                            <field name="fold" invisible="1"/>
+                        </h1>
+                    </div>
+                    <group name="group_name" string="group_string">
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action ek_help -->
+    <record id="action_ek_help" model="ir.actions.act_window">
+        <field name="name">Ek_help</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ek.help</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+    parent="base.next_id_9"
+    id="menu_ek_l10n_type_model_mixin_action_ek_help"
+    action="action_ek_help"/>
+
+</odoo>
