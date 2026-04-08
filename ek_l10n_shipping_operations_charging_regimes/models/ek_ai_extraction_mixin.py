@@ -238,11 +238,61 @@ class EkAIExtractionMixin(models.AbstractModel):
                                         "type": "string",
                                         "description": "Código arancelario (HS Code) para clasificación aduanera."
                                     },
-                                    "quantity": {"type": "number"},
-                                    "unit_price_fob": {"type": "number"},
-                                    "total_fob": {"type": "number"},
+                                    "is_palletized": {
+                                        "type": "boolean",
+                                        "description": (
+                                            "TRUE si el proveedor agrupó/paletizó múltiples unidades en bultos (BULTOS/BALES/PALLETS). "
+                                            "En este caso, la factura muestra una columna distinta de BULTOS vs PAÑOS/UNIDADES/SHEETS. "
+                                            "FALSE si cada línea corresponde a unidades individuales sin agrupación en bultos."
+                                        )
+                                    },
+                                    "bales_count": {
+                                        "type": "integer",
+                                        "description": (
+                                            "Número de bultos/fardos/pallets físicos (columna BULTOS, BALES, PALLETS o similar). "
+                                            "Solo completar si is_palletized=true. "
+                                            "Este es el número que se usará como 'quantity' para la declaración aduanera."
+                                        )
+                                    },
+                                    "units_per_bale": {
+                                        "type": "number",
+                                        "description": (
+                                            "Cantidad de unidades/piezas físicas dentro de cada bulto (columna PAÑOS, SHEETS, PCS, UNITS o similar). "
+                                            "Solo completar si is_palletized=true. Informativo, no se usa para el cálculo FOB."
+                                        )
+                                    },
+                                    "quantity": {
+                                        "type": "number",
+                                        "description": (
+                                            "CANTIDAD PARA LA DECLARACIÓN ADUANERA. "
+                                            "Si is_palletized=TRUE: usar bales_count (número de bultos). "
+                                            "Si is_palletized=FALSE: usar la cantidad de unidades individuales de la línea."
+                                        )
+                                    },
+                                    "unit_price_fob": {
+                                        "type": "number",
+                                        "description": (
+                                            "PRECIO FOB UNITARIO PARA LA DECLARACIÓN ADUANERA. "
+                                            "Si is_palletized=TRUE: calcular como total_fob / bales_count (FOB por bulto). "
+                                            "Si is_palletized=FALSE: usar el precio unitario por pieza que aparece en la factura."
+                                        )
+                                    },
+                                    "total_fob": {
+                                        "type": "number",
+                                        "description": (
+                                            "Valor FOB TOTAL de la línea. Siempre copiar el importe/amount total tal como "
+                                            "aparece en la factura (IMPORTE, AMOUNT, TOTAL). No recalcular."
+                                        )
+                                    },
                                     "weight_kg": {"type": "number"},
-                                    "packages_count": {"type": "integer"},
+                                    "packages_count": {
+                                        "type": "integer",
+                                        "description": (
+                                            "Número de paquetes/bultos para registrar en el sistema. "
+                                            "Si is_palletized=TRUE: igual a bales_count. "
+                                            "Si is_palletized=FALSE: igual a quantity."
+                                        )
+                                    },
                                     "ship_name": {
                                         "type": "string",
                                         "description": (
@@ -259,9 +309,13 @@ class EkAIExtractionMixin(models.AbstractModel):
                                         "description": "Nivel de confianza del matching con el catálogo proporcionado (0.0 a 1.0)."
                                     }
                                 },
-                                "required": ["description", "quantity", "total_fob"]
+                                "required": ["description", "quantity", "total_fob", "is_palletized"]
                             },
-                            "description": "Lista de productos/items en la factura. Es CRÍTICO extraer la descripción completa para el matching de catálogo."
+                            "description": (
+                                "Lista de productos/items en la factura. "
+                                "CRÍTICO: detectar si los productos están paletizados/agrupados en bultos "
+                                "para calcular correctamente el FOB unitario por bulto."
+                            )
                         },
                         "subtotal": {"type": "number"},
                         "total": {"type": "number"},
@@ -593,7 +647,7 @@ El documento PDF está adjunto."""
             invoices_processed = 0
 
             # Procesar cada factura
-            for invoice_att in self.invoice_attachment_ids:
+            for invoice_att in sorted(self.invoice_attachment_ids, key=lambda a: (a.name or '').lower()):
                 _logger.info(f"Extrayendo datos de factura: {invoice_att.name}")
 
                 messages = [
@@ -621,10 +675,39 @@ Tu trabajo tiene dos partes:
   - EJEMPLO (Español): "Motor Eléctrico WEG W22 7.5HP 4P"
   - EJEMPLO (Inglés): "Electric Motor WEG W22 7.5HP 4P"
 
-## REGLAS DE EXTRACCIÓN
-- Extrae todos los items, cantidades y precios FOB exactos.
-- IMPORTANTE: NO extraigas items con precio cero (0.00). Si un item no tiene precio o es cero, ignóralo por completo.
+## REGLAS DE PALETIZACIÓN Y AGRUPACIÓN EN BULTOS (MUY IMPORTANTE)
+Algunas facturas agrupan las unidades físicas en BULTOS, FARDOS, BALES o PALLETS. Esto es crítico para la declaración aduanera:
+
+**CASO A — Productos NO paletizados (líneas individuales):**
+- La factura NO tiene una columna separada de BULTOS o BALES.
+- Cada línea = 1 tipo de producto con su cantidad y precio unitario directos.
+- `is_palletized` = false
+- `quantity` = cantidad de unidades de la línea
+- `unit_price_fob` = precio por unidad tal como aparece en la factura
+- EJEMPLO: 10 unidades × $50 c/u = $500 total → quantity=10, unit_price_fob=50, total_fob=500
+
+**CASO B — Productos paletizados/agrupados en BULTOS:**
+- La factura tiene columnas SEPARADAS: BULTOS/BALES/PALLETS (agrupa físicamente) y PAÑOS/SHEETS/PCS/UNIDADES (contenido).
+- El precio INDIVIDUAL por unidad NO coincidirá con el total si divides por unidades — debes dividir por BULTOS.
+- `is_palletized` = true
+- `bales_count` = valor de la columna BULTOS/BALES (= cantidad de unidades físicas despachables)
+- `units_per_bale` = valor de la columna PAÑOS/SHEETS/PCS (informativo)
+- `quantity` = bales_count (número de BULTOS, NO de unidades internas)
+- `unit_price_fob` = total_fob / bales_count (FOB distribuido entre los bultos)
+- `total_fob` = el importe/amount total de la línea tal como aparece en la factura
+- `packages_count` = bales_count
+- EJEMPLO: 3 BULTOS × 5 PAÑOS c/u, importe total $1,500 → quantity=3, unit_price_fob=500, total_fob=1500, bales_count=3, units_per_bale=5
+
+**CÓMO DETECTAR agrupación en bultos:**
+- Busca columnas con encabezados como: BULTOS, BALES, PALLETS, FARDOS, CAJAS, PACKAGES (acompañadas de otra columna PAÑOS, SHEETS, PCS, UNITS, QTY).
+- Si el precio por unidad × cantidad de unidades NO da el total, es señal de agrupación en bultos.
+- Si hay una columna de unidades internas (PAÑOS/SHEETS) distinta de la de bultos, aplica CASO B.
+
+## REGLAS DE EXTRACCIÓN GENERALES
+- Extrae todos los items con sus cantidades y precios FOB exactos.
+- IMPORTANTE: NO extraigas items con precio cero (0.00). Si un item no tiene precio o es cero, ignóralo.
 - Si el documento menciona explícitamente un buque destino (ej: "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), captúralo en `ship_name`.
+- `total_fob` SIEMPRE debe ser el importe total de la línea tal como aparece; nunca lo recalcules.
 
 Llama siempre a `extract_invoice_data` para devolver los resultados estructurados."""
                     },
@@ -741,7 +824,10 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
 
     def _create_goods_lines_from_invoice_items(self, items):
         """
-        Crea líneas de mercancía desde items extraídos de facturas
+        Crea líneas de mercancía desde items extraídos de facturas.
+        Maneja correctamente la paletización/agrupación en bultos:
+        - Si is_palletized=True: quantity=bales_count, unit_price_fob=total_fob/bales_count
+        - Si is_palletized=False: quantity y unit_price_fob directamente de la factura
         """
         goods_model = self.env['ek.product.packagens.goods']
 
@@ -760,15 +846,55 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
                 _logger.info("Saltando item con precio en cero: %s", display_name)
                 continue
 
+            # ── LÓGICA DE PALETIZACIÓN ──────────────────────────────────────────
+            # La IA devuelve is_palletized=True cuando el proveedor agrupa unidades
+            # en bultos (BULTOS/BALES). En ese caso:
+            #   - quantity = número de bultos (bales_count)
+            #   - unit_price_fob = total_fob / bales_count  (FOB por bulto)
+            # Cuando is_palletized=False, se usan los valores directos de la factura.
+            is_palletized = item.get('is_palletized', False)
+            bales_count = item.get('bales_count') or 0
+
+            if is_palletized and bales_count > 0:
+                # CASO B: productos agrupados en bultos
+                final_quantity = bales_count
+                final_unit_fob = round(total_price / bales_count, 6) if total_price else 0
+                final_packages = bales_count
+                _logger.info(
+                    "Item PALETIZADO '%s': %d bultos, FOB/bulto=%.2f (total=%.2f)",
+                    display_name, bales_count, final_unit_fob, total_price
+                )
+            else:
+                # CASO A: unidades individuales — usar valores directos de la IA
+                final_quantity = item.get('quantity') or 0
+                final_unit_fob = item.get('unit_price_fob') or 0
+                final_packages = item.get('packages_count') or 0
+
+                # Heurística de seguridad: si la IA no marcó is_palletized pero los
+                # números no cuadran (unit_price × qty ≠ total con margen > 5%),
+                # recalculamos unit_price desde el total para evitar inconsistencias.
+                if final_quantity > 0 and total_price > 0:
+                    calculated_total = round(final_unit_fob * final_quantity, 2)
+                    variance = abs(calculated_total - total_price) / total_price
+                    if variance > 0.05:
+                        original_fob = final_unit_fob
+                        final_unit_fob = round(total_price / final_quantity, 6)
+                        _logger.warning(
+                            "Item '%s': precio unitario inconsistente (%.2f × %s = %.2f ≠ total %.2f). "
+                            "Recalculando unit_fob=%.4f desde total.",
+                            display_name, original_fob, final_quantity,
+                            calculated_total, total_price, final_unit_fob
+                        )
+
             line_vals = {
                 parent_field: self.id,
                 'name': display_name,
                 'extracted_name': raw_description,  # Original supplier text for audit trail
-                'quantity': item.get('quantity') or 0,
-                'fob': item.get('unit_price_fob') or 0,
-                'total_fob': item.get('total_fob') or 0,
+                'quantity': final_quantity,
+                'fob': final_unit_fob,
+                'total_fob': total_price,
                 'gross_weight': item.get('weight_kg') or 0,
-                'packages_count': item.get('packages_count') or 0,
+                'packages_count': final_packages,
                 'invoice_number': item.get('invoice_number', ''),
                 'supplier': item.get('supplier', ''),
                 'product_id': item.get('product_id'),

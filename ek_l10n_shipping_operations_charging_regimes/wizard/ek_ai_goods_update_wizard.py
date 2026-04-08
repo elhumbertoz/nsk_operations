@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import json
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -104,6 +105,7 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                             "fob": {"type": "number"},
                                             "gross_weight": {"type": "number"},
                                             "tariff_item": {"type": "string"},
+                                            "id_hs_copmt_cd": {"type": "string"},
                                             "invoice_number": {"type": "string"},
                                             "supplier": {"type": "string"},
                                             "packages_count": {"type": "string"},
@@ -114,7 +116,8 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                     "quantity": {"type": "number", "description": "Para add: Cantidad"},
                                     "fob": {"type": "number", "description": "Para add: Precio unitario FOB"},
                                     "gross_weight": {"type": "number", "description": "Para add: Peso bruto"},
-                                    "tariff_item": {"type": "string", "description": "Para add: Item arancelario"},
+                                    "tariff_item": {"type": "string", "description": "Para add: Item arancelario / Partida"},
+                                    "id_hs_copmt_cd": {"type": "string", "description": "Para add: Código complementario"},
                                     "invoice_number": {"type": "string", "description": "Para add: Nro factura"},
                                     "supplier": {"type": "string", "description": "Para add: Proveedor"},
                                     "packages_count": {"type": "string", "description": "Para add: Cantidad de bultos"},
@@ -158,16 +161,55 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
         if not lines:
             return "La tabla de mercancías está actualmente VACÍA."
 
-        headers = ["LINE_ID", "Nombre", "Cant", "FOB", "Peso (kg)", "Bultos", "Factura", "Proveedor"]
+        headers = ["LINE_ID", "Nombre", "Cant", "FOB", "Peso", "Bultos", "Partida", "Compl."]
         rows = []
         for l in lines:
-            rows.append(f"| {l.id} | {l.name or ''} | {l.quantity} | {l.fob} | {l.gross_weight} | {l.packages_count or ''} | {l.invoice_number or ''} | {l.supplier or ''} |")
+            rows.append(f"| {l.id} | {l.name or ''} | {l.quantity} | {l.fob} | {l.gross_weight} | {l.packages_count or ''} | {l.tariff_item or ''} | {l.id_hs_copmt_cd or ''} |")
         
         md_table = "| " + " | ".join(headers) + " |\n"
         md_table += "|-" + "-|-".join(["-"*len(h) for h in headers]) + "-|\n"
         md_table += "\n".join(rows)
 
         return md_table
+
+    def _markdown_to_html(self, text):
+        """Conversión básica de Markdown a HTML para visualización"""
+        if not text:
+            return ""
+        
+        # 1. Bold: **text** -> <strong>text</strong>
+        text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+        
+        # 2. Encabezados: ### Titulo -> <h3>Titulo</h3>
+        text = re.sub(r'### (.*?)\n', r'<h3>\1</h3>', text)
+        text = re.sub(r'## (.*?)\n', r'<h2>\1</h2>', text)
+        
+        # 3. Listas: * ítem -> <li>ítem</li>
+        lines = text.split('\n')
+        processed_lines = []
+        in_list = False
+        for line in lines:
+            clean_line = line.strip()
+            if clean_line.startswith(('* ', '- ')):
+                if not in_list:
+                    processed_lines.append('<ul>')
+                    in_list = True
+                content = clean_line[2:]
+                processed_lines.append(f'<li>{content}</li>')
+            else:
+                if in_list:
+                    processed_lines.append('</ul>')
+                    in_list = False
+                processed_lines.append(line)
+        if in_list:
+            processed_lines.append('</ul>')
+        
+        res = "\n".join(processed_lines)
+        
+        # 4. Saltos de línea
+        res = res.replace('\n', '<br/>')
+        
+        return Markup(res)
 
     def action_process(self):
         """Llama al LLM y procesa la respuesta"""
@@ -242,7 +284,7 @@ REGLAS DEL TOOL:
                 # Verificar si hay eliminaciones
                 self.has_deletions = any(item.get('action') == 'delete' for item in changes_data.get('items', []))
             else:
-                self.ai_response_text = msg.content
+                self.ai_response_text = self._markdown_to_html(msg.content)
                 self.processing_status = 'response'
 
         except Exception as e:
@@ -287,9 +329,22 @@ REGLAS DEL TOOL:
             for u in updates:
                 line = self.env['ek.product.packagens.goods'].browse(u['line_id'])
                 html += f"<tr><td colspan='2'><strong>ID {u['line_id']}: {line.name}</strong></td></tr>"
+                field_labels = {
+                    'name': 'Nombre',
+                    'quantity': 'Cantidad',
+                    'fob': 'FOB',
+                    'gross_weight': 'Peso',
+                    'tariff_item': 'Partida',
+                    'id_hs_copmt_cd': 'Cómpl.',
+                    'invoice_number': 'Factura',
+                    'supplier': 'Proveedor',
+                    'packages_count': 'Bultos',
+                    'observation': 'Obs.'
+                }
                 for field, val in u.get('changes', {}).items():
+                    label = field_labels.get(field, field)
                     old_val = getattr(line, field, 'N/A')
-                    html += f"<tr><td class='ps-3 text-muted'>{field}:</td><td>{old_val} &rarr; <strong>{val}</strong></td></tr>"
+                    html += f"<tr><td class='ps-3 text-muted'>{label}:</td><td>{old_val} &rarr; <strong>{val}</strong></td></tr>"
             html += "</table></div>"
 
         if adds:
@@ -347,6 +402,7 @@ REGLAS DEL TOOL:
                         'fob': item.get('fob', 0),
                         'gross_weight': item.get('gross_weight', 0),
                         'tariff_item': item.get('tariff_item'),
+                        'id_hs_copmt_cd': item.get('id_hs_copmt_cd'),
                         'invoice_number': item.get('invoice_number'),
                         'supplier': item.get('supplier'),
                         'packages_count': item.get('packages_count'),
