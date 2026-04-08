@@ -5,6 +5,7 @@ from . import (
   ek_wizard_filter_regimen,
   ek_wizard_regime70_report,
   ek_ship_assignment_wizard,
+  ek_ai_goods_update_wizard,
 )
 
 

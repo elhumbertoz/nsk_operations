@@ -12,3 +12,4 @@ bl_import_export,bl_import_export,model_bl_import_export,,1,1,1,1
 access_ek_invoice_ship_map_user,ek.invoice.ship.map.user,model_ek_invoice_ship_map,base.group_user,1,1,1,1
 
 access_ek_packages_goods_clear_wizard_user,ek.packages.goods.clear.wizard.user,model_ek_packages_goods_clear_wizard,base.group_user,1,1,1,1
+access_ek_ai_goods_update_wizard_user,ek.ai.goods.update.wizard.user,model_ek_ai_goods_update_wizard,base.group_user,1,1,1,1
