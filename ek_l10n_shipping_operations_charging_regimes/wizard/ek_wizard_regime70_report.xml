@@ -16,10 +16,16 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="action_generate_report"
-                            string="Generar Reporte"
+                    <button name="action_generate_pdf"
+                            string="PDF"
                             type="object"
-                            class="btn-primary"/>
+                            class="btn-primary"
+                            icon="fa-file-pdf-o"/>
+                    <button name="action_generate_xlsx"
+                            string="Excel"
+                            type="object"
+                            class="btn-success"
+                            icon="fa-file-excel-o"/>
                     <button special="cancel" string="Cancelar" class="btn-secondary"/>
                 </footer>
             </form>

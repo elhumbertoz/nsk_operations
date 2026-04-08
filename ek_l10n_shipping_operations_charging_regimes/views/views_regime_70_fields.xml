@@ -21,36 +21,41 @@
                 <field name="number_mrn" invisible="1"/>
                 <field name="stage_sequence" invisible="1"/>
                 <field name="stage_fold" invisible="1"/>
+                <field name="mail_sent_customs_agent" invisible="1"/>
+                <field name="mail_sent_warehouse" invisible="1"/>
+                <field name="mail_sent_driver_info" invisible="1"/>
+                <field name="mail_sent_custody" invisible="1"/>
+                <field name="mail_sent_insurance" invisible="1"/>
                 <button name="action_send_mail_customs_agent"
-                        string="Agente Aduanas"
+                        string="NotificarAgente Aduanas"
                         type="object"
                         class="btn-secondary"
                         icon="fa-envelope"
-                        invisible="regime not in ['70'] or stage_sequence &lt; 11 or stage_fold"/>
+                        invisible="regime not in ['70'] or stage_sequence &lt; 11 or stage_fold or mail_sent_customs_agent"/>
                 <button name="action_send_mail_warehouse"
-                        string="Almacenera"
+                        string="Notificar Almacenera"
                         type="object"
                         class="btn-secondary"
                         icon="fa-envelope"
-                        invisible="regime not in ['70'] or stage_sequence &lt; 13 or stage_fold"/>
+                        invisible="regime not in ['70'] or stage_sequence &lt; 13 or stage_fold or mail_sent_warehouse"/>
                 <button name="action_send_mail_driver_info"
-                        string="Datos Chofer"
+                        string="Notificar Datos Chofer"
                         type="object"
                         class="btn-secondary"
                         icon="fa-truck"
-                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold or mail_sent_driver_info"/>
                 <button name="action_send_mail_custody"
-                        string="Custodia"
+                        string="Notificar Custodia"
                         type="object"
                         class="btn-warning"
                         icon="fa-shield"
-                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold or mail_sent_custody"/>
                 <button name="action_send_mail_insurance"
-                        string="Póliza"
+                        string="Notificar Póliza"
                         type="object"
                         class="btn-secondary"
                         icon="fa-file-text"
-                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold or mail_sent_insurance"/>
             </xpath>
 
             <!-- REQ-017: Cambiar label ID BL → ID CONTENEDOR -->
@@ -58,18 +63,11 @@
                 <label for="id_bl" string="ID CONTENEDOR" invisible="not regime in ['70']"/>
             </xpath>
 
-            <!-- Agregar campos de Régimen 70 en grupo principal -->
+            <!-- Agregar campos de Régimen 70 en grupo principal
+                 NOTA: authorization_code, shipping_lines, date_transfer y
+                 date_return_container vienen dinámicamente del Tipo de Solicitud -->
             <xpath expr="//field[@name='ek_group_mail_template_id']" position="after">
-                <!-- CAMPOS NUEVOS RÉGIMEN 70 -->
                 <field name="regime" invisible="1"/>
-
-                <field name="authorization_number"
-                       invisible="not regime in ['70']"
-                       placeholder="M-XXXX"/>
-
-                <field name="shipping_line_id"
-                       invisible="not regime in ['70']"
-                       options="{'no_create': True}"/>
 
                 <field name="client_partner_id"
                        invisible="not regime in ['70']"
@@ -78,15 +76,6 @@
                 <field name="client_vessel_name"
                        invisible="not regime in ['70']"
                        placeholder="Nombre del barco del cliente"/>
-            </xpath>
-
-            <!-- Agregar fechas adicionales -->
-            <xpath expr="//field[@name='create_date']" position="after">
-                <field name="transfer_date"
-                       invisible="not regime in ['70']"/>
-
-                <field name="container_return_date"
-                       invisible="not regime in ['70']"/>
             </xpath>
 
             <!-- Agregar tabs nuevos al notebook -->
@@ -141,24 +130,23 @@
 
                     <group string="Documentación y Autorizaciones">
                         <group>
-                            <field name="bl_number" string="Número BL"/>
+                            <field name="number_bl" string="Número BL"/>
                             <field name="booking_number"/>
                             <field name="seal_number"/>
-                            <field name="authorization_number"/>
+                            <field name="authorization_code" string="# Autorización"/>
                             <field name="deposit_description" placeholder="MA-00"/>
                             <field name="dae_regularized"/>
                             <field name="days_in_deposit" readonly="1"/>
                         </group>
                         <group>
-                            <field name="shipping_line_id"/>
+                            <field name="shipping_lines" string="Línea Naviera"/>
                             <field name="consignee_id" options="{'no_create': True}"/>
                             <field name="on_board_date"/>
                             <field name="type_move_fcl_lcl"/>
-                            <field name="supplies_detail"/>
-
+                            <field name="detail_supplies_spare_parts" string="Detalle"/>
                         </group>
                     </group>
-
+<!-- 
                     <group string="Póliza de Transporte">
                         <group>
                             <field name="insurance_contract_date"/>
@@ -167,33 +155,17 @@
                             <field name="insurance_renewal_from"/>
                             <field name="insurance_renewal_to"/>
                         </group>
-                    </group>
+                    </group> -->
 
 
-                    <group string="Cliente y Facturación">
-                        <group>
-                            <field name="client_partner_id"/>
-                            <field name="client_vessel_name"/>
-                        </group>
-                        <group>
-                            <field name="sale_order_id" readonly="1"/>
-                            <button name="action_generate_sale_order"
-                                    string="Generar Orden de Venta"
-                                    type="object"
-                                    class="btn-primary"
-                                    icon="fa-file-text-o"
-                                    invisible="sale_order_id or not client_partner_id"/>
-                        </group>
-                    </group>
-
-                    <group string="Fechas y Traslado">
-                        <group>
-                            <field name="transfer_date"/>
-                            <field name="container_return_date"/>
-                        </group>
-                        <group>
-                            <field name="transfer_explanation" placeholder="Datos del transportista: Chofer, Cédula, Placas, Cooperativa"/>
-                        </group>
+                    <group string="Orden de Venta">
+                        <field name="sale_order_id" readonly="1"/>
+                        <button name="action_generate_sale_order"
+                                string="Generar Orden de Venta"
+                                type="object"
+                                class="btn-primary"
+                                icon="fa-file-text-o"
+                                invisible="sale_order_id or not client_partner_id"/>
                     </group>
 
                     <group string="Resumen de Bultos por Buque" invisible="not total_packages_by_vessel">
@@ -252,7 +224,7 @@
                             context="{'group_by': 'client_partner_id'}"/>
                     <filter string="Línea Naviera"
                             name="group_by_shipping_line"
-                            context="{'group_by': 'shipping_line_id'}"/>
+                            context="{'group_by': 'shipping_lines'}"/>
                 </group>
             </xpath>
         </field>

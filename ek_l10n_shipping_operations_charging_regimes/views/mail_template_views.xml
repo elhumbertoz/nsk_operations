@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Hereda la vista nativa de mail.template para agregar cc_user_ids -->
+    <record id="mail_template_form_inherit_cc_users" model="ir.ui.view">
+        <field name="name">mail.template.form.inherit.cc.users</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <field name="email_cc" position="after">
+                <field name="cc_partner_ids"
+                       widget="many2many_tags"
+                       options="{'no_create': True}"
+                       string="Contactos en Copia (CC)"/>
+            </field>
+        </field>
+    </record>
+
     <!-- Vista de árbol para plantillas de email de Régimen 70 -->
     <record id="mail_template_regime_70_tree" model="ir.ui.view">
         <field name="name">mail.template.regime.70.tree</field>
@@ -46,7 +61,11 @@
                                     <field name="email_from" placeholder="Ej: ${object.company_id.email or ''}"/>
                                     <field name="email_to" placeholder="Ej: ${object.shipping_agent_id.email or ''}"/>
                                     <field name="partner_to" placeholder="Ej: ${object.partner_id.id}"/>
-                                    <field name="email_cc" placeholder="Emails separados por comas"/>
+                                    <field name="email_cc" placeholder="Emails separados por comas (opcional)"/>
+                                    <field name="cc_partner_ids"
+                                           widget="many2many_tags"
+                                           options="{'no_create': True}"
+                                           placeholder="Selecciona contactos para CC..."/>
                                     <field name="reply_to" placeholder="Ej: ${object.user_id.email or ''}"/>
                                 </group>
                             </group>

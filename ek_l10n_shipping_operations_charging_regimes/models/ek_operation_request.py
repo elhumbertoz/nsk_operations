@@ -85,11 +85,11 @@ class EkOperationRequest(models.Model):
     tracking=True
   )
 
-  @api.depends('transfer_date', 'container_return_date')
+  @api.depends('date_transfer', 'date_return_container')
   def _compute_days_in_deposit(self):
     for rec in self:
-      if rec.transfer_date and rec.container_return_date:
-        delta = rec.container_return_date - rec.transfer_date.date()
+      if rec.date_transfer and rec.date_return_container:
+        delta = rec.date_return_container.date() - rec.date_transfer.date()
         rec.days_in_deposit = delta.days
       else:
         rec.days_in_deposit = 0
@@ -139,32 +139,14 @@ class EkOperationRequest(models.Model):
 
   # ============================================================
   # CAMPOS NUEVOS REQ-008: Régimen 70 - Contenedores
+  # Nota: authorization_number → authorization_code (base)
+  #       bl_number → number_bl (base)
+  #       container_return_date → date_return_container (base)
+  #       shipping_line_id → shipping_lines (base)
+  #       supplies_detail → detail_supplies_spare_parts (base)
+  #       transfer_date → date_transfer (base)
   # ============================================================
 
-  # AUTORIZACIÓN Y DOCUMENTACIÓN
-  authorization_number = fields.Char(
-    string="# Autorización",
-    default="M-",
-    help="Solicitud previa N° otorgado por almacenera (ej: M-3711)",
-    tracking=True
-  )
-
-  shipping_line_id = fields.Many2one(
-    'res.partner',
-    string="Línea Naviera",
-    domain="[('is_company', '=', True)]",
-    help="Línea naviera comercial (diferente del buque)",
-    tracking=True
-  )
-
-  # FECHAS ADICIONALES
-  container_return_date = fields.Date(
-    string="Fecha Devolución Contenedor",
-    tracking=True
-  )
-
-  # NUEVOS CAMPOS LOGÍSTICOS (REQ-008B)
-  bl_number = fields.Char(related="number_bl", string="Número BL", readonly=False, store=True)
   booking_number = fields.Char("Booking Number", tracking=True)
   seal_number = fields.Char("Seal Number", tracking=True)
   consignee_id = fields.Many2one("res.partner", string="Consignatario", tracking=True)
@@ -175,19 +157,6 @@ class EkOperationRequest(models.Model):
       ('lcl_lcl', 'LCL/LCL'),
       ('lcl_fcl', 'LCL/FCL'),
   ], string="Tipo Movimiento (FCL/LCL)", tracking=True)
-
-  transfer_date = fields.Datetime(
-    string="Fecha de Traslado",
-    help="Fecha de traslado al depósito aduanero",
-    tracking=True
-  )
-
-  # DETALLES DE MERCANCÍA
-  supplies_detail = fields.Char(
-    string="Detalle de Suministros o Repuestos",
-    default="CONTENEDOR #",
-    help="Descripción breve de la carga"
-  )
 
   deposit_description = fields.Char(
     string="# Matrícula Depósito",
@@ -1085,12 +1054,15 @@ class EkOperationRequest(models.Model):
     template = self.mail_template_customs_agent
 
     attachment_ids = []
-    if self.bl_attachment_ids:
-      attachment_ids.extend(self.bl_attachment_ids.ids)
-    if self.invoice_attachment_ids:
-      attachment_ids.extend(self.invoice_attachment_ids.ids)
+    container = self.container_id
+    if container:
+      if container.bl_attachment_ids:
+        attachment_ids.extend(container.bl_attachment_ids.ids)
+      if container.invoice_attachment_ids:
+        attachment_ids.extend(container.invoice_attachment_ids.ids)
 
-    template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
+    email_values = {'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
+    template.send_mail(self.id, force_send=True, email_values=email_values)
 
     # Marcar como enviado
     self.write({
@@ -1104,6 +1076,7 @@ class EkOperationRequest(models.Model):
       'title': _('Correo Enviado'),
       'message': _('Se envió correo a %s con %d adjuntos') % (self.agent_customs_id.name, len(attachment_ids)),
       'type': 'success',
+      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
     }}
 
   def action_send_mail_warehouse(self):
@@ -1113,12 +1086,6 @@ class EkOperationRequest(models.Model):
     # Validaciones de datos requeridos
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
-
-    if not self.authorization_number or self.authorization_number == 'M-':
-      raise UserError(_(
-        "Debe completar el Número de Autorización (M-XXXX).\n"
-        "Este número es otorgado por la almacenera en la solicitud previa."
-      ))
 
     if not self.ek_produc_packages_goods_ids:
       raise UserError(_("No hay productos/mercancías para enviar a la almacenera."))
@@ -1130,14 +1097,17 @@ class EkOperationRequest(models.Model):
     template = self.mail_template_warehouse
 
     attachment_ids = []
-    if self.purchase_order_attachment_ids:
-      attachment_ids.extend(self.purchase_order_attachment_ids.ids)
-    if self.bl_attachment_ids:
-      attachment_ids.extend(self.bl_attachment_ids.ids)
-    if self.invoice_attachment_ids:
-      attachment_ids.extend(self.invoice_attachment_ids.ids)
+    container = self.container_id
+    if container:
+      if getattr(container, 'purchase_order_attachment_ids', False):
+        attachment_ids.extend(container.purchase_order_attachment_ids.ids)
+      if container.bl_attachment_ids:
+        attachment_ids.extend(container.bl_attachment_ids.ids)
+      if container.invoice_attachment_ids:
+        attachment_ids.extend(container.invoice_attachment_ids.ids)
 
-    template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
+    email_values = {'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
+    template.send_mail(self.id, force_send=True, email_values=email_values)
 
     # Marcar como enviado
     self.write({
@@ -1151,6 +1121,7 @@ class EkOperationRequest(models.Model):
       'title': _('Correo Enviado'),
       'message': _('Se envió correo a %s') % self.res_partner_id.name,
       'type': 'success',
+      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
     }}
 
   def action_send_mail_driver_info(self):
@@ -1158,16 +1129,18 @@ class EkOperationRequest(models.Model):
     self.ensure_one()
 
     # Validaciones de datos requeridos
+    if not self.detail_supplies_spare_parts:
+      raise UserError(_("Debe ingresar detalles de chofer asignado - placas - cooperativa"))
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
 
-    if not self.transfer_explanation:
+    if not self.authorization_code or self.authorization_code == 'M-':
       raise UserError(_(
-        "Debe completar la información del transportista.\n"
-        "Incluya: Nombre del chofer, Cédula, Placas del vehículo, Cooperativa."
+        "Debe completar el Número de Autorización (M-XXXX).\n"
+        "Este número es otorgado por la almacenera en la solicitud previa."
       ))
 
-    if not self.transfer_date:
+    if not self.date_transfer:
       raise UserError(_("Debe especificar la fecha de traslado."))
 
     # Usar plantilla configurable
@@ -1188,6 +1161,7 @@ class EkOperationRequest(models.Model):
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
       'title': _('Correo Enviado'), 'message': _('Datos del chofer enviados'), 'type': 'success',
+      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
     }}
 
   def action_send_mail_custody(self):
@@ -1199,6 +1173,12 @@ class EkOperationRequest(models.Model):
       raise UserError(_(
         "Debe completar el Número de Matrícula del Depósito (MA-XX).\n"
         "Este número es asignado por la almacenera al ingresar la mercancía."
+      ))
+    
+    if not self.authorization_code or self.authorization_code == 'M-':
+      raise UserError(_(
+        "Debe completar el Número de Autorización (M-XXXX).\n"
+        "Este número es otorgado por la almacenera en la solicitud previa."
       ))
 
     if not self.ek_produc_packages_goods_ids:
@@ -1222,6 +1202,7 @@ class EkOperationRequest(models.Model):
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
       'title': _('Correo Enviado'), 'message': _('Solicitud de custodia enviada'), 'type': 'success',
+      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
     }}
 
   def action_send_mail_insurance(self):
@@ -1238,6 +1219,11 @@ class EkOperationRequest(models.Model):
         "La póliza se aplica sobre los consumos facturados."
       ))
 
+    if not self.authorization_code or self.authorization_code == 'M-':
+      raise UserError(_(
+        "Debe completar el Número de Autorización (M-XXXX).\n"
+        "Este número es otorgado por la almacenera en la solicitud previa."
+      ))
 
     # Usar plantilla configurable
     if not self.mail_template_insurance:
@@ -1257,6 +1243,7 @@ class EkOperationRequest(models.Model):
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
       'title': _('Correo Enviado'), 'message': _('Póliza MRN: %s enviada') % self.number_mrn, 'type': 'success',
+      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
     }}
 
   def action_requeired_stage_fields(self, stage):
@@ -1403,6 +1390,7 @@ class EkInvoiceShipMap(models.Model):
   invoice_number = fields.Char('Factura', required=True)
   supplier = fields.Char('Proveedor', required=True)
   ship_id = fields.Many2one('ek.ship.registration', string='Buque')
+  packages_count = fields.Integer(string='# Bultos', default=0)
   operation_request_id = fields.Many2one(
     'ek.operation.request',
     string='Operación',

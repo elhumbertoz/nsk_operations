@@ -21,7 +21,7 @@
             <t t-call="web.external_layout">
                 <div class="page">
                     <div class="text-center mb16">
-                        <h3>RÉGIMEN 70 - NAVIERA SANTA KATALINA - <t t-esc="docs[0].transfer_date.year if docs and docs[0].transfer_date else ''"/></h3>
+                        <h3>RÉGIMEN 70 - NAVIERA SANTA KATALINA - <t t-esc="docs[0].date_transfer.year if docs and docs[0].date_transfer else ''"/></h3>
                         <h5>Reporte de Cargas Ingresadas a Depósito / Exportaciones</h5>
                     </div>
 
@@ -54,7 +54,7 @@
                         <tbody>
                             <t t-foreach="docs" t-as="o">
                                 <tr>
-                                    <td class="text-center"><span t-field="o.authorization_number"/></td>
+                                    <td class="text-center"><span t-field="o.authorization_code"/></td>
                                     <td class="text-center"><span t-field="o.shipping_lines.name"/></td>
                                     <td class="text-center"><span t-field="o.number_container"/></td>
                                     <td><span t-field="o.detail_supplies_spare_parts"/></td>
@@ -62,10 +62,10 @@
                                     <td class="text-center"><span t-field="o.number_bl"/></td>
                                     <td class="text-center"><span t-field="o.number_dai"/></td>
                                     <td class="text-center"><span t-field="o.deposit_description"/></td>
-                                    <td class="text-center"><span t-field="o.transfer_date" t-options='{"widget": "date"}'/></td>
+                                    <td class="text-center"><span t-field="o.date_transfer" t-options='{"widget": "date"}'/></td>
                                     <td class="text-center"><span t-field="o.ek_ship_registration_id.name"/></td>
                                     <td class="text-center"><span t-field="o.number_dae"/></td>
-                                    <td class="text-center"><span t-field="o.container_return_date"/></td>
+                                    <td class="text-center"><span t-field="o.date_return_container" t-options='{"widget": "date"}'/></td>
                                     <td class="text-center"><span t-field="o.bl_import_export_id.name"/></td>
                                     <td class="text-center">
                                         <t t-if="o.dae_regularized">SÍ</t>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="col-6">
                                 <strong>Barco Cliente:</strong> <span t-field="o.client_vessel_name"/><br/>
-                                <strong>Línea Naviera:</strong> <span t-field="o.shipping_line_id.name"/><br/>
+                                <strong>Línea Naviera:</strong> <span t-field="o.shipping_lines.name"/><br/>
                                 <strong>Orden de Venta:</strong> <span t-field="o.sale_order_id.name"/><br/>
                             </div>
                         </div>
@@ -299,7 +299,7 @@
                         <tbody>
                             <t t-foreach="docs" t-as="o">
                                 <tr>
-                                    <td class="text-center"><span t-field="o.transfer_date" t-options='{"widget": "date"}'/></td>
+                                    <td class="text-center"><span t-field="o.date_transfer" t-options='{"widget": "date"}'/></td>
                                     <td class="text-center"><span t-field="o.company_id.name"/></td>
                                     <td class="text-center"><span t-field="o.type_move_fcl_lcl"/></td>
                                     <td class="text-center"><span t-field="o.ek_res_world_seaport_id_origin.name"/></td>

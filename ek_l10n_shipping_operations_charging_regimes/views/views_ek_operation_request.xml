@@ -181,6 +181,7 @@
               <field name="invoice_number"/>
               <field name="supplier"/>
               <field name="ship_id"/>
+              <field name="packages_count" sum="Total Bultos"/>
             </tree>
           </field>
         </page>

@@ -40,6 +40,7 @@
     'report/regime_70_reports.xml',
   ],
   'depends': [
+    'mail',
     'ek_l10n_shipping_operations',
     'resource',
     'ek_l10n_ec_purchase_reimbursement',

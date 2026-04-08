@@ -69,8 +69,8 @@
 
                 <p>Detallo información de vehículo y chofer que ingresará al depósito para la entrega de
                 la carga del cont. <strong>${object.number_container or 'N/A'}</strong> - BL <strong>${object.number_bl or 'N/A'}</strong>
-                (${object.supplies_detail or 'Carga general'}) el día de mañana
-                <strong>${object.transfer_date.strftime('%d/%m/%Y') if object.transfer_date else 'N/A'}</strong>
+                (${object.detail_supplies_spare_parts or 'Carga general'}) el día de mañana
+                <strong>${object.date_transfer.strftime('%d/%m/%Y') if object.date_transfer else 'N/A'}</strong>
                 aproximadamente con ingreso en la Almacenera sobre las 16h00 pm.</p>
 
                 <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff;">
@@ -114,7 +114,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 5px; font-weight: bold;">Día y hora de Salida:</td>
-                        <td style="padding: 5px;">${object.transfer_date.strftime('%d/%m/%Y %H:%M') if object.transfer_date else 'N/A'}</td>
+                        <td style="padding: 5px;">${object.date_transfer.strftime('%d/%m/%Y %H:%M') if object.date_transfer else 'N/A'}</td>
                     </tr>
                 </table>
 
