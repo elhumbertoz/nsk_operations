@@ -159,11 +159,20 @@ class EkBoatsInformation(models.Model):
 
     def action_create_operation_request(self):
         """
-        Crea una solicitud de operación (Régimen 70) a partir de los datos 
+        Crea una solicitud de operación (Régimen 70) a partir de los datos
         del contenedor (ya extraídos con IA).
+
+        IMPORTANTE: Migra todos los productos/mercancías del contenedor a la solicitud.
         """
         self.ensure_one()
-        
+
+        # Validar que haya productos para migrar
+        if not self.ek_produc_packages_goods_ids:
+            raise UserError(_(
+                'No hay productos/mercancías en el contenedor.\n'
+                'Debe extraer datos con IA o agregar productos manualmente antes de crear la solicitud.'
+            ))
+
         # Buscar tipo de operación predeterminado para Régimen 70
         operation_type = self.env['ek.l10n.type.model.mixin'].search([
             ('use_in_regimen_70', '=', True)
@@ -175,17 +184,34 @@ class EkBoatsInformation(models.Model):
             'type_id': operation_type.id if operation_type else False,
             'ek_ship_registration_id': self.ship_name_id.id if self.ship_name_id else False,
             'res_partner_id': self.shipper_id.id if self.shipper_id else False,
-            'shipping_line_id': self.shipping_line_id.id if self.shipping_line_id else False,
-            'supplies_detail': self.supplies_detail or self.load_number,
+            'shipping_lines': self.shipping_line_id.id if self.shipping_line_id else False,
             'number_container': self.number_container,
-            'id_bl': self.id_bl,
+            'number_bl': self.bl_number,
+            'agent_customs_id': self.custom_agent.id if self.custom_agent else False,
+            'detail_supplies_spare_parts': self.supplies_detail or self.load_number,
+            'supplies_detail': self.supplies_detail or self.load_number,
+            'container_return_date': self.rcd.date() if self.rcd else False,
+            'eta': self.eta,
+            'ek_res_world_seaport_id_origin': self.ek_res_world_seaports_id.id if self.ek_res_world_seaports_id else False,
+            'ek_res_world_seaport_id_destination': self.ek_res_world_seaports_d_id.id if self.ek_res_world_seaports_d_id else False,
         }
 
         # Crear la solicitud
         request = self.env['ek.operation.request'].create(vals)
 
-        # Los items (ek_produc_packages_goods_ids) se comparten automáticamente
-        # a través de la relación con container_id
+        # MIGRAR productos del contenedor a la solicitud
+        # Cada producto se copia manteniendo la trazabilidad al contenedor original
+        products_copied = 0
+        for item in self.ek_produc_packages_goods_ids:
+            item.copy({
+                'ek_operation_request_id': request.id,
+                'ek_boats_information_id': self.id,  # Mantener trazabilidad al contenedor
+            })
+            products_copied += 1
+
+        # Mensaje de confirmación
+        message = _('Solicitud creada exitosamente.\n%d producto(s) migrado(s) del contenedor.') % products_copied
+        request.message_post(body=message, message_type='notification')
 
         return {
             'type': 'ir.actions.act_window',

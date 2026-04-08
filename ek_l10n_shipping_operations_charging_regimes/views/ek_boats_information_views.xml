@@ -96,6 +96,13 @@
                   <field name="product_id"
                          domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
                          options="{'no_create': True}"
+                         context="{
+                           'default_categ_id': %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d,
+                           'default_type': 'consu',
+                           'default_detailed_type': 'consu',
+                           'default_purchase_ok': True,
+                           'default_sale_ok': True
+                         }"
                          width="400px"/>
                   <field name="extracted_name" optional="show" string="Descripción Proveedor" class="text-muted italic"/>
                   <field name="ship_id" options="{'no_create': True}"/>

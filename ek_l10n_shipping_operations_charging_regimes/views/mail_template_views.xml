@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de árbol para plantillas de email de Régimen 70 -->
+    <record id="mail_template_regime_70_tree" model="ir.ui.view">
+        <field name="name">mail.template.regime.70.tree</field>
+        <field name="model">mail.template</field>
+        <field name="arch" type="xml">
+            <tree string="Plantillas de Notificación Régimen 70">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="model_id"/>
+                <field name="email_from"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para plantillas de email de Régimen 70 -->
+    <record id="mail_template_regime_70_form" model="ir.ui.view">
+        <field name="name">mail.template.regime.70.form</field>
+        <field name="model">mail.template</field>
+        <field name="arch" type="xml">
+            <form string="Plantilla de Notificación">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nombre"/>
+                        <h1>
+                            <field name="name" placeholder="Ej: Régimen 70 - Notificación de..." required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Aplica a">
+                            <field name="model_id" options="{'no_create': True}" required="1"/>
+                            <field name="model" invisible="1"/>
+                        </group>
+                        <group string="Idioma">
+                            <field name="lang" placeholder="${object.partner_id.lang}"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Contenido Email" name="email_configuration">
+                            <group>
+                                <group string="Asunto y Destinatarios">
+                                    <field name="subject" placeholder="Ej: RÉGIMEN 70: BL ${object.id_bl or ''}" required="1"/>
+                                    <field name="email_from" placeholder="Ej: ${object.company_id.email or ''}"/>
+                                    <field name="email_to" placeholder="Ej: ${object.shipping_agent_id.email or ''}"/>
+                                    <field name="partner_to" placeholder="Ej: ${object.partner_id.id}"/>
+                                    <field name="email_cc" placeholder="Emails separados por comas"/>
+                                    <field name="reply_to" placeholder="Ej: ${object.user_id.email or ''}"/>
+                                </group>
+                            </group>
+
+                            <separator string="Cuerpo del Mensaje"/>
+                            <field name="body_html" widget="html" options="{'style-inline': true}"/>
+                        </page>
+
+                        <page string="Adjuntos" name="attachments">
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary" string="Archivos Adjuntos Fijos"/>
+                            </group>
+
+                            <separator string="Reportes Dinámicos (PDF)"/>
+                            <field name="report_template_ids" widget="many2many_tags"
+                                   domain="[('model', '=', model)]"
+                                   context="{'default_model': model}"/>
+                            <div class="text-muted">
+                                Los reportes seleccionados se generarán automáticamente como PDF y se adjuntarán al email
+                            </div>
+                        </page>
+
+                        <page string="Configuración Avanzada" name="advanced_settings">
+                            <group>
+                                <group string="Opciones de Envío">
+                                    <field name="auto_delete" string="Eliminar Email Después de Enviar"/>
+                                    <field name="use_default_to" string="Usar Destinatario por Defecto"/>
+                                    <field name="scheduled_date" placeholder="Ej: ${object.create_date}"/>
+                                </group>
+                                <group string="Servidor de Correo">
+                                    <field name="mail_server_id" placeholder="Usar servidor por defecto"/>
+                                </group>
+                            </group>
+
+                            <separator string="Descripción Interna"/>
+                            <field name="description" placeholder="Notas internas sobre cuándo usar esta plantilla"/>
+                        </page>
+
+                        <page string="Variables Disponibles" name="placeholders_help">
+                            <div class="alert alert-info">
+                                <h4><i class="fa fa-info-circle"/> Guía de Variables Dinámicas</h4>
+                                <p>Puedes usar estas variables en: <strong>Asunto</strong>, <strong>Destinatarios</strong> y <strong>Cuerpo del mensaje</strong></p>
+                            </div>
+
+                            <group string="📋 Datos del Contenedor/BL">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.id_bl}'}</code> - ID del BL/Contenedor</li>
+                                            <li><code>${'${object.number_container}'}</code> - Número de contenedor</li>
+                                            <li><code>${'${object.number_mrn}'}</code> - Número MRN</li>
+                                            <li><code>${'${object.authorization_number}'}</code> - Número de autorización (M-XXXX)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.supplies_detail}'}</code> - Detalle de suministros</li>
+                                            <li><code>${'${object.deposit_description}'}</code> - Descripción del depósito</li>
+                                            <li><code>${'${object.value_of_container}'}</code> - Valor del contenedor</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group string="🚢 Buques y Naviera">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.client_vessel_name}'}</code> - Nombre del barco del cliente</li>
+                                            <li><code>${'${object.ek_ship_registration_id.name}'}</code> - Buque registrado</li>
+                                            <li><code>${'${object.shipping_line_id.name}'}</code> - Línea naviera</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.shipping_agent_id.name}'}</code> - Agente naviero</li>
+                                            <li><code>${'${object.shipping_agent_id.email}'}</code> - Email agente</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group string="👥 Cliente y Contactos">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.client_partner_id.name}'}</code> - Cliente</li>
+                                            <li><code>${'${object.client_partner_id.email}'}</code> - Email del cliente</li>
+                                            <li><code>${'${object.res_partner_id.name}'}</code> - Almacenera/Contacto</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.res_partner_id.email}'}</code> - Email almacenera</li>
+                                            <li><code>${'${object.user_id.name}'}</code> - Usuario responsable</li>
+                                            <li><code>${'${object.user_id.email}'}</code> - Email responsable</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group string="📅 Fechas">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.eta}'}</code> - Fecha estimada de arribo (sin formato)</li>
+                                            <li><code>${"${object.eta.strftime('%d/%m/%Y') if object.eta else 'N/A'}"}</code> - ETA formateada</li>
+                                            <li><code>${'${object.transfer_date}'}</code> - Fecha de traslado (sin formato)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${"${object.transfer_date.strftime('%d/%m/%Y %H:%M') if object.transfer_date else 'N/A'}"}</code> - Fecha traslado formateada</li>
+                                            <li><code>${'${object.container_return_date}'}</code> - Fecha devolución contenedor</li>
+                                            <li><code>${'${object.create_date}'}</code> - Fecha de creación</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group string="🚚 Transporte">
+                                <ul>
+                                    <li><code>${'${object.transfer_explanation}'}</code> - Datos del transportista (Chofer, Cédula, Placas, Cooperativa)</li>
+                                </ul>
+                            </group>
+
+                            <group string="🏢 Empresa">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.company_id.name}'}</code> - Nombre de la compañía</li>
+                                            <li><code>${'${object.company_id.email}'}</code> - Email de la compañía</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li><code>${'${object.company_id.phone}'}</code> - Teléfono de la compañía</li>
+                                            <li><code>${'${object.company_id.street}'}</code> - Dirección de la compañía</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <group string="💡 Variables del Sistema">
+                                <ul>
+                                    <li><code>${'${user.name}'}</code> - Usuario actual que envía</li>
+                                    <li><code>${'${user.email}'}</code> - Email del usuario actual</li>
+                                    <li><code>${'${ctx.get(\"lang\")}'}</code> - Idioma del contexto</li>
+                                </ul>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda/filtros -->
+    <record id="mail_template_regime_70_search" model="ir.ui.view">
+        <field name="name">mail.template.regime.70.search</field>
+        <field name="model">mail.template</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Plantillas">
+                <field name="name" string="Nombre" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="subject" string="Asunto"/>
+                <field name="model_id" string="Modelo"/>
+
+                <filter string="Régimen 70" name="filter_regime_70"
+                        domain="[('name', 'ilike', 'Régimen 70')]"/>
+
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Modelo" name="group_by_model" context="{'group_by': 'model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción para abrir plantillas de Régimen 70 -->
+    <record id="action_mail_template_regime_70" model="ir.actions.act_window">
+        <field name="name">Plantillas de Notificación</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name', 'ilike', 'Régimen 70')]</field>
+        <field name="context">{'default_model_id': %(ek_l10n_shipping_operations.model_ek_operation_request)d, 'search_default_filter_regime_70': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear una nueva plantilla de notificación
+            </p>
+            <p>
+                Las plantillas de email te permiten enviar mensajes automáticos<br/>
+                en diferentes etapas del proceso de Régimen 70.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú en Configuración de Operaciones -->
+    <menuitem
+        id="menu_mail_template_regime_70"
+        name="Plantillas de Notificación"
+        parent="ek_l10n_shipping_operations.menu_setting_request_requests"
+        action="action_mail_template_regime_70"
+        sequence="150"
+        groups="base.group_system"/>
+</odoo>

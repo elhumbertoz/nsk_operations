@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Configuración de Régimen 70 -->
+    <record id="res_config_settings_view_form_regime_70" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.regime.70</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">90</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Régimen 70" string="Régimen 70" name="ek_regime_70" groups="base.group_system">
+                    <block title="Productos Régimen 70">
+                        <setting string="Auto-crear Productos" help="Crea automáticamente productos en el catálogo cuando no existan durante la extracción con IA o ingreso manual">
+                            <field name="regime_70_auto_create_products"/>
+                        </setting>
+                        <setting string="Categoría por Defecto" help="Categoría asignada automáticamente a productos creados en Régimen 70">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="regime_70_product_category_id" class="col-lg-3 o_light_label"/>
+                                    <field name="regime_70_product_category_id" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Tipo de Producto" help="Tipo por defecto para productos creados automáticamente">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="regime_70_product_type" class="col-lg-3 o_light_label"/>
+                                    <field name="regime_70_product_type"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Matching y Precios">
+                        <setting string="Umbral de Similitud" help="Porcentaje mínimo para considerar productos como coincidentes (recomendado: 85%)">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="regime_70_similarity_threshold" class="col-lg-3 o_light_label"/>
+                                    <field name="regime_70_similarity_threshold"/> %
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Markup por Defecto" help="Porcentaje agregado al costo para calcular precio de venta">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="regime_70_default_markup" class="col-lg-3 o_light_label"/>
+                                    <field name="regime_70_default_markup"/> %
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Acción para abrir configuración directa -->
+    <record id="action_regime_70_settings" model="ir.actions.act_window">
+        <field name="name">Configuración Régimen 70</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'ek_l10n_shipping_operations_charging_regimes'}</field>
+    </record>
+
+    <!-- Menú de acceso en Configuración de Operaciones -->
+    <menuitem
+        id="menu_regime_70_config"
+        name="Configuración Régimen 70"
+        parent="ek_l10n_shipping_operations.menu_setting_request_requests"
+        action="action_regime_70_settings"
+        sequence="200"
+        groups="base.group_system"/>
+</odoo>

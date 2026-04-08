@@ -10,6 +10,7 @@
   'data': [
     # 1. Datos base (necesarios antes que cualquier vista)
     'data/product_category.xml',
+    'data/product_sequence.xml',
     'data/ek_type_request_data.xml',
     'data/mail_templates_regime_70.xml',
     # NOTA: Las etapas de Régimen 70 se gestionan desde Configuración → Tipos de Solicitud
@@ -31,6 +32,8 @@
     'views/views_ek_operation_request.xml',
     'views/ek_operation_request_kanban_view.xml',
     'views/views_regime_70_fields.xml',
+    # 'views/res_config_settings_views.xml',
+    'views/mail_template_views.xml',
     # 5. Reportes (al final porque pueden depender de otros elementos)
     'report/kardex_container.xml',
     'report/regime_70_reports.xml',

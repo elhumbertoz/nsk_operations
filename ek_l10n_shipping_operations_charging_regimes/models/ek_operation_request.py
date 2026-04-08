@@ -60,6 +60,9 @@ class EkOperationRequest(models.Model):
     related='type_id.regime',
   )
 
+  stage_sequence = fields.Integer(related='stage_id.sequence', string='Stage Sequence', store=False)
+  stage_fold = fields.Boolean(related='stage_id.fold', string='Stage Fold', store=False)
+
   movement_date = fields.Datetime(string='Movement Date')
   max_regime_date = fields.Datetime(string='Max Regime Date')
 
@@ -178,6 +181,119 @@ class EkOperationRequest(models.Model):
     default=False,
     help="Indica si la factura fue validada contra Nota de Pedido",
     tracking=True
+  )
+
+  # ============================================================
+  # ESTADO DE NOTIFICACIONES (REQ-011 a REQ-015)
+  # ============================================================
+
+  # REQ-011: Solicitud a Agente de Aduanas
+  mail_sent_customs_agent = fields.Boolean(
+    string="Email Agente Enviado",
+    default=False,
+    help="Indica si se envió la solicitud al agente de aduanas",
+    tracking=True
+  )
+  mail_sent_customs_agent_date = fields.Datetime(
+    string="Fecha Envío Agente",
+    readonly=True,
+    help="Fecha y hora en que se envió el email al agente de aduanas"
+  )
+
+  # REQ-012: Solicitud a Almacenera
+  mail_sent_warehouse = fields.Boolean(
+    string="Email Almacenera Enviado",
+    default=False,
+    help="Indica si se envió la solicitud a la almacenera",
+    tracking=True
+  )
+  mail_sent_warehouse_date = fields.Datetime(
+    string="Fecha Envío Almacenera",
+    readonly=True,
+    help="Fecha y hora en que se envió el email a la almacenera"
+  )
+
+  # REQ-013: Datos de Chofer
+  mail_sent_driver_info = fields.Boolean(
+    string="Email Chofer Enviado",
+    default=False,
+    help="Indica si se enviaron los datos del chofer",
+    tracking=True
+  )
+  mail_sent_driver_info_date = fields.Datetime(
+    string="Fecha Envío Chofer",
+    readonly=True,
+    help="Fecha y hora en que se enviaron los datos del chofer"
+  )
+
+  # REQ-014: Solicitud de Custodia
+  mail_sent_custody = fields.Boolean(
+    string="Email Custodia Enviado",
+    default=False,
+    help="Indica si se envió la solicitud de custodia",
+    tracking=True
+  )
+  mail_sent_custody_date = fields.Datetime(
+    string="Fecha Envío Custodia",
+    readonly=True,
+    help="Fecha y hora en que se envió la solicitud de custodia"
+  )
+
+  # REQ-015: Aplicación de Póliza
+  mail_sent_insurance = fields.Boolean(
+    string="Email Póliza Enviado",
+    default=False,
+    help="Indica si se envió la aplicación de póliza",
+    tracking=True
+  )
+  mail_sent_insurance_date = fields.Datetime(
+    string="Fecha Envío Póliza",
+    readonly=True,
+    help="Fecha y hora en que se envió la aplicación de póliza"
+  )
+
+  # ============================================================
+  # PLANTILLAS CONFIGURABLES (OBLIGATORIAS PARA RÉGIMEN 70)
+  # ============================================================
+
+  mail_template_customs_agent = fields.Many2one(
+    'mail.template',
+    string="Plantilla Agente Aduanas",
+    domain="[('model', '=', 'ek.operation.request')]",
+    default=lambda self: self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_customs_agent', raise_if_not_found=False),
+    help="Plantilla configurable para solicitud al agente de aduanas."
+  )
+
+  mail_template_warehouse = fields.Many2one(
+    'mail.template',
+    string="Plantilla Almacenera",
+    domain="[('model', '=', 'ek.operation.request')]",
+    default=lambda self: self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_warehouse', raise_if_not_found=False),
+    help="Plantilla configurable para solicitud a almacenera."
+  )
+
+  mail_template_driver_info = fields.Many2one(
+    'mail.template',
+    string="Plantilla Datos Chofer",
+    domain="[('model', '=', 'ek.operation.request')]",
+    default=lambda self: self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_driver_info', raise_if_not_found=False),
+    help="Plantilla configurable para datos de chofer."
+  )
+
+  mail_template_custody = fields.Many2one(
+    'mail.template',
+    string="Plantilla Custodia",
+    domain="[('model', '=', 'ek.operation.request')]",
+    default=lambda self: self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_custody', raise_if_not_found=False),
+    help="Plantilla configurable para solicitud de custodia."
+  )
+
+  mail_template_insurance = fields.Many2one(
+    'mail.template',
+    string="Plantilla Póliza",
+    domain="[('model', '=', 'ek.operation.request')]",
+    default=lambda self: self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_insurance', raise_if_not_found=False),
+    help="Plantilla configurable para aplicación de póliza."
   )
 
   # RESUMEN DE BULTOS POR BUQUE (REQ-010)
@@ -952,12 +1068,28 @@ class EkOperationRequest(models.Model):
   def action_send_mail_customs_agent(self):
     """REQ-011: Enviar correo a agente de aduanas (Etapa: NOTIFICACIÓN)"""
     self.ensure_one()
-    if not self.shipping_agent_id:
+
+    # Validaciones de datos requeridos
+    if not self.agent_customs_id:
       raise UserError(_("Debe asignar un Agente de Aduanas antes de enviar el correo."))
 
-    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_customs_agent', raise_if_not_found=False)
-    if not template:
-      raise UserError(_("No se encontró la plantilla de correo para el agente de aduanas."))
+    if not self.container_id:
+      raise UserError(_("La solicitud debe estar vinculada a un contenedor."))
+
+    if not self.number_bl:
+      raise UserError(_("Debe especificar el número de BL (Bill of Lading)."))
+
+    if not self.ek_produc_packages_goods_ids:
+      raise UserError(_(
+        "No hay productos/mercancías para notificar.\n"
+        "La solicitud debe tener productos migrados del contenedor."
+      ))
+
+    # Usar plantilla configurable
+    if not self.mail_template_customs_agent:
+      raise UserError(_("Debe seleccionar una plantilla de correo para el agente de aduanas."))
+
+    template = self.mail_template_customs_agent
 
     attachment_ids = []
     if self.bl_attachment_ids:
@@ -966,23 +1098,43 @@ class EkOperationRequest(models.Model):
       attachment_ids.extend(self.invoice_attachment_ids.ids)
 
     template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
-    self.message_post(body=_("📧 Correo enviado al agente de aduanas: %s") % self.shipping_agent_id.name)
+
+    # Marcar como enviado
+    self.write({
+      'mail_sent_customs_agent': True,
+      'mail_sent_customs_agent_date': fields.Datetime.now()
+    })
+
+    self.message_post(body=_("📧 Correo enviado al agente de aduanas: %s") % self.agent_customs_id.name)
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
       'title': _('Correo Enviado'),
-      'message': _('Se envió correo a %s con %d adjuntos') % (self.shipping_agent_id.name, len(attachment_ids)),
+      'message': _('Se envió correo a %s con %d adjuntos') % (self.agent_customs_id.name, len(attachment_ids)),
       'type': 'success',
     }}
 
   def action_send_mail_warehouse(self):
     """REQ-012: Enviar correo a almacenera (Etapa: ARRIBO)"""
     self.ensure_one()
+
+    # Validaciones de datos requeridos
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
 
-    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_warehouse', raise_if_not_found=False)
-    if not template:
-      raise UserError(_("No se encontró la plantilla de correo para la almacenera."))
+    if not self.authorization_number or self.authorization_number == 'M-':
+      raise UserError(_(
+        "Debe completar el Número de Autorización (M-XXXX).\n"
+        "Este número es otorgado por la almacenera en la solicitud previa."
+      ))
+
+    if not self.ek_produc_packages_goods_ids:
+      raise UserError(_("No hay productos/mercancías para enviar a la almacenera."))
+
+    # Usar plantilla configurable
+    if not self.mail_template_warehouse:
+      raise UserError(_("Debe seleccionar una plantilla de correo para la almacenera."))
+
+    template = self.mail_template_warehouse
 
     attachment_ids = []
     if self.purchase_order_attachment_ids:
@@ -993,6 +1145,13 @@ class EkOperationRequest(models.Model):
       attachment_ids.extend(self.invoice_attachment_ids.ids)
 
     template.send_mail(self.id, force_send=True, email_values={'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {})
+
+    # Marcar como enviado
+    self.write({
+      'mail_sent_warehouse': True,
+      'mail_sent_warehouse_date': fields.Datetime.now()
+    })
+
     self.message_post(body=_("📧 Correo enviado a almacenera: %s") % self.res_partner_id.name)
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
@@ -1004,16 +1163,34 @@ class EkOperationRequest(models.Model):
   def action_send_mail_driver_info(self):
     """REQ-013: Enviar datos de chofer (Etapa: TRASLADO)"""
     self.ensure_one()
+
+    # Validaciones de datos requeridos
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
-    if not self.transfer_explanation:
-      raise UserError(_("Debe completar la información del transportista."))
 
-    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_driver_info', raise_if_not_found=False)
-    if not template:
-      raise UserError(_("No se encontró la plantilla de correo."))
+    if not self.transfer_explanation:
+      raise UserError(_(
+        "Debe completar la información del transportista.\n"
+        "Incluya: Nombre del chofer, Cédula, Placas del vehículo, Cooperativa."
+      ))
+
+    if not self.transfer_date:
+      raise UserError(_("Debe especificar la fecha de traslado."))
+
+    # Usar plantilla configurable
+    if not self.mail_template_driver_info:
+      raise UserError(_("Debe seleccionar una plantilla de correo para datos de chofer."))
+
+    template = self.mail_template_driver_info
 
     template.send_mail(self.id, force_send=True)
+
+    # Marcar como enviado
+    self.write({
+      'mail_sent_driver_info': True,
+      'mail_sent_driver_info_date': fields.Datetime.now()
+    })
+
     self.message_post(body=_("📧 Información de chofer enviada"))
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
@@ -1023,11 +1200,31 @@ class EkOperationRequest(models.Model):
   def action_send_mail_custody(self):
     """REQ-014: Solicitar custodia (Etapa: TRASLADO)"""
     self.ensure_one()
-    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_custody', raise_if_not_found=False)
-    if not template:
-      raise UserError(_("No se encontró la plantilla de correo."))
+
+    # Validaciones de datos requeridos
+    if not self.deposit_description or self.deposit_description == 'MA-00':
+      raise UserError(_(
+        "Debe completar el Número de Matrícula del Depósito (MA-XX).\n"
+        "Este número es asignado por la almacenera al ingresar la mercancía."
+      ))
+
+    if not self.ek_produc_packages_goods_ids:
+      raise UserError(_("No hay productos/mercancías para solicitar custodia."))
+
+    # Usar plantilla configurable
+    if not self.mail_template_custody:
+      raise UserError(_("Debe seleccionar una plantilla de correo para solicitud de custodia."))
+
+    template = self.mail_template_custody
 
     template.send_mail(self.id, force_send=True)
+
+    # Marcar como enviado
+    self.write({
+      'mail_sent_custody': True,
+      'mail_sent_custody_date': fields.Datetime.now()
+    })
+
     self.message_post(body=_("🚨 Solicitud de custodia enviada"))
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
@@ -1035,16 +1232,38 @@ class EkOperationRequest(models.Model):
     }}
 
   def action_send_mail_insurance(self):
-    """REQ-015: Enviar aplicación de póliza (Etapa: TRASLADO)"""
+    """REQ-015: Enviar aplicación de póliza (Etapa: CIERRE)"""
     self.ensure_one()
+
+    # Validaciones de datos requeridos
     if not self.number_mrn:
       raise UserError(_("Debe ingresar el número de póliza (MRN)."))
 
-    template = self.env.ref('ek_l10n_shipping_operations_charging_regimes.mail_template_regime_70_insurance', raise_if_not_found=False)
-    if not template:
-      raise UserError(_("No se encontró la plantilla de correo."))
+    if not self.sale_order_id:
+      raise UserError(_(
+        "Debe generar la Orden de Venta antes de aplicar la póliza.\n"
+        "La póliza se aplica sobre los consumos facturados."
+      ))
+
+    if not self.invoice_validated:
+      raise UserError(_(
+        "Debe validar la factura contra la Nota de Pedido antes de aplicar la póliza."
+      ))
+
+    # Usar plantilla configurable
+    if not self.mail_template_insurance:
+      raise UserError(_("Debe seleccionar una plantilla de correo para aplicación de póliza."))
+
+    template = self.mail_template_insurance
 
     template.send_mail(self.id, force_send=True)
+
+    # Marcar como enviado
+    self.write({
+      'mail_sent_insurance': True,
+      'mail_sent_insurance_date': fields.Datetime.now()
+    })
+
     self.message_post(body=_("📋 Aplicación de póliza enviada (MRN: %s)") % self.number_mrn)
 
     return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {

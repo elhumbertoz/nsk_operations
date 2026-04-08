@@ -254,6 +254,13 @@ class ek_product_packagens_goods(models.Model):
     best_match = None
     best_score = 0
 
+    # Obtener umbral de similitud desde configuración
+    ICP = self.env['ir.config_parameter'].sudo()
+    similarity_threshold = float(ICP.get_param(
+      'ek_l10n_shipping_operations_charging_regimes.regime_70_similarity_threshold',
+      85.0
+    )) / 100.0  # Convertir porcentaje a decimal
+
     for prod in products:
       similarity = SequenceMatcher(
         None,
@@ -265,12 +272,12 @@ class ek_product_packagens_goods(models.Model):
         best_score = similarity
         best_match = prod
 
-    # Si similitud > 85%, usar ese producto
-    if best_score > 0.85:
+    # Si similitud supera el umbral configurado, usar ese producto
+    if best_score > similarity_threshold:
       return best_match.id
 
     # Zona gris: advertir posible duplicado pero crear nuevo
-    if 0.70 < best_score <= 0.85 and best_match:
+    if 0.70 < best_score <= similarity_threshold and best_match:
       _logger.warning(
         "Producto '%s' tiene similitud %.0f%% con '%s' (id=%s). "
         "Se crea nuevo producto. Revisar si es duplicado.",
@@ -290,15 +297,39 @@ class ek_product_packagens_goods(models.Model):
     if vals is not None:
       vals['is_new_product'] = True
 
-    # Obtener categoría Régimen 70
-    category = self.env.ref(
-      'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
-      raise_if_not_found=False
+    # Obtener configuración
+    ICP = self.env['ir.config_parameter'].sudo()
+
+    # Categoría desde configuración
+    category_id = ICP.get_param(
+      'ek_l10n_shipping_operations_charging_regimes.regime_70_product_category_id',
+      False
     )
 
+    if category_id:
+      category = self.env['product.category'].browse(int(category_id))
+    else:
+      # Fallback a categoría por defecto Régimen 70
+      category = self.env.ref(
+        'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
+        raise_if_not_found=False
+      )
+
     if not category:
-      # Si no existe la categoría, usar categoría por defecto
+      # Si no existe, usar categoría general
       category = self.env.ref('product.product_category_all')
+
+    # Tipo de producto desde configuración
+    product_type = ICP.get_param(
+      'ek_l10n_shipping_operations_charging_regimes.regime_70_product_type',
+      'consu'
+    )
+
+    # Markup desde configuración
+    markup_percent = float(ICP.get_param(
+      'ek_l10n_shipping_operations_charging_regimes.regime_70_default_markup',
+      20.0
+    ))
 
     # Tag Régimen 70
     tag = self.env.ref(
@@ -306,16 +337,16 @@ class ek_product_packagens_goods(models.Model):
       raise_if_not_found=False
     )
 
-    # Crear producto CONSUMIBLE (no afecta inventario contable)
+    # Crear producto con configuración
     product_vals = {
       'name': description[:255],  # Limitar longitud
       'categ_id': category.id,
-      'type': 'consu',  # CONSUMIBLE - NO stockeable
-      'detailed_type': 'consu',
+      'type': product_type,
+      'detailed_type': product_type,
       'purchase_ok': True,
       'sale_ok': True,
       'standard_price': fob_unit,
-      'list_price': fob_unit * 1.2,  # 20% markup por defecto
+      'list_price': fob_unit * (1 + markup_percent / 100.0),  # Aplicar markup configurado
       'uom_id': self.env.ref('uom.product_uom_unit').id,
       'uom_po_id': self.env.ref('uom.product_uom_unit').id,
     }

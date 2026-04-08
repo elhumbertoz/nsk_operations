@@ -12,6 +12,47 @@
         <field name="inherit_id" ref="ek_l10n_shipping_operations.ek_operation_request_form"/>
         <field name="arch" type="xml">
 
+            <!-- Botones de notificación en el header (Régimen 70) -->
+            <xpath expr="//header" position="inside">
+                <field name="regime" invisible="1"/>
+                <field name="shipping_agent_id" invisible="1"/>
+                <field name="res_partner_id" invisible="1"/>
+                <field name="transfer_explanation" invisible="1"/>
+                <field name="number_mrn" invisible="1"/>
+                <field name="stage_sequence" invisible="1"/>
+                <field name="stage_fold" invisible="1"/>
+                <button name="action_send_mail_customs_agent"
+                        string="Agente Aduanas"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-envelope"
+                        invisible="regime not in ['70'] or stage_sequence &lt; 11 or stage_fold"/>
+                <button name="action_send_mail_warehouse"
+                        string="Almacenera"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-envelope"
+                        invisible="regime not in ['70'] or stage_sequence &lt; 13 or stage_fold"/>
+                <button name="action_send_mail_driver_info"
+                        string="Datos Chofer"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-truck"
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+                <button name="action_send_mail_custody"
+                        string="Custodia"
+                        type="object"
+                        class="btn-warning"
+                        icon="fa-shield"
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+                <button name="action_send_mail_insurance"
+                        string="Póliza"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-file-text"
+                        invisible="regime not in ['70'] or stage_sequence &lt; 22 or stage_fold"/>
+            </xpath>
+
             <!-- REQ-017: Cambiar label ID BL → ID CONTENEDOR -->
             <xpath expr="//field[@name='id_bl']" position="before">
                 <label for="id_bl" string="ID CONTENEDOR" invisible="not regime in ['70']"/>
@@ -86,6 +127,47 @@
                         <group>
                             <field name="ai_extraction_log" widget="text" readonly="1"
                                    invisible="not ai_extraction_log"/>
+                        </group>
+                    </group>
+
+                    <!-- SECCIÓN: Estado de Notificaciones -->
+                    <group string="📊 Estado de Notificaciones Enviadas">
+                        <group>
+                            <field name="mail_sent_customs_agent" widget="boolean_toggle" readonly="1"/>
+                            <field name="mail_sent_customs_agent_date" readonly="1" invisible="not mail_sent_customs_agent"/>
+                            <field name="mail_sent_warehouse" widget="boolean_toggle" readonly="1"/>
+                            <field name="mail_sent_warehouse_date" readonly="1" invisible="not mail_sent_warehouse"/>
+                            <field name="mail_sent_driver_info" widget="boolean_toggle" readonly="1"/>
+                            <field name="mail_sent_driver_info_date" readonly="1" invisible="not mail_sent_driver_info"/>
+                        </group>
+                        <group>
+                            <field name="mail_sent_custody" widget="boolean_toggle" readonly="1"/>
+                            <field name="mail_sent_custody_date" readonly="1" invisible="not mail_sent_custody"/>
+                            <field name="mail_sent_insurance" widget="boolean_toggle" readonly="1"/>
+                            <field name="mail_sent_insurance_date" readonly="1" invisible="not mail_sent_insurance"/>
+                        </group>
+                    </group>
+
+                    <!-- SECCIÓN: Plantillas Configurables -->
+                    <group string="⚙️ Plantillas de Correo Configurables">
+                        <group>
+                            <field name="mail_template_customs_agent"
+                                   options="{'no_create': True}"
+                                   help="Plantilla para solicitud al agente de aduanas"/>
+                            <field name="mail_template_warehouse"
+                                   options="{'no_create': True}"
+                                   help="Plantilla para solicitud a almacenera"/>
+                            <field name="mail_template_driver_info"
+                                   options="{'no_create': True}"
+                                   help="Plantilla para datos de chofer"/>
+                        </group>
+                        <group>
+                            <field name="mail_template_custody"
+                                   options="{'no_create': True}"
+                                   help="Plantilla para solicitud de custodia"/>
+                            <field name="mail_template_insurance"
+                                   options="{'no_create': True}"
+                                   help="Plantilla para aplicación de póliza"/>
                         </group>
                     </group>
 
