@@ -160,6 +160,7 @@
                      required="0"
                      options="{'no_create': False, 'no_open': True}"
                      domain="[('purchase_ok', '=', True)]"/>
+              <field name="customs_description" />
 
               <field name="ship_id" optional="show"/>
 

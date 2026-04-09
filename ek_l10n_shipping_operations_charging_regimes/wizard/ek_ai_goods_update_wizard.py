@@ -114,6 +114,7 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                             "tariff_item": {"type": "string"},
                                             "id_hs_copmt_cd": {"type": "string"},
                                             "id_hs_spmt_cd": {"type": "string"},
+                                            "customs_description": {"type": "string"},
                                             "invoice_number": {"type": "string"},
                                             "supplier": {"type": "string"},
                                             "packages_count": {"type": "string"},
@@ -127,6 +128,7 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                     "tariff_item": {"type": "string", "description": "Para add: Partida Arancelaria (10 dígitos)"},
                                     "id_hs_copmt_cd": {"type": "string", "description": "Para add: Código Complementario"},
                                     "id_hs_spmt_cd": {"type": "string", "description": "Para add: Código Suplementario"},
+                                    "customs_description": {"type": "string", "description": "Para add: Descripción según la Aduana"},
                                     "invoice_number": {"type": "string", "description": "Para add: Nro factura"},
                                     "supplier": {"type": "string", "description": "Para add: Proveedor"},
                                     "packages_count": {"type": "string", "description": "Para add: Cantidad de bultos"},
@@ -300,6 +302,7 @@ Cuando el usuario pida actualizar la "partida" o códigos de aduana, usa estos c
 - tariff_item: Partida Arancelaria (Subpartida)
 - id_hs_copmt_cd: Código Complementario (Comp.)
 - id_hs_spmt_cd: Código Suplementario (Suplem.)
+- customs_description: Descripción de Aduana (cómo la aduana nombró al producto)
 
 Responde siempre en español."""
 
@@ -403,6 +406,7 @@ Responde siempre en español."""
                     'tariff_item': 'Partida',
                     'id_hs_copmt_cd': 'Comp.',
                     'id_hs_spmt_cd': 'Suplem.',
+                    'customs_description': 'Desc. Aduana',
                     'invoice_number': 'Factura',
                     'supplier': 'Proveedor',
                     'packages_count': 'Bultos',
@@ -435,7 +439,7 @@ Responde siempre en español."""
         # Lista de campos válidos en el modelo destino para evitar errores de 'Invalid field'
         VALID_FIELDS = [
             'name', 'quantity', 'fob', 'gross_weight', 'tariff_item', 
-            'id_hs_copmt_cd', 'id_hs_spmt_cd', 'invoice_number', 
+            'id_hs_copmt_cd', 'id_hs_spmt_cd', 'customs_description', 'invoice_number', 
             'supplier', 'packages_count', 'observation', 'ship_id'
         ]
 
@@ -489,6 +493,7 @@ Responde siempre en español."""
                         'tariff_item': item.get('tariff_item'),
                         'id_hs_copmt_cd': item.get('id_hs_copmt_cd'),
                         'id_hs_spmt_cd': item.get('id_hs_spmt_cd'),
+                        'customs_description': item.get('customs_description'),
                         'invoice_number': item.get('invoice_number'),
                         'supplier': item.get('supplier'),
                         'packages_count': item.get('packages_count'),
