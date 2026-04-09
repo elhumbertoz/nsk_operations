@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <record id="view_ek_boats_information_regimens_form" model="ir.ui.view">
     <field name="name">ek.boats.information.regimen.form</field>
@@ -96,7 +95,9 @@
 
           <notebook>
             <page string="Items en Contenedor">
-              <button name="open_items_container" type="object" string="Configuración Avanzada de Items" class="btn btn-primary mb-2" icon="fa-arrows-alt"/>
+              <div class="d-flex justify-content-end w-100">
+                <button name="open_items_container" type="object" string="Vista extendida" class="btn btn-primary mb-2" icon="fa-arrows-alt"/>
+              </div>
               <field name="ek_produc_packages_goods_ids">
                 <tree editable="bottom" decoration-info="match_confidence &gt;= 80" decoration-warning="match_confidence &lt; 80 and match_confidence &gt; 0">
                   <field name="sequence" widget="handle"/>
@@ -112,14 +113,14 @@
                            'default_sale_ok': True
                          }"
                          width="400px"/>
-                  <field name="extracted_name" optional="show" string="Descripción Proveedor" class="text-muted italic"/>
+                  <field name="extracted_name" optional="show" string="Nombre Personalizado" class="text-muted italic"/>
                   <field name="ship_id" options="{'no_create': True}"/>
                   <field name="is_not_dispatched" string="No Vino"/>
                   <field name="packages_count" optional="hide"/>
                   <field name="match_confidence" string="% Match IA" widget="progressbar"/>
-                  <field name="tariff_item" optional="show" string="Partida"/>
-                  <field name="id_hs_copmt_cd" optional="show" string="Comp."/>
-                  <field name="id_hs_spmt_cd" optional="show" string="Suplem."/>
+                  <field name="tariff_item" optional="hide" string="Partida"/>
+                  <field name="id_hs_copmt_cd" optional="hide" string="Comp."/>
+                  <field name="id_hs_spmt_cd" optional="hide" string="Suplem."/>
                   <field name="gross_weight" sum="total"/>
                   <field name="quantity" sum="total"/>
                   <field name="fob" optional="show"/>
@@ -249,7 +250,7 @@
     <field name="arch" type="xml">
       <search>
         <field name="product_id"/>
-        <field name="extracted_name"/>
+        <field name="extracted_name" string="Nombre Personalizado"/>
         <field name="tariff_item"/>
         <field name="invoice_number"/>
         <field name="supplier"/>
@@ -288,7 +289,7 @@
           </div>
           <group>
             <group string="Información del Documento">
-                <field name="extracted_name" string="Desc. Proveedor"/>
+                <field name="extracted_name" string="Nombre Personalizado"/>
                 <field name="invoice_number"/>
                 <field name="supplier"/>
                 <field name="id_bl"/>
@@ -344,10 +345,10 @@
         <field name="sequence" widget="handle"/>
         <field name="creation_indicator" string=" " readonly="1"/>
         <field name="product_id" options="{'no_create': True}" width="400px"/>
-        <field name="extracted_name" string="Descripción Proveedor" class="text-muted italic"/>
+        <field name="extracted_name" string="Nombre Personalizado" class="text-muted italic"/>
         <field name="ship_id" options="{'no_create': True}"/>
         <field name="is_not_dispatched" string="No Vino"/>
-        <field name="match_confidence" widget="progressbar"/>
+        <field name="match_confidence" widget="progressbar" optional="hide"/>
         <field name="tariff_item" optional="show" string="Partida"/>
         <field name="id_hs_copmt_cd" optional="show" string="Comp."/>
         <field name="id_hs_spmt_cd" optional="show" string="Suplem."/>
@@ -356,28 +357,32 @@
         <field name="fob"/>
         <field name="total_fob" sum="Total FOB"/>
         <field name="invoice_number" />
-        <field name="supplier" />
+        <field name="supplier" optional="hide"/>
         <field name="id_bl" />
       </tree>
     </field>
   </record>
+
+  <!-- IMPORTANT: These records must exist to overwrite orphaned inherited views in the DB 
+       that still reference the removed 'customs_description' field. -->
   <record id="ek_product_packagens_goods_tree_items_request" model="ir.ui.view">
     <field name="name">ek.product.packagens.goods.tree.request</field>
     <field name="model">ek.product.packagens.goods</field>
     <field name="inherit_id" ref="ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items"/>
     <field name="arch" type="xml">
       <xpath expr="//field[@name='product_id']" position="after">
-        <field name="customs_description" />
+        <!-- Replaced customs_description to fix orphaned view in DB -->
       </xpath>
     </field>
   </record>
+
   <record id="ek_product_packagens_goods_form_request" model="ir.ui.view">
     <field name="name">ek.product.packagens.goods.form.request</field>
     <field name="model">ek.product.packagens.goods</field>
     <field name="inherit_id" ref="ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_form"/>
     <field name="arch" type="xml">
       <xpath expr="//field[@name='product_id']" position="after">
-        <field name="customs_description" />
+        <!-- Replaced customs_description to fix orphaned view in DB -->
       </xpath>
     </field>
   </record>

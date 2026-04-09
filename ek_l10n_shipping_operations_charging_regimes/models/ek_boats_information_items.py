@@ -114,8 +114,8 @@ class ek_product_packagens_goods(models.Model):
 
   # REQ-010: Integración de Matching por IA
   extracted_name = fields.Char(
-    string='Descripción del Proveedor',
-    help="Descripción tal cual aparece en el documento fuente (factura/BL)"
+    string='Nombre Personalizado',
+    help="Descripción tal cual aparece en el documento fuente (factura/BL) o como lo conoce la aduana"
   )
 
   match_confidence = fields.Float(
@@ -143,10 +143,6 @@ class ek_product_packagens_goods(models.Model):
     help="Marcar si el producto no vino en este contenedor (no despachado o previo)"
   )
 
-  customs_description = fields.Char(
-    string='Descripción Aduana',
-    help="Nombre o descripción asignada por la aduana (puede diferir del nombre comercial)"
-  )
 
   @api.depends('is_new_product')
   def _compute_creation_indicator(self):

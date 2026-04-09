@@ -1360,8 +1360,8 @@ class EkOperationRequest(models.Model):
       'res_model': 'ek.product.packagens.goods',
       'view_mode': 'tree,form',
       'views': [
-        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items_request').id, 'tree'),
-        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_form_request').id, 'form'),
+        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items').id, 'tree'),
+        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_form').id, 'form'),
       ],
       'target': 'current',
       'domain': [('ek_operation_request_id', '=', self.id)],

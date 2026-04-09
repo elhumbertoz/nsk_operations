@@ -106,7 +106,7 @@
               <field name="id_bl" readonly="has_confirmed_type" />
             </group>
             <button name="action_open_wizard_export" type="object" class="btn btn-primary oe_inline justify-self-end" icon="fa-upload" invisible="ek_produc_packages_goods_ids" height="33px" />
-            <button name="action_open_goods_management" type="object" string="Configuración Avanzada" class="btn btn-primary oe_inline justify-self-end" icon="fa-arrows-alt" invisible="not ek_produc_packages_goods_ids" height="33px" />
+            <button name="action_open_goods_management" type="object" string="Vista extendida" class="btn btn-primary oe_inline justify-self-end" icon="fa-arrows-alt" invisible="not ek_produc_packages_goods_ids" height="33px" />
             <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
             <button name="action_open_ai_goods_update_wizard" type="object" class="btn btn-secondary oe_inline justify-self-end" icon="fa-magic" title="Actualizar Paquetes y Mercancía con IA" invisible="fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
           </div>
@@ -160,7 +160,7 @@
                      required="0"
                      options="{'no_create': False, 'no_open': True}"
                      domain="[('purchase_ok', '=', True)]"/>
-              <field name="customs_description" />
+              <field name="extracted_name" string="Nombre Personalizado" class="text-muted italic"/>
 
               <field name="ship_id" optional="show"/>
 
@@ -175,8 +175,8 @@
               <field name="product_weight_in_lbs" />
               <field name="fob" sum="Total" />
               <field name="total_fob" sum="Total" />
-              <field name="invoice_number" />
-              <field name="supplier" />
+              <field name="invoice_number" optional="hide" />
+              <field name="supplier" optional="hide"/>
             </tree>
           </field>
         </page>

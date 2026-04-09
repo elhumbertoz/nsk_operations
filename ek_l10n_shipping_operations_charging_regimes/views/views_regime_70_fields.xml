@@ -209,7 +209,7 @@
                        options="{'no_create': True}"
                        invisible="not parent.regime in ['70']"/>
                 <field name="extracted_name"
-                       string="Descripción Proveedor"
+                       string="Nombre Personalizado"
                        optional="hide"
                        invisible="not parent.regime in ['70']"/>
             </xpath>
@@ -222,7 +222,7 @@
                 <field name="id_hs_copmt_cd" string="Comp." optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="id_hs_spmt_cd" string="Suplem." optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="invoice_number" optional="show" invisible="not parent.regime in ['70']"/>
-                <field name="supplier" optional="show" invisible="not parent.regime in ['70']"/>
+                <field name="supplier" optional="hide" invisible="not parent.regime in ['70']"/>
                 <field name="ship_id" string="Buque Destino" optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="packages_count" string="Bultos" optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="commercial_unit" optional="hide" invisible="not parent.regime in ['70']"/>
