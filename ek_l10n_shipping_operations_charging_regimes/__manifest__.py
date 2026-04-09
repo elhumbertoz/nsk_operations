@@ -39,6 +39,11 @@
     'report/kardex_container.xml',
     'report/regime_70_reports.xml',
   ],
+  'assets': {
+    'web.assets_backend': [
+      'ek_l10n_shipping_operations_charging_regimes/static/src/js/ai_progress_bus.js',
+    ],
+  },
   'depends': [
     'mail',
     'ek_l10n_shipping_operations',

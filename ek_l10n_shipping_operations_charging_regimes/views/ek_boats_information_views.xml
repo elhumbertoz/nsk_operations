@@ -64,7 +64,6 @@
               <field name="booking_number"/>
               <field name="type_move_fcl_lcl"/>
               <field name="consignee_id" options="{'no_create': True}"/>
-              <field name="value_of_container" invisible="1" />
             </group>
           </group>
 
@@ -80,6 +79,7 @@
             <group string="Cantidades y Totales">
               <field name="total_gross_weight" readonly="1"/>
               <field name="total_packages_count" readonly="1"/>
+              <field name="value_of_container" string="Total FOB" decoration-bf="1"/>
               <field name="etd" string="Transfer Date"/>
               <field name="atd" string="Desconsolidation Date"/>
               <field name="rcd" string="Return Container Date"/>
@@ -117,11 +117,13 @@
                   <field name="is_not_dispatched" string="No Vino"/>
                   <field name="packages_count" optional="hide"/>
                   <field name="match_confidence" string="% Match IA" widget="progressbar"/>
-                  <field name="tariff_item" optional="hide"/>
+                  <field name="tariff_item" optional="show" string="Partida"/>
+                  <field name="id_hs_copmt_cd" optional="show" string="Comp."/>
+                  <field name="id_hs_spmt_cd" optional="show" string="Suplem."/>
                   <field name="gross_weight" sum="total"/>
                   <field name="quantity" sum="total"/>
-                  <field name="fob" sum="total"/>
-                  <field name="total_fob" sum="total"/>
+                  <field name="fob" optional="show"/>
+                  <field name="total_fob" sum="Total FOB"/>
                   <field name="invoice_number" string="N. Factura"/>
                   <field name="supplier" string="Proveedor" optional="hide" />
                   <field name="ek_ship_registration_id" column_invisible="1"/>
@@ -140,14 +142,20 @@
                           type="object"
                           class="btn-success"
                           icon="fa-file-pdf-o"
-                          invisible="not invoice_attachment_ids"/>
+                          invisible="not invoice_attachment_ids or ai_extraction_status_fc == 'processing'"/>
                 </group>
                 <group string="Estado">
-                  <field name="ai_extraction_status_fc" widget="badge"
-                         string="Estado Facturas"
-                         decoration-success="ai_extraction_status_fc=='completed'"
-                         decoration-warning="ai_extraction_status_fc=='processing'"
-                         decoration-danger="ai_extraction_status_fc=='error'"/>
+                   <field name="ai_extraction_status_fc" widget="badge"
+                          string="Estado Facturas"
+                          decoration-success="ai_extraction_status_fc=='completed'"
+                          decoration-warning="ai_extraction_status_fc=='processing'"
+                          decoration-danger="ai_extraction_status_fc=='error'"/>
+                   <field name="ai_extraction_progress" widget="progressbar" 
+                          invisible="ai_extraction_status_fc != 'processing'"
+                          label="Progreso"/>
+                   <field name="ai_extraction_message" 
+                          invisible="not ai_extraction_message"
+                          style="font-size: 0.85rem;" class="text-muted"/>
                 </group>
               </group>
             </page>
@@ -164,7 +172,7 @@
                                 type="object"
                                 class="btn-primary"
                                 icon="fa-magic"
-                                invisible="not bl_attachment_ids"/>
+                                invisible="not bl_attachment_ids or ai_extraction_status_bl == 'processing'"/>
                     </group>
                     <group string="Estado BL">
                         <field name="ai_extraction_status_bl" widget="badge"
@@ -288,10 +296,11 @@
             <group string="Matching e IA">
                 <field name="match_confidence" widget="progressbar" string="Confianza IA"/>
                 <field name="is_new_product" readonly="1"/>
-                <field name="tariff_item"/>
-                <field name="id_hs_copmt_cd"/>
+                <field name="tariff_item" string="Partida Arancelaria"/>
+                <field name="id_hs_copmt_cd" string="Código Complementario"/>
+                <field name="id_hs_spmt_cd" string="Código Suplementario"/>
             </group>
-          </group>
+        </group>
           <group>
             <group string="Cantidades y Logística">
                 <field name="quantity"/>
@@ -336,9 +345,12 @@
         <field name="creation_indicator" string=" " readonly="1"/>
         <field name="product_id" options="{'no_create': True}" width="400px"/>
         <field name="extracted_name" string="Descripción Proveedor" class="text-muted italic"/>
+        <field name="ship_id" options="{'no_create': True}"/>
         <field name="is_not_dispatched" string="No Vino"/>
         <field name="match_confidence" widget="progressbar"/>
-        <field name="tariff_item" optional="hide"/>
+        <field name="tariff_item" optional="show" string="Partida"/>
+        <field name="id_hs_copmt_cd" optional="show" string="Comp."/>
+        <field name="id_hs_spmt_cd" optional="show" string="Suplem."/>
         <field name="quantity" />
         <field name="gross_weight" />
         <field name="fob"/>

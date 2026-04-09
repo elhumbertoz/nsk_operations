@@ -109,6 +109,12 @@
             <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
             <button name="action_open_ai_goods_update_wizard" type="object" class="btn btn-secondary oe_inline justify-self-end" icon="fa-magic" title="Actualizar Paquetes y Mercancía con IA" invisible="fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
           </div>
+          <field name="ai_extraction_status_fc" invisible="1"/>
+          <field name="ai_extraction_status_bl" invisible="1"/>
+          <group invisible="ai_extraction_status_fc != 'processing'">
+            <field name="ai_extraction_progress" widget="progressbar" label="Progreso Extracción IA"/>
+            <field name="ai_extraction_message" nolabel="1" class="text-muted italic"/>
+          </group>
           <!-- estadísticos de los paquetes y mercancías -->
           <group col="1" class="d-flex" invisible="not ek_produc_packages_goods_ids">
             <div class="row border border-secondary" style="border-radius: 3px; margin-right: 20px; margin-left: 0px; width: 100%; padding-top: 4px;">
@@ -338,6 +344,7 @@
           <field name="display_dinamic_field" invisible="1" force_save="1" />
           <field name="has_trade_numeber" invisible="1" force_save="1" />
           <field name="has_confirmed_type" invisible="1" force_save="1" />
+          <field name="validate_correction_request" invisible="1" force_save="1" />
           <field name="readonly_mass" invisible="1" />
           <!-- FIN INVISIBLE -->
           <group>

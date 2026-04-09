@@ -227,6 +227,9 @@
                 <field name="uom_id" optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="fob" invisible="not parent.regime in ['70']"/>
                 <field name="total_fob" sum="Total FOB" invisible="not parent.regime in ['70']"/>
+                <field name="tariff_item" string="Partida" optional="show" invisible="not parent.regime in ['70']"/>
+                <field name="id_hs_copmt_cd" string="Comp." optional="show" invisible="not parent.regime in ['70']"/>
+                <field name="id_hs_spmt_cd" string="Suplem." optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="invoice_number" optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="supplier" optional="show" invisible="not parent.regime in ['70']"/>
                 <field name="ship_id" string="Buque Destino" optional="show" invisible="not parent.regime in ['70']"/>

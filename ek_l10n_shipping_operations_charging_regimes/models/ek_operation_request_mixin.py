@@ -17,6 +17,12 @@ class EkOperationRequestMixinComposition(models.Model):
     """
     _inherit = 'ek.operation.request'
 
+    # Campos relacionados para mostrar el progreso del contenedor vinculado
+    ai_extraction_progress = fields.Integer(related='container_id.ai_extraction_progress')
+    ai_extraction_message = fields.Char(related='container_id.ai_extraction_message')
+    ai_extraction_status_fc = fields.Selection(related='container_id.ai_extraction_status_fc', string="Estado Facturas")
+    ai_extraction_status_bl = fields.Selection(related='container_id.ai_extraction_status_bl', string="Estado BL")
+
     # Delegate to the container methods if available
     def action_extract_bl_with_ai(self):
         """Redirige extracción al contenedor vinculado"""

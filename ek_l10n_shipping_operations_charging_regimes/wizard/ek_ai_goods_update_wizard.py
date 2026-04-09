@@ -106,6 +106,7 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                             "gross_weight": {"type": "number"},
                                             "tariff_item": {"type": "string"},
                                             "id_hs_copmt_cd": {"type": "string"},
+                                            "id_hs_spmt_cd": {"type": "string"},
                                             "invoice_number": {"type": "string"},
                                             "supplier": {"type": "string"},
                                             "packages_count": {"type": "string"},
@@ -116,8 +117,9 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
                                     "quantity": {"type": "number", "description": "Para add: Cantidad"},
                                     "fob": {"type": "number", "description": "Para add: Precio unitario FOB"},
                                     "gross_weight": {"type": "number", "description": "Para add: Peso bruto"},
-                                    "tariff_item": {"type": "string", "description": "Para add: Item arancelario / Partida"},
-                                    "id_hs_copmt_cd": {"type": "string", "description": "Para add: Código complementario"},
+                                    "tariff_item": {"type": "string", "description": "Para add: Partida Arancelaria (10 dígitos)"},
+                                    "id_hs_copmt_cd": {"type": "string", "description": "Para add: Código Complementario"},
+                                    "id_hs_spmt_cd": {"type": "string", "description": "Para add: Código Suplementario"},
                                     "invoice_number": {"type": "string", "description": "Para add: Nro factura"},
                                     "supplier": {"type": "string", "description": "Para add: Proveedor"},
                                     "packages_count": {"type": "string", "description": "Para add: Cantidad de bultos"},
@@ -161,10 +163,10 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
         if not lines:
             return "La tabla de mercancías está actualmente VACÍA."
 
-        headers = ["LINE_ID", "Nombre", "Cant", "FOB", "Peso", "Bultos", "Partida", "Compl."]
+        headers = ["LINE_ID", "Nombre", "Cant", "FOB", "Peso", "Bultos", "Partida", "Comp.", "Supl."]
         rows = []
         for l in lines:
-            rows.append(f"| {l.id} | {l.name or ''} | {l.quantity} | {l.fob} | {l.gross_weight} | {l.packages_count or ''} | {l.tariff_item or ''} | {l.id_hs_copmt_cd or ''} |")
+            rows.append(f"| {l.id} | {l.name or ''} | {l.quantity} | {l.fob} | {l.gross_weight} | {l.packages_count or ''} | {l.tariff_item or ''} | {l.id_hs_copmt_cd or ''} | {l.id_hs_spmt_cd or ''} |")
         
         md_table = "| " + " | ".join(headers) + " |\n"
         md_table += "|-" + "-|-".join(["-"*len(h) for h in headers]) + "-|\n"
@@ -255,7 +257,14 @@ REGLAS DEL TOOL:
 - delete: requiere line_id y 'reason'.
 - add: line_id debe ser null. Proporciona campos requeridos.
 - Nombres: [Tipo] [Marca] [Modelo] [Especificación] (máx 60 chars).
-- Responde siempre en español."""
+
+## CLASIFICACIÓN ARANCELARIA (IMPORTANTE)
+Cuando el usuario pida actualizar la "partida" o códigos de aduana, usa estos campos:
+- tariff_item: Partida Arancelaria (Subpartida)
+- id_hs_copmt_cd: Código Complementario (Comp.)
+- id_hs_spmt_cd: Código Suplementario (Suplem.)
+
+Responde siempre en español."""
 
         # 2. Llamada a LLM
         llm = self.env['nsk.llm.provider']
@@ -335,7 +344,8 @@ REGLAS DEL TOOL:
                     'fob': 'FOB',
                     'gross_weight': 'Peso',
                     'tariff_item': 'Partida',
-                    'id_hs_copmt_cd': 'Cómpl.',
+                    'id_hs_copmt_cd': 'Comp.',
+                    'id_hs_spmt_cd': 'Suplem.',
                     'invoice_number': 'Factura',
                     'supplier': 'Proveedor',
                     'packages_count': 'Bultos',
@@ -403,6 +413,7 @@ REGLAS DEL TOOL:
                         'gross_weight': item.get('gross_weight', 0),
                         'tariff_item': item.get('tariff_item'),
                         'id_hs_copmt_cd': item.get('id_hs_copmt_cd'),
+                        'id_hs_spmt_cd': item.get('id_hs_spmt_cd'),
                         'invoice_number': item.get('invoice_number'),
                         'supplier': item.get('supplier'),
                         'packages_count': item.get('packages_count'),

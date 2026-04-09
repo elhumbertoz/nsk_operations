@@ -53,8 +53,15 @@ class ek_product_packagens_goods(models.Model):
   )
   fob = fields.Float(
     'Fob',
+    digits=(16, 6)
   )
-  total_fob = fields.Float('Total Fob', compute='_compute_total_fob')
+  total_fob = fields.Float(
+    'Total Fob',
+    compute='_compute_total_fob',
+    inverse='_inverse_total_fob',
+    store=True,
+    digits=(16, 2)
+  )
   invoice_number = fields.Char('Invoice Number', required=False)
   supplier = fields.Char('Supplier', required=False)
   ek_ship_registration_id = fields.Many2one(
@@ -146,6 +153,13 @@ class ek_product_packagens_goods(models.Model):
     for rec in self:
       rec.total_fob = rec.quantity * rec.fob
 
+  def _inverse_total_fob(self):
+    for rec in self:
+      if rec.quantity:
+        rec.fob = rec.total_fob / rec.quantity
+      else:
+        rec.fob = 0.0
+
   @api.depends('quantity', 'delivery_product')
   def _get_quantiy_for_consume(self):
     for rec in self:
@@ -177,9 +191,7 @@ class ek_product_packagens_goods(models.Model):
     """
     description = vals.get('name', '').strip()
     hs_code = vals.get('tariff_item', '') or vals.get('id_hs_copmt_cd', '')
-    fob = vals.get('fob') or 0.0
-    quantity = vals.get('quantity') or 1.0
-    fob_unit = fob / quantity if quantity else fob
+    fob_unit = vals.get('fob') or 0.0
 
     if not description:
       return False

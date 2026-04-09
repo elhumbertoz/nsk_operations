@@ -26,7 +26,7 @@ class EkBoatsInformation(models.Model):
         help="Productos extraídos de facturas/BL con IA o ingresados manualmente"
     )
 
-    value_of_container = fields.Float("Value of Container", compute="_compute_value_of_container", store=True, index=True)
+    value_of_container = fields.Float("Value of Container", compute="_compute_value_of_container", store=True, index=True, digits=(16, 2))
 
     @api.depends("ek_produc_packages_goods_ids", "ek_produc_packages_goods_ids.total_fob")
     def _compute_value_of_container(self):

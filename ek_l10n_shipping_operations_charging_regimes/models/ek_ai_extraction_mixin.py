@@ -4,6 +4,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import json
 import logging
+import threading
+from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
 
@@ -69,6 +71,17 @@ class EkAIExtractionMixin(models.AbstractModel):
         string='Resultado de Extracción',
         readonly=True,
         help='Muestra el resultado estructurado de la última operación de IA'
+    )
+
+    ai_extraction_progress = fields.Integer(
+        string='Progreso Extracción',
+        default=0,
+        help='Porcentaje de progreso de la extracción actual'
+    )
+
+    ai_extraction_message = fields.Char(
+        string='Mensaje de Estado',
+        readonly=True
     )
 
     def _get_regime_70_catalog_prompt(self):
@@ -224,19 +237,24 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     "product_name": {
                                         "type": "string",
                                         "description": (
-                                            "Nombre de producto normalizado y legible siguiendo el patrón: "
-                                            "[Tipo de Producto] [Marca] [Modelo] [Especificaciones Clave]. "
-                                            "Reglas: (1) Ser conciso — máx ~60 caracteres. "
-                                            "(2) Omitir texto legal extenso, números de parte complejos, direcciones y palabras genéricas de relleno. "
-                                            "(3) Preservar la marca y el modelo cuando estén presentes — son los atributos más identificables. "
-                                            "(4) Incluir solo la especificación más discriminante (ej: potencia, tamaño, voltaje). "
-                                            "Ejemplos: 'Motor Eléctrico WEG W22 7.5HP 4P', 'Bomba Hidráulica Bosch Rexroth A10V 45cc', "
-                                            "'Rodamiento SKF 6205-2RS'."
+                                            "Nombre comercial del producto. REGLA CRÍTICA: Debe ser lo más fiel posible al nombre/descripción "
+                                            "que aparece en la factura, pero formateado de forma limpia (sin direcciones, texto legal o "
+                                            "números de serie excesivamente largos). "
+                                            "Patrón sugerido: [Tipo de Producto] [Marca] [Modelo] [Especificaciones]. "
+                                            "Ejemplo: 'RODAMIENTO SKF 6205-2RS', 'MOTOR WEG 7.5HP W22'."
                                         )
                                     },
                                     "hs_code": {
                                         "type": "string",
-                                        "description": "Código arancelario (HS Code) para clasificación aduanera."
+                                        "description": "Código arancelario (HS Code) para clasificación aduanera (Partida)."
+                                    },
+                                    "complementary_code": {
+                                        "type": "string",
+                                        "description": "Código complementario aduanero de 4 dígitos (si está presente)."
+                                    },
+                                    "supplementary_code": {
+                                        "type": "string",
+                                        "description": "Código suplementario aduanero de 4 dígitos (si está presente)."
                                     },
                                     "is_palletized": {
                                         "type": "boolean",
@@ -629,9 +647,89 @@ El documento PDF está adjunto."""
         if not self.invoice_attachment_ids:
             raise UserError(_('Por favor adjunte al menos una factura comercial antes de continuar.'))
 
+        if self.ai_extraction_status_fc == 'processing':
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Proceso en curso'),
+                    'message': _('Ya se está ejecutando una extracción para este registro.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+
         self.ai_extraction_status_fc = 'processing'
         self.ai_extraction_status = 'processing'
+        self.ai_extraction_progress = 0
+        self.ai_extraction_message = _('Iniciando extracción asíncrona...')
 
+        # Forzar commit para liberar el bloqueo del registro antes de lanzar el hilo
+        # Esto evita el error "could not serialize access due to concurrent update"
+        self.env.cr.commit()
+
+        # Lanzar hilo en segundo plano
+        # Pasamos el ID, el nombre del modelo, el ID de la base de datos y el UID del usuario
+        threaded_extraction = threading.Thread(
+            target=self._run_invoice_extraction_async,
+            args=(self.id, self._name, self.env.cr.dbname, self.env.uid)
+        )
+        threaded_extraction.start()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Extracción Iniciada'),
+                'message': _('El proceso de extracción de facturas se ha iniciado en segundo plano. Puede seguir trabajando.'),
+                'type': 'info',
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'reload'},
+            }
+        }
+
+    def _notify_ui_update(self):
+        """
+        Envía una notificación al bus para que la UI sepa que debe refrescarse
+        """
+        self.env['bus.bus']._sendone('ai_extraction_update', 'ai_extraction_update', {
+            'id': self.id,
+            'model': self._name,
+            'progress': self.ai_extraction_progress,
+            'status': self.ai_extraction_status_fc,
+            'message': self.ai_extraction_message
+        })
+
+    def _run_invoice_extraction_async(self, record_id, model_name, db_name, uid):
+        """
+        Método ejecutado en un hilo separado para procesar las facturas
+        """
+        # Crear un nuevo registro/cursor para el hilo
+        with Registry(db_name).cursor() as new_cr:
+            # En Odoo 17, es mejor usar odoo.api.Environment
+            env = api.Environment(new_cr, uid, {})
+            record = env[model_name].browse(record_id)
+            
+            try:
+                record._do_invoice_extraction_logic()
+            except Exception as e:
+                new_cr.rollback()
+                _logger.error("Error en extracción asíncrona: %s", str(e))
+                record.write({
+                    'ai_extraction_status_fc': 'error',
+                    'ai_extraction_status': 'error',
+                    'ai_extraction_message': str(e)
+                })
+            finally:
+                # El commit se hace automáticamente al salir del contexto del cursor si no hay error
+                # pero podemos forzarlo si queremos actualizaciones parciales (dentro de la lógica)
+                pass
+
+    def _do_invoice_extraction_logic(self):
+        """
+        Lógica real de extracción, separada para poder ser llamada asíncronamente
+        """
+        self.ensure_one()
         try:
             llm = self.env['nsk.llm.provider']
             tools = [self._get_invoice_extraction_tool_definition()]
@@ -640,56 +738,46 @@ El documento PDF está adjunto."""
             invoices_processed = 0
             failed_invoices = []
 
-            # Ordenar adjuntos alfabéticamente y dividir en lotes de 5
+            # Ordenar adjuntos alfabéticamente
             sorted_attachments = sorted(self.invoice_attachment_ids, key=lambda a: (a.name or '').lower())
-            batch_size = 5
-            batches = [
-                sorted_attachments[i:i + batch_size]
-                for i in range(0, len(sorted_attachments), batch_size)
-            ]
+            total_attachments = len(sorted_attachments)
+            
+            _logger.info("Iniciando extracción asíncrona de %d facturas", total_attachments)
 
-            _logger.info(
-                "Iniciando extracción de %d facturas en %d lote(s) de hasta %d archivos.",
-                len(sorted_attachments), len(batches), batch_size
-            )
+            for i, attachment in enumerate(sorted_attachments):
+                progress_val = int((i / total_attachments) * 100)
+                self.write({
+                    'ai_extraction_progress': progress_val,
+                    'ai_extraction_message': _('Procesando factura %d de %d: %s') % (i + 1, total_attachments, attachment.name)
+                })
+                # Commit parcial para que la UI vea el progreso
+                self.env.cr.commit()
+                # Notificar vía bus
+                self._notify_ui_update()
 
-            for batch_num, batch in enumerate(batches, start=1):
-                batch_names = [a.name for a in batch]
-                _logger.info("Procesando lote %d/%d: %s", batch_num, len(batches), batch_names)
+                _logger.info("Procesando factura %d/%d: %s", i + 1, total_attachments, attachment.name)
 
+                # Procesar una por una (o podrías seguir usando lotes, pero una por una da mejor feeling de progreso)
                 batch_items, batch_ok, batch_failed = self._process_invoice_batch(
-                    batch, llm, tools
+                    [attachment], llm, tools
                 )
 
-                all_items.extend(batch_items)
+                if batch_items:
+                    self._create_goods_lines_from_invoice_items(batch_items)
+                    all_items.extend(batch_items)
+                
                 invoices_processed += batch_ok
                 failed_invoices.extend(batch_failed)
 
-                # Commit parcial: persistir las líneas de cada lote antes de continuar
-                # Esto evita perder todo el trabajo si un lote posterior falla
-                if batch_items:
-                    self._create_goods_lines_from_invoice_items(batch_items)
-                    # Limpiar para no duplicar en el commit final
-                    batch_items.clear()
+            # Finalizar
+            self.write({
+                'ai_extraction_status_fc': 'completed',
+                'ai_extraction_status': 'completed',
+                'ai_extraction_progress': 100,
+                'ai_extraction_message': _('Completado: %d facturas exitosas') % invoices_processed
+            })
 
-                _logger.info(
-                    "Lote %d/%d completado — %d facturas OK, %d fallidas. Total items acumulados: %d",
-                    batch_num, len(batches), batch_ok, len(batch_failed), len(all_items)
-                )
-
-            if failed_invoices:
-                _logger.warning(
-                    "Facturas con error (se omitieron): %s",
-                    ", ".join(failed_invoices)
-                )
-
-            # Ya se crearon líneas por lote — no volver a llamar _create_goods_lines_from_invoice_items aquí
-
-            # Actualizar estado
-            self.ai_extraction_status_fc = 'completed'
-            self.ai_extraction_status = 'completed'
-
-            # Log Elegante (HTML) con info de productos
+            # Generar el log HTML (reutilizando lógica existente)
             failed_html = ""
             if failed_invoices:
                 failed_html = f"""
@@ -711,24 +799,14 @@ El documento PDF está adjunto."""
                         <tr><td><strong>Total Items:</strong> {len(all_items)}</td><td><strong>Estado:</strong> <span class="badge bg-success">Catálogo Sincronizado</span></td></tr>
                     </table>
                 </div>
-                <div class="mt-3">
-                    <table class="table table-hover table-sm">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Descripción Extracción</th>
-                                <th>Producto Catálogo</th>
-                                <th class="text-end">Cant.</th>
-                                <th class="text-end">FOB Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
             """
-            # Obtener las últimas líneas creadas para mostrar el matching real
+            # Agregar tabla de resumen (limitada)
             parent_field = 'ek_operation_request_id' if self._name == 'ek.operation.request' else 'ek_boats_information_id'
             recent_lines = self.env['ek.product.packagens.goods'].search([
                 (parent_field, '=', self.id)
             ], order='id desc', limit=20)
 
+            html_log += '<div class="mt-3"><table class="table table-hover table-sm"><thead class="table-light"><tr><th>Descripción</th><th>Producto</th><th class="text-end">Cant.</th><th class="text-end">FOB</th></tr></thead><tbody>'
             for line in recent_lines:
                 html_log += f"""
                     <tr>
@@ -738,46 +816,38 @@ El documento PDF está adjunto."""
                         <td class="text-end"><strong>{line.total_fob or 0:,.2f}</strong></td>
                     </tr>
                 """
-            if len(all_items) > 20:
-                html_log += f'<tr><td colspan="4" class="text-center text-muted">... y {len(all_items) - 20} productos más</td></tr>'
-            
             html_log += "</tbody></table></div>"
-            self.ai_extraction_log = html_log
-
-
+            
+            self.write({
+                'ai_extraction_status_fc': 'completed',
+                'ai_extraction_status': 'completed',
+                'ai_extraction_progress': 100,
+                'ai_extraction_message': _('Extracción completada con éxito.'),
+                'ai_extraction_log': html_log
+            })
+            self._notify_ui_update()
+            
             # Mensaje en chatter
             self.message_post(
                 body=Markup(_(
-                    '<strong>✅ Extracción de Facturas completada con IA</strong><br/>'
+                    '<strong>Extracción de Facturas completada (Async)</strong><br/>'
                     'Facturas procesadas: %s<br/>'
                     'Items totales: %s<br/>'
                 )) % (invoices_processed, len(all_items))
             )
-
-            _logger.info("Extracción de facturas finalizada para %s", self.name)
-
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('✅ Extracción Completada'),
-                    'message': _('Se procesaron %s facturas con %s productos totales extraídos.') % (
-                        invoices_processed,
-                        len(all_items)
-                    ),
-                    'type': 'success',
-                    'sticky': False,
-                    'next': {'type': 'ir.actions.client', 'tag': 'reload'},
-                }
-            }
+            self.env.cr.commit()
 
         except Exception as e:
-            self.ai_extraction_status_fc = 'error'
-            self.ai_extraction_status = 'error'
             error_msg = str(e)
-            _logger.error(f"Error en extracción de facturas: {error_msg}")
-            self.ai_extraction_log = (self.ai_extraction_log or '') + f"\n=== ERROR - {fields.Datetime.now()} ===\n{error_msg}\n"
-            raise UserError(_('Error al extraer datos de las facturas:\n\n%s') % error_msg)
+            _logger.error(f"Error en extracción asíncrona: {error_msg}")
+            self.write({
+                'ai_extraction_status_fc': 'error',
+                'ai_extraction_status': 'error',
+                'ai_extraction_message': error_msg,
+                'ai_extraction_log': (self.ai_extraction_log or '') + f"\n=== ERROR ASYNC - {fields.Datetime.now()} ===\n{error_msg}\n"
+            })
+            self._notify_ui_update()
+            self.env.cr.commit()
 
     def _process_invoice_batch(self, batch_attachments, llm, tools):
         """
@@ -805,13 +875,12 @@ Tu trabajo tiene dos partes:
 - Solo asigna `product_id` cuando la confianza supere el 70% — nunca fuerces una vinculación.
 - Asigna `match_confidence` entre 0.0 y 1.0 (ej: 0.95 = casi exacto, 0.75 = razonable).
 - `description`: copia el texto original de la línea exactamente como está impreso en la factura (para auditoría).
-- `product_name`: genera un nombre normalizado y conciso usando el patrón: [Tipo] [Marca] [Modelo] [Especificación Clave].
-- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe estar en español.
-  - Máximo ~60 caracteres. Omitir números de serie, especificaciones largas, texto legal y direcciones.
-  - Conservar la marca y el modelo — son los identificadores más valiosos.
-  - Incluir solo la especificación más discriminante (potencia, tamaño, capacidad, voltaje, etc.).
-  - EJEMPLO (Español): "Motor Eléctrico WEG W22 7.5HP 4P"
-  - EJEMPLO (Inglés): "Electric Motor WEG W22 7.5HP 4P"
+- `product_name`: nombre comercial del producto, respetando fielmente el nombre de la factura pero eliminando ruido innecesario (direcciones, avisos legales, etc.).
+- IDIOMA: Debe estar en el mismo idioma de la factura (Español -> Español, Inglés -> Inglés).
+- REGLA DE ORO: Si el producto tiene una marca (Brand) o modelo (Model) específico en la factura, debe aparecer obligatoriamente en `product_name`.
+- Máximo ~80 caracteres para `product_name`.
+- No inventes códigos si no están en el catálogo.
+- Si el producto NO está en el catálogo, `product_name` se usará para crear el nuevo producto en el sistema, por lo que debe ser descriptivo y fiel al documento original.
 
 ## REGLA DE ORO DE VINCULACIÓN — "EL NÚMERO MANDA"
 Los identificadores numéricos, sufijos de modelo y calibres son IDENTIFICADORES ÚNICOS Y NO NEGOCIABLES. 
@@ -930,9 +999,16 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
         parent_field = 'ek_operation_request_id' if is_request else 'ek_boats_information_id'
 
         for item in items:
-            # Use normalized product_name for display; keep raw description as audit trail
-            raw_description = item.get('description', '')
-            display_name = item.get('product_name') or raw_description
+            # PRIORIDAD: Respetar el nombre de la factura para la creación y visualización.
+            # description contiene el texto original verbatim.
+            # product_name contiene el nombre comercial extraído por la IA.
+            raw_description = item.get('description', '').strip()
+            ai_product_name = item.get('product_name', '').strip()
+            
+            # Usamos el nombre comercial de la IA como nombre principal si es descriptivo,
+            # de lo contrario el raw. Pero para cumplir con "respetar el nombre de la factura",
+            # nos aseguramos de que no sea alterado drásticamente.
+            display_name = ai_product_name or raw_description or "Producto sin nombre"
 
             # REQ: No agregar productos con precio en cero
             unit_price = item.get('unit_price_fob') or 0
@@ -991,6 +1067,10 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
 
             if item.get('hs_code'):
                 line_vals['tariff_item'] = item['hs_code']
+            if item.get('complementary_code'):
+                line_vals['id_hs_copmt_cd'] = item['complementary_code']
+            if item.get('supplementary_code'):
+                line_vals['id_hs_spmt_cd'] = item['supplementary_code']
 
             # REQ-006A: Vincular buque destino si la IA lo detectó
             ship_name = (item.get('ship_name') or '').strip()

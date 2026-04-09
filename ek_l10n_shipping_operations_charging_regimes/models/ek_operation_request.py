@@ -129,6 +129,7 @@ class EkOperationRequest(models.Model):
     compute='_compute_packages_goods_totals',
     store=True,
     help='Total FOB value of all packages and goods',
+    digits=(16, 2),
   )
 
   total_total_fob = fields.Float(
@@ -136,6 +137,7 @@ class EkOperationRequest(models.Model):
     compute='_compute_packages_goods_totals',
     store=True,
     help='Total of total FOB values of all packages and goods',
+    digits=(16, 2),
   )
 
   total_lines = fields.Integer(
