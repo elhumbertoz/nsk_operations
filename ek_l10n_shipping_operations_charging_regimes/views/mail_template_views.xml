@@ -15,6 +15,23 @@
         </field>
     </record>
 
+    <!-- Hereda el formulario del composer para ocultar el selector de
+         plantilla y el botón "Guardar plantilla" cuando se abre desde una
+         notificación de Régimen 70 (detectado por context.mark_sent_field). -->
+    <record id="mail_compose_message_form_inherit_regime_70" model="ir.ui.view">
+        <field name="name">mail.compose.message.form.inherit.regime.70</field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_id']" position="attributes">
+                <attribute name="invisible">context.get('mark_sent_field')</attribute>
+            </xpath>
+            <xpath expr="//button[@name='open_template_creation_wizard']" position="attributes">
+                <attribute name="invisible">context.get('mark_sent_field')</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Vista de árbol para plantillas de email de Régimen 70 -->
     <record id="mail_template_regime_70_tree" model="ir.ui.view">
         <field name="name">mail.template.regime.70.tree</field>

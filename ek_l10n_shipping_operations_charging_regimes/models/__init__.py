@@ -7,4 +7,5 @@ from . import ek_operation_request_mixin
 from . import ek_boats_information_items
 from . import res_partner
 from . import res_config_settings
+from . import mail_compose_message
 from . import product_product

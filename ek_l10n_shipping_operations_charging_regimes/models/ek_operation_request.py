@@ -1024,227 +1024,256 @@ class EkOperationRequest(models.Model):
         record.is_stage_cancelled = True
 
   # ============================================================================
-  # FASE CRISTHIAN: Métodos de envío de correos automáticos
+  # FASE CRISTHIAN: Notificaciones Régimen 70 con preview y edición
   # ============================================================================
 
-  def action_send_mail_customs_agent(self):
-    """REQ-011: Enviar correo a agente de aduanas (Etapa: NOTIFICACIÓN)"""
+  def _open_notification_composer(self, template, mark_sent_field, chatter_body, attachment_ids=None, extra_partner_ids=None):
+    """Abre el composer de Odoo (mail.compose.message) con los valores de la
+    plantilla YA RENDERIZADOS (asunto, body, destinatarios, CC, adjuntos).
+
+    Esto soluciona dos cosas:
+    1. Los placeholders ${object.xxx} / {{object.xxx}} se resuelven antes de
+       mostrar el modal al usuario, para que vea datos reales.
+    2. El composer abre directamente en modo "edición libre" sin dropdown de
+       plantilla, así el usuario no puede cambiarla accidentalmente.
+
+    Cuando el usuario hace clic en Enviar, nuestro override de
+    mail.compose.message._action_send_mail detecta mark_sent_field en el
+    contexto y marca el flag correspondiente en este record."""
     self.ensure_one()
 
-    # Validaciones de datos requeridos
+    # Renderizar la plantilla con los valores del record
+    def _render(field):
+      try:
+        res = template._render_field(field, self.ids)
+        return res.get(self.id) if isinstance(res, dict) else res
+      except Exception:
+        return False
+
+    values = {
+      'subject': _render('subject') or '',
+      'body_html': _render('body_html') or '',
+      'email_from': _render('email_from') or template.email_from or '',
+      'email_to': _render('email_to') or '',
+      'email_cc': _render('email_cc') or '',
+      'reply_to': _render('reply_to') or '',
+      'partner_to': _render('partner_to') or '',
+    }
+
+    # cc_partner_ids de la plantilla → los vamos a agregar a partner_ids
+    # más abajo (Odoo 17 composer no tiene campo email_cc)
+    cc_partner_list = list(template.cc_partner_ids.ids) if hasattr(template, 'cc_partner_ids') else []
+
+    # Adjuntos fijos de la plantilla
+    tpl_att_ids = template.attachment_ids.ids if template.attachment_ids else []
+
+    # Combinar adjuntos del contenedor con los fijos de la plantilla
+    final_attachment_ids = list(attachment_ids or [])
+    for att_id in tpl_att_ids:
+      if att_id not in final_attachment_ids:
+        final_attachment_ids.append(att_id)
+
+    # Resolver destinatarios → partner_ids (Odoo 17 composer SOLO usa partner_ids
+    # tanto para TO como CC — no hay campo email_cc separado)
+    partner_ids = set()
+    Partner = self.env['res.partner']
+
+    def _resolve_emails(email_str):
+      """Busca en res.partner los emails separados por coma/punto-y-coma."""
+      if not email_str:
+        return
+      for email in [e.strip() for e in str(email_str).replace(';', ',').split(',') if e.strip()]:
+        p = Partner.search([('email', '=ilike', email)], limit=1)
+        if p:
+          partner_ids.add(p.id)
+
+    # 1) Partners extra específicos del método (TO principal)
+    for pid in (extra_partner_ids or []):
+      if pid:
+        partner_ids.add(pid)
+
+    # 2) partner_to del template (IDs separados por coma)
+    partner_to = values.get('partner_to') or ''
+    if partner_to:
+      for pid in str(partner_to).split(','):
+        pid = pid.strip()
+        if pid and pid.isdigit():
+          partner_ids.add(int(pid))
+
+    # 3) Emails del email_to de la plantilla → partners
+    _resolve_emails(values.get('email_to'))
+
+    # 4) cc_partner_ids configurados en la plantilla (selector de contactos)
+    for pid in cc_partner_list:
+      partner_ids.add(pid)
+
+    # 5) Emails del email_cc de la plantilla (texto libre) → partners
+    _resolve_emails(values.get('email_cc'))
+
+    partner_ids = list(partner_ids)
+
+    ctx = dict(self.env.context or {})
+    ctx.update({
+      'default_model': self._name,
+      'default_res_ids': [self.id],
+      'default_composition_mode': 'comment',
+      'default_subtype_xmlid': 'mail.mt_comment',
+      'default_subject': values.get('subject') or '',
+      'default_body': values.get('body_html') or '',
+      'default_email_from': values.get('email_from') or '',
+      'default_reply_to': values.get('reply_to') or '',
+      'default_mail_server_id': values.get('mail_server_id') or False,
+      'mark_sent_field': mark_sent_field,
+      'mark_sent_model': self._name,
+      'mark_sent_res_id': self.id,
+      'mark_sent_chatter_body': chatter_body,
+      'force_email': True,
+    })
+
+    if partner_ids:
+      ctx['default_partner_ids'] = [(6, 0, partner_ids)]
+    if final_attachment_ids:
+      ctx['default_attachment_ids'] = [(6, 0, final_attachment_ids)]
+
+    return {
+      'name': _('Revisar y Enviar Correo'),
+      'type': 'ir.actions.act_window',
+      'res_model': 'mail.compose.message',
+      'views': [(False, 'form')],
+      'view_mode': 'form',
+      'target': 'new',
+      'context': ctx,
+    }
+
+  def _collect_container_attachments(self, include_po=False):
+    """Reúne adjuntos del contenedor vinculado (BL, facturas y opcionalmente PO)."""
+    self.ensure_one()
+    ids = []
+    container = self.container_id
+    if not container:
+      return ids
+    if include_po and getattr(container, 'purchase_order_attachment_ids', False):
+      ids.extend(container.purchase_order_attachment_ids.ids)
+    if container.bl_attachment_ids:
+      ids.extend(container.bl_attachment_ids.ids)
+    if container.invoice_attachment_ids:
+      ids.extend(container.invoice_attachment_ids.ids)
+    return ids
+
+  def action_send_mail_customs_agent(self):
+    """REQ-011: Abre composer para notificar al agente de aduanas."""
+    self.ensure_one()
     if not self.agent_customs_id:
       raise UserError(_("Debe asignar un Agente de Aduanas antes de enviar el correo."))
-
     if not self.container_id:
       raise UserError(_("La solicitud debe estar vinculada a un contenedor."))
-
     if not self.number_bl:
       raise UserError(_("Debe especificar el número de BL (Bill of Lading)."))
-
     if not self.ek_produc_packages_goods_ids:
       raise UserError(_(
         "No hay productos/mercancías para notificar.\n"
         "La solicitud debe tener productos migrados del contenedor."
       ))
-
-    # Usar plantilla configurable
     if not self.mail_template_customs_agent:
       raise UserError(_("Debe seleccionar una plantilla de correo para el agente de aduanas."))
 
-    template = self.mail_template_customs_agent
-
-    attachment_ids = []
-    container = self.container_id
-    if container:
-      if container.bl_attachment_ids:
-        attachment_ids.extend(container.bl_attachment_ids.ids)
-      if container.invoice_attachment_ids:
-        attachment_ids.extend(container.invoice_attachment_ids.ids)
-
-    email_values = {'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
-    template.send_mail(self.id, force_send=True, email_values=email_values)
-
-    # Marcar como enviado
-    self.write({
-      'mail_sent_customs_agent': True,
-      'mail_sent_customs_agent_date': fields.Datetime.now()
-    })
-
-    self.message_post(body=_("📧 Correo enviado al agente de aduanas: %s") % self.agent_customs_id.name)
-
-    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
-      'title': _('Correo Enviado'),
-      'message': _('Se envió correo a %s con %d adjuntos') % (self.agent_customs_id.name, len(attachment_ids)),
-      'type': 'success',
-      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-    }}
+    return self._open_notification_composer(
+      template=self.mail_template_customs_agent,
+      mark_sent_field='mail_sent_customs_agent',
+      chatter_body=_("📧 Correo enviado al agente de aduanas: %s") % self.agent_customs_id.name,
+      attachment_ids=self._collect_container_attachments(include_po=False),
+      extra_partner_ids=[self.agent_customs_id.id] if self.agent_customs_id else None,
+    )
 
   def action_send_mail_warehouse(self):
-    """REQ-012: Enviar correo a almacenera (Etapa: ARRIBO)"""
+    """REQ-012: Abre composer para notificar a la almacenera."""
     self.ensure_one()
-
-    # Validaciones de datos requeridos
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
-
     if not self.ek_produc_packages_goods_ids:
       raise UserError(_("No hay productos/mercancías para enviar a la almacenera."))
-
-    # Usar plantilla configurable
     if not self.mail_template_warehouse:
       raise UserError(_("Debe seleccionar una plantilla de correo para la almacenera."))
 
-    template = self.mail_template_warehouse
-
-    attachment_ids = []
-    container = self.container_id
-    if container:
-      if getattr(container, 'purchase_order_attachment_ids', False):
-        attachment_ids.extend(container.purchase_order_attachment_ids.ids)
-      if container.bl_attachment_ids:
-        attachment_ids.extend(container.bl_attachment_ids.ids)
-      if container.invoice_attachment_ids:
-        attachment_ids.extend(container.invoice_attachment_ids.ids)
-
-    email_values = {'attachment_ids': [(6, 0, attachment_ids)]} if attachment_ids else {}
-    template.send_mail(self.id, force_send=True, email_values=email_values)
-
-    # Marcar como enviado
-    self.write({
-      'mail_sent_warehouse': True,
-      'mail_sent_warehouse_date': fields.Datetime.now()
-    })
-
-    self.message_post(body=_("📧 Correo enviado a almacenera: %s") % self.res_partner_id.name)
-
-    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
-      'title': _('Correo Enviado'),
-      'message': _('Se envió correo a %s') % self.res_partner_id.name,
-      'type': 'success',
-      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-    }}
+    return self._open_notification_composer(
+      template=self.mail_template_warehouse,
+      mark_sent_field='mail_sent_warehouse',
+      chatter_body=_("📧 Correo enviado a almacenera: %s") % self.res_partner_id.name,
+      attachment_ids=self._collect_container_attachments(include_po=True),
+      extra_partner_ids=[self.res_partner_id.id] if self.res_partner_id else None,
+    )
 
   def action_send_mail_driver_info(self):
-    """REQ-013: Enviar datos de chofer (Etapa: TRASLADO)"""
+    """REQ-013: Abre composer para enviar datos del chofer."""
     self.ensure_one()
-
-    # Validaciones de datos requeridos
     if not self.detail_supplies_spare_parts:
       raise UserError(_("Debe ingresar detalles de chofer asignado - placas - cooperativa"))
     if not self.res_partner_id:
       raise UserError(_("Debe asignar una Almacenera antes de enviar el correo."))
-
     if not self.authorization_code or self.authorization_code == 'M-':
       raise UserError(_(
         "Debe completar el Número de Autorización (M-XXXX).\n"
         "Este número es otorgado por la almacenera en la solicitud previa."
       ))
-
     if not self.date_return_container:
       raise UserError(_("Debe especificar la fecha de traslado."))
-
-    # Usar plantilla configurable
     if not self.mail_template_driver_info:
       raise UserError(_("Debe seleccionar una plantilla de correo para datos de chofer."))
 
-    template = self.mail_template_driver_info
-
-    template.send_mail(self.id, force_send=True)
-
-    # Marcar como enviado
-    self.write({
-      'mail_sent_driver_info': True,
-      'mail_sent_driver_info_date': fields.Datetime.now()
-    })
-
-    self.message_post(body=_("📧 Información de chofer enviada"))
-
-    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
-      'title': _('Correo Enviado'), 'message': _('Datos del chofer enviados'), 'type': 'success',
-      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-    }}
+    return self._open_notification_composer(
+      template=self.mail_template_driver_info,
+      mark_sent_field='mail_sent_driver_info',
+      chatter_body=_("📧 Información de chofer enviada"),
+      extra_partner_ids=[self.res_partner_id.id] if self.res_partner_id else None,
+    )
 
   def action_send_mail_custody(self):
-    """REQ-014: Solicitar custodia (Etapa: TRASLADO)"""
+    """REQ-014: Abre composer para solicitar custodia."""
     self.ensure_one()
-
-    # Validaciones de datos requeridos
     if not self.deposit_description or self.deposit_description == 'MA-00':
       raise UserError(_(
         "Debe completar el Número de Matrícula del Depósito (MA-XX).\n"
         "Este número es asignado por la almacenera al ingresar la mercancía."
       ))
-    
     if not self.authorization_code or self.authorization_code == 'M-':
       raise UserError(_(
         "Debe completar el Número de Autorización (M-XXXX).\n"
         "Este número es otorgado por la almacenera en la solicitud previa."
       ))
-
     if not self.ek_produc_packages_goods_ids:
       raise UserError(_("No hay productos/mercancías para solicitar custodia."))
-
-    # Usar plantilla configurable
     if not self.mail_template_custody:
       raise UserError(_("Debe seleccionar una plantilla de correo para solicitud de custodia."))
 
-    template = self.mail_template_custody
-
-    template.send_mail(self.id, force_send=True)
-
-    # Marcar como enviado
-    self.write({
-      'mail_sent_custody': True,
-      'mail_sent_custody_date': fields.Datetime.now()
-    })
-
-    self.message_post(body=_("🚨 Solicitud de custodia enviada"))
-
-    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
-      'title': _('Correo Enviado'), 'message': _('Solicitud de custodia enviada'), 'type': 'success',
-      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-    }}
+    return self._open_notification_composer(
+      template=self.mail_template_custody,
+      mark_sent_field='mail_sent_custody',
+      chatter_body=_("🚨 Solicitud de custodia enviada"),
+    )
 
   def action_send_mail_insurance(self):
-    """REQ-015: Enviar aplicación de póliza (Etapa: CIERRE)"""
+    """REQ-015: Abre composer para enviar aplicación de póliza."""
     self.ensure_one()
-
-    # Validaciones de datos requeridos
     if not self.number_mrn:
       raise UserError(_("Debe ingresar el número de póliza (MRN)."))
-
     if not self.sale_order_id:
       raise UserError(_(
         "Debe generar la Orden de Venta antes de aplicar la póliza.\n"
         "La póliza se aplica sobre los consumos facturados."
       ))
-
     if not self.authorization_code or self.authorization_code == 'M-':
       raise UserError(_(
         "Debe completar el Número de Autorización (M-XXXX).\n"
         "Este número es otorgado por la almacenera en la solicitud previa."
       ))
-
-    # Usar plantilla configurable
     if not self.mail_template_insurance:
       raise UserError(_("Debe seleccionar una plantilla de correo para aplicación de póliza."))
 
-    template = self.mail_template_insurance
-
-    template.send_mail(self.id, force_send=True)
-
-    # Marcar como enviado
-    self.write({
-      'mail_sent_insurance': True,
-      'mail_sent_insurance_date': fields.Datetime.now()
-    })
-
-    self.message_post(body=_("📋 Aplicación de póliza enviada (MRN: %s)") % self.number_mrn)
-
-    return {'type': 'ir.actions.client', 'tag': 'display_notification', 'params': {
-      'title': _('Correo Enviado'), 'message': _('Póliza MRN: %s enviada') % self.number_mrn, 'type': 'success',
-      'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-    }}
+    return self._open_notification_composer(
+      template=self.mail_template_insurance,
+      mark_sent_field='mail_sent_insurance',
+      chatter_body=_("📋 Aplicación de póliza enviada (MRN: %s)") % self.number_mrn,
+    )
 
   def action_requeired_stage_fields(self, stage):
     """Override para agregar validaciones de notificación en etapas de Régimen 70."""
