@@ -158,6 +158,15 @@
                     </group> -->
 
 
+                    <group string="Ruta de Custodia">
+                        <group>
+                            <field name="custody_origin"/>
+                        </group>
+                        <group>
+                            <field name="custody_destination"/>
+                        </group>
+                    </group>
+
                     <group string="Orden de Venta">
                         <field name="sale_order_id" readonly="1"/>
                         <button name="action_generate_sale_order"

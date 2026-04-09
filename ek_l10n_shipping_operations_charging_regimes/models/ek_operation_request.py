@@ -85,6 +85,21 @@ class EkOperationRequest(models.Model):
     tracking=True
   )
 
+  # CUSTODIA - Ruta
+  custody_origin = fields.Char(
+    string='Custodia: Punto de Partida',
+    default='YILPORT - MACHALA',
+    help='Punto de partida del servicio de custodia',
+    tracking=True
+  )
+
+  custody_destination = fields.Char(
+    string='Custodia: Punto de Llegada',
+    default='KM 4.5 VÍA MANTA - ROCAFUERTE (SECTOR PARQUE DEL ATÚN-JARAMIJÓ) - ALMACENERA ALMACOPIO S.A.',
+    help='Punto de llegada del servicio de custodia',
+    tracking=True
+  )
+
   @api.depends('date_transfer', 'date_return_container')
   def _compute_days_in_deposit(self):
     for rec in self:

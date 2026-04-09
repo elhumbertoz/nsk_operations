@@ -106,11 +106,11 @@
                 <table style="border-collapse: collapse; margin: 15px 0;">
                     <tr>
                         <td style="padding: 5px; font-weight: bold;">Punto de Partida:</td>
-                        <td style="padding: 5px;">YILPORT- MACHALA</td>
+                        <td style="padding: 5px;"><t t-out="object.custody_origin or 'N/A'"/></td>
                     </tr>
                     <tr>
                         <td style="padding: 5px; font-weight: bold;">Punto de Llegada:</td>
-                        <td style="padding: 5px;">KM 4.5 VÍA MANTA - ROCAFUERTE (SECTOR PARQUE DEL ATÚN-JARAMIJÓ) - ALMACENERA ALMACOPIO S.A.</td>
+                        <td style="padding: 5px;"><t t-out="object.custody_destination or 'N/A'"/></td>
                     </tr>
                     <tr>
                         <td style="padding: 5px; font-weight: bold;">Día y hora de Salida:</td>
