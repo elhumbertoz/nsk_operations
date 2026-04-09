@@ -271,18 +271,11 @@ class EkAIExtractionMixin(models.AbstractModel):
                                     },
                                     "unit_price_fob": {
                                         "type": "number",
-                                        "description": (
-                                            "PRECIO FOB UNITARIO PARA LA DECLARACIÓN ADUANERA. "
-                                            "Si is_palletized=TRUE: calcular como total_fob / bales_count (FOB por bulto). "
-                                            "Si is_palletized=FALSE: usar el precio unitario por pieza que aparece en la factura."
-                                        )
+                                        "description": "Precio unitario TAL CUAL APARECE IMPRESO en la factura. No lo calcules tú."
                                     },
                                     "total_fob": {
                                         "type": "number",
-                                        "description": (
-                                            "Valor FOB TOTAL de la línea. Siempre copiar el importe/amount total tal como "
-                                            "aparece en la factura (IMPORTE, AMOUNT, TOTAL). No recalcular."
-                                        )
+                                        "description": "VALOR TOTAL (Importe/Amount) de la línea tal como aparece en la factura. Es el campo principal para el cálculo."
                                     },
                                     "weight_kg": {"type": "number"},
                                     "packages_count": {
@@ -645,110 +638,74 @@ El documento PDF está adjunto."""
 
             all_items = []
             invoices_processed = 0
+            failed_invoices = []
 
-            # Procesar cada factura
-            for invoice_att in sorted(self.invoice_attachment_ids, key=lambda a: (a.name or '').lower()):
-                _logger.info(f"Extrayendo datos de factura: {invoice_att.name}")
+            # Ordenar adjuntos alfabéticamente y dividir en lotes de 5
+            sorted_attachments = sorted(self.invoice_attachment_ids, key=lambda a: (a.name or '').lower())
+            batch_size = 5
+            batches = [
+                sorted_attachments[i:i + batch_size]
+                for i in range(0, len(sorted_attachments), batch_size)
+            ]
 
-                messages = [
-                    {
-                        "role": "system",
-                        "content": f"""Eres un experto analista de facturas comerciales y especialista en inventarios para el comercio marítimo internacional.
+            _logger.info(
+                "Iniciando extracción de %d facturas en %d lote(s) de hasta %d archivos.",
+                len(sorted_attachments), len(batches), batch_size
+            )
 
-Tu trabajo tiene dos partes:
-1. **Extraer** cada item de línea de la factura comercial adjunta con total precisión.
-2. **Vincular** cada item con el catálogo de productos de Régimen 70 proporcionado a continuación.
+            for batch_num, batch in enumerate(batches, start=1):
+                batch_names = [a.name for a in batch]
+                _logger.info("Procesando lote %d/%d: %s", batch_num, len(batches), batch_names)
 
-## CATÁLOGO DE PRODUCTOS
-{self._get_regime_70_catalog_prompt()}
-
-## REGLAS DE VINCULACIÓN
-- Utiliza el nombre del producto, el contexto y el código HS en conjunto para encontrar la mejor coincidencia en el catálogo.
-- Solo asigna `product_id` cuando la confianza supere el 70% — nunca fuerces una vinculación.
-- Asigna `match_confidence` entre 0.0 y 1.0 (ej: 0.95 = casi exacto, 0.75 = razonable).
-- `description`: copia el texto original de la línea exactamente como está impreso en la factura (para auditoría).
-- `product_name`: genera un nombre normalizado y conciso usando el patrón: [Tipo] [Marca] [Modelo] [Especificación Clave].
-- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe estar en español.
-  - Máximo ~60 caracteres. Omitir números de serie, especificaciones largas, texto legal y direcciones.
-  - Conservar la marca y el modelo — son los identificadores más valiosos.
-  - Incluir solo la especificación más discriminante (potencia, tamaño, capacidad, voltaje, etc.).
-  - EJEMPLO (Español): "Motor Eléctrico WEG W22 7.5HP 4P"
-  - EJEMPLO (Inglés): "Electric Motor WEG W22 7.5HP 4P"
-
-## REGLAS DE PALETIZACIÓN Y AGRUPACIÓN EN BULTOS (MUY IMPORTANTE)
-Algunas facturas agrupan las unidades físicas en BULTOS, FARDOS, BALES o PALLETS. Esto es crítico para la declaración aduanera:
-
-**CASO A — Productos NO paletizados (líneas individuales):**
-- La factura NO tiene una columna separada de BULTOS o BALES.
-- Cada línea = 1 tipo de producto con su cantidad y precio unitario directos.
-- `is_palletized` = false
-- `quantity` = cantidad de unidades de la línea
-- `unit_price_fob` = precio por unidad tal como aparece en la factura
-- EJEMPLO: 10 unidades × $50 c/u = $500 total → quantity=10, unit_price_fob=50, total_fob=500
-
-**CASO B — Productos paletizados/agrupados en BULTOS:**
-- La factura tiene columnas SEPARADAS: BULTOS/BALES/PALLETS (agrupa físicamente) y PAÑOS/SHEETS/PCS/UNIDADES (contenido).
-- El precio INDIVIDUAL por unidad NO coincidirá con el total si divides por unidades — debes dividir por BULTOS.
-- `is_palletized` = true
-- `bales_count` = valor de la columna BULTOS/BALES (= cantidad de unidades físicas despachables)
-- `units_per_bale` = valor de la columna PAÑOS/SHEETS/PCS (informativo)
-- `quantity` = bales_count (número de BULTOS, NO de unidades internas)
-- `unit_price_fob` = total_fob / bales_count (FOB distribuido entre los bultos)
-- `total_fob` = el importe/amount total de la línea tal como aparece en la factura
-- `packages_count` = bales_count
-- EJEMPLO: 3 BULTOS × 5 PAÑOS c/u, importe total $1,500 → quantity=3, unit_price_fob=500, total_fob=1500, bales_count=3, units_per_bale=5
-
-**CÓMO DETECTAR agrupación en bultos:**
-- Busca columnas con encabezados como: BULTOS, BALES, PALLETS, FARDOS, CAJAS, PACKAGES (acompañadas de otra columna PAÑOS, SHEETS, PCS, UNITS, QTY).
-- Si el precio por unidad × cantidad de unidades NO da el total, es señal de agrupación en bultos.
-- Si hay una columna de unidades internas (PAÑOS/SHEETS) distinta de la de bultos, aplica CASO B.
-
-## REGLAS DE EXTRACCIÓN GENERALES
-- Extrae todos los items con sus cantidades y precios FOB exactos.
-- IMPORTANTE: NO extraigas items con precio cero (0.00). Si un item no tiene precio o es cero, ignóralo.
-- Si el documento menciona explícitamente un buque destino (ej: "FOR VESSEL ATÚN I", "PARA BUQUE TXOPITUNA"), captúralo en `ship_name`.
-- `total_fob` SIEMPRE debe ser el importe total de la línea tal como aparece; nunca lo recalcules.
-
-Llama siempre a `extract_invoice_data` para devolver los resultados estructurados."""
-                    },
-                    {
-                        "role": "user",
-                        "content": "Extrae los datos de la factura comercial y realiza el matching con el catálogo proporcionado. El documento está adjunto."
-                    }
-                ]
-
-                response = llm.generate_completion(
-                    messages=messages,
-                    attachments=invoice_att,
-                    tools=tools
+                batch_items, batch_ok, batch_failed = self._process_invoice_batch(
+                    batch, llm, tools
                 )
 
-                if response.choices and response.choices[0].message.tool_calls:
-                    tool_call = response.choices[0].message.tool_calls[0]
-                    invoice_data = json.loads(tool_call.function.arguments)
+                all_items.extend(batch_items)
+                invoices_processed += batch_ok
+                failed_invoices.extend(batch_failed)
 
-                    # Agregar items de esta factura
-                    for item in invoice_data.get('items', []):
-                        item['invoice_number'] = invoice_data.get('invoice_number', invoice_att.name)
-                        item['supplier'] = invoice_data.get('supplier', '')
-                        all_items.append(item)
+                # Commit parcial: persistir las líneas de cada lote antes de continuar
+                # Esto evita perder todo el trabajo si un lote posterior falla
+                if batch_items:
+                    self._create_goods_lines_from_invoice_items(batch_items)
+                    # Limpiar para no duplicar en el commit final
+                    batch_items.clear()
 
-                    invoices_processed += 1
-                    _logger.info(f"Factura {invoice_att.name} procesada: {len(invoice_data.get('items', []))} items")
+                _logger.info(
+                    "Lote %d/%d completado — %d facturas OK, %d fallidas. Total items acumulados: %d",
+                    batch_num, len(batches), batch_ok, len(batch_failed), len(all_items)
+                )
 
-            # Crear líneas de productos
-            if all_items:
-                self._create_goods_lines_from_invoice_items(all_items)
+            if failed_invoices:
+                _logger.warning(
+                    "Facturas con error (se omitieron): %s",
+                    ", ".join(failed_invoices)
+                )
+
+            # Ya se crearon líneas por lote — no volver a llamar _create_goods_lines_from_invoice_items aquí
 
             # Actualizar estado
             self.ai_extraction_status_fc = 'completed'
             self.ai_extraction_status = 'completed'
 
             # Log Elegante (HTML) con info de productos
+            failed_html = ""
+            if failed_invoices:
+                failed_html = f"""
+                    <div class="alert alert-warning mt-2" role="alert">
+                        <strong>Atención:</strong> No se pudieron procesar {len(failed_invoices)} archivos:
+                        <ul class="mb-0">
+                            {"".join([f"<li>{name}</li>" for name in failed_invoices])}
+                        </ul>
+                    </div>
+                """
+
             html_log = f"""
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Extracción de Facturas Completada</h4>
-                    <p>Se procesaron <strong>{invoices_processed}</strong> facturas. Los productos han sido sincronizados con el catálogo unificado de Régimen 70.</p>
+                    <p>Se procesaron <strong>{invoices_processed}</strong> facturas exitosamente.</p>
+                    {failed_html}
                     <hr>
                     <table class="table table-sm table-borderless mb-0">
                         <tr><td><strong>Total Items:</strong> {len(all_items)}</td><td><strong>Estado:</strong> <span class="badge bg-success">Catálogo Sincronizado</span></td></tr>
@@ -822,6 +779,144 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
             self.ai_extraction_log = (self.ai_extraction_log or '') + f"\n=== ERROR - {fields.Datetime.now()} ===\n{error_msg}\n"
             raise UserError(_('Error al extraer datos de las facturas:\n\n%s') % error_msg)
 
+    def _process_invoice_batch(self, batch_attachments, llm, tools):
+        """
+        Procesa un lote de hasta 5 facturas PDF contra el LLM.
+
+        Cada archivo se envía por separado al LLM para preservar la calidad de extracción,
+        pero el lote agrupa los resultados antes del commit a DB, reduciendo la carga
+        de transacciones y evitando timeouts en cargas masivas.
+
+        Returns:
+            (items: list, ok_count: int, failed_names: list[str])
+        """
+        catalog_prompt = self._get_regime_70_catalog_prompt()
+        system_prompt = f"""Eres un experto analista de facturas comerciales y especialista en inventarios para el comercio marítimo internacional.
+
+Tu trabajo tiene dos partes:
+1. **Extraer** cada item de línea de la factura comercial adjunta con total precisión.
+2. **Vincular** cada item con el catálogo de productos de Régimen 70 proporcionado a continuación.
+
+## CATÁLOGO DE PRODUCTOS
+{catalog_prompt}
+
+## REGLAS DE VINCULACIÓN
+- Utiliza el nombre del producto, el contexto y el código HS en conjunto para encontrar la mejor coincidencia en el catálogo.
+- Solo asigna `product_id` cuando la confianza supere el 70% — nunca fuerces una vinculación.
+- Asigna `match_confidence` entre 0.0 y 1.0 (ej: 0.95 = casi exacto, 0.75 = razonable).
+- `description`: copia el texto original de la línea exactamente como está impreso en la factura (para auditoría).
+- `product_name`: genera un nombre normalizado y conciso usando el patrón: [Tipo] [Marca] [Modelo] [Especificación Clave].
+- IDIOMA: IMPORTANTE — El nombre del producto debe estar en el idioma del documento de origen. Si el documento está en español, el nombre debe estar en español.
+  - Máximo ~60 caracteres. Omitir números de serie, especificaciones largas, texto legal y direcciones.
+  - Conservar la marca y el modelo — son los identificadores más valiosos.
+  - Incluir solo la especificación más discriminante (potencia, tamaño, capacidad, voltaje, etc.).
+  - EJEMPLO (Español): "Motor Eléctrico WEG W22 7.5HP 4P"
+  - EJEMPLO (Inglés): "Electric Motor WEG W22 7.5HP 4P"
+
+## REGLA DE ORO DE VINCULACIÓN — "EL NÚMERO MANDA"
+Los identificadores numéricos, sufijos de modelo y calibres son IDENTIFICADORES ÚNICOS Y NO NEGOCIABLES. 
+
+**PROHIBICIÓN ESTRICTA DE "AUTOCORRECCIÓN":** 
+Si en el documento PDF lees un número (ej: #168) y en el catálogo ves algo parecido pero con otro número (ej: #96), **NO VINCULES**. 
+- Extrae el texto EXACTAMENTE como lo ves en el PDF (#168).
+- NUNCA cambies un número del documento por uno del catálogo.
+- La fidelidad al documento es prioritaria sobre la vinculación al catálogo.
+
+**BLOQUEADORES ABSOLUTOS DE MATCH** — Confianza 0% y NO asignar `product_id` si difieren:
+1. **Calibres/Grosor con `#`**: `#96` ≠ `#168` ≠ `#210`. Un cambio de número tras el `#` indica un producto técnico distinto (redes, hilos, mallas).
+2. **Modelos Alfanuméricos**: `W22` ≠ `W21`, `6205` ≠ `6206`.
+3. **Especificaciones de Capacidad/Potencia**: `7.5HP` ≠ `10HP`, `3/4"` ≠ `1/2"`, `220V` ≠ `110V`.
+
+**EJEMPLOS DE FALLOS CRÍTICOS (PROHIBIDO):**
+- ❌ Factura dice: "RED NYLON #168" -> Catálogo tiene: "RED NYLON #96" -> **RESULTADO**: `product_id`: null, `product_name`: "RED NYLON #168", `match_confidence`: 0.0. (NUNCA VINCULAR).
+- ❌ Factura dice: "MOTOR 10HP" -> Catálogo tiene: "MOTOR 7.5HP" -> **RESULTADO**: `product_id`: null, `match_confidence`: 0.0.
+
+**REGLA FINAL**: Ante la más mínima diferencia numérica o técnica, es OBLIGATORIO marcar como NO encontrado (product_id: null). Es preferible que el usuario cree un producto nuevo a que el sistema asocie uno incorrecto que cause errores en la declaración aduanera.
+
+## REGLAS DE PALETIZACIÓN Y AGRUPACIÓN EN BULTOS (MUY IMPORTANTE)
+Algunas facturas agrupan las unidades físicas en BULTOS, FARDOS, BALES o PALLETS. Esto es crítico para la declaración aduanera:
+
+**PROHIBICIÓN DE CÁLCULO**: No realices ninguna operación matemática (divisiones o multiplicaciones). Limítate a extraer los números exactos del documento. El sistema Odoo hará los cálculos.
+
+**CASO A — Productos NO paletizados (líneas individuales):**
+- La factura NO tiene una columna separada de BULTOS o BALES.
+- Cada línea = 1 tipo de producto con su cantidad y precio unitario directos.
+- `is_palletized` = false
+- `quantity` = cantidad de unidades de la línea
+- `total_fob` = el valor total/importe/amount de la línea.
+
+**CASO B — Productos paletizados/agrupados en BULTOS:**
+- La factura tiene columnas SEPARADAS: BULTOS/BALES/PALLETS (agrupa físicamente) y PAÑOS/SHEETS/PCS/UNIDADES (contenido).
+- `is_palletized` = true
+- `bales_count` = valor de la columna BULTOS/BALES.
+- `units_per_bale` = valor de la columna PAÑOS/SHEETS/PCS (contenido interno).
+- `quantity` = bales_count (número de BULTOS).
+- `total_fob` = el importe/amount total de la línea.
+
+**CÓMO DETECTAR agrupación en bultos:**
+- Busca columnas con encabezados como: BULTOS, BALES, PALLETS, FARDOS, CAJAS, PACKAGES junto a otra columna de contenido (PAÑOS, SHEETS, PCS, UNITS, QTY).
+- Si existe una columna de bultos separada de la de piezas, ES PALETIZACIÓN (Caso B).
+
+## REGLAS DE EXTRACCIÓN GENERALES
+- **NO CALCULES NADA**: Extrae los valores tal cual están escritos.
+- **TOTAL FOB**: Siempre extrae el importe total de la línea (Total, Amount, Extension).
+- **items con precio cero**: Ignora items sin precio.
+- **Buque destino**: Captura nombres de buques en `ship_name` si se mencionan.
+
+Llama siempre a `extract_invoice_data` para devolver los resultados estructurados."""
+
+        batch_items = []
+        ok_count = 0
+        failed_names = []
+
+        for invoice_att in batch_attachments:
+            _logger.info("Extrayendo factura: %s", invoice_att.name)
+            try:
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {
+                        "role": "user",
+                        "content": "Extrae los datos de la factura comercial y realiza el matching con el catálogo proporcionado. El documento está adjunto."
+                    }
+                ]
+
+                response = llm.generate_completion(
+                    messages=messages,
+                    attachments=invoice_att,
+                    tools=tools
+                )
+
+                if response.choices and response.choices[0].message.tool_calls:
+                    tool_call = response.choices[0].message.tool_calls[0]
+                    invoice_data = json.loads(tool_call.function.arguments)
+
+                    items_in_invoice = invoice_data.get('items', [])
+                    for item in items_in_invoice:
+                        item['invoice_number'] = invoice_data.get('invoice_number', invoice_att.name)
+                        item['supplier'] = invoice_data.get('supplier', '')
+                        batch_items.append(item)
+
+                    ok_count += 1
+                    _logger.info(
+                        "Factura '%s' OK — %d items extraídos.",
+                        invoice_att.name, len(items_in_invoice)
+                    )
+                else:
+                    _logger.warning(
+                        "Factura '%s' — el LLM no devolvió tool_call. Se omite.",
+                        invoice_att.name
+                    )
+                    failed_names.append(invoice_att.name)
+
+            except Exception as exc:
+                _logger.error(
+                    "Error procesando factura '%s': %s. Se continúa con el lote.",
+                    invoice_att.name, exc
+                )
+                failed_names.append(invoice_att.name)
+
+        return batch_items, ok_count, failed_names
+
     def _create_goods_lines_from_invoice_items(self, items):
         """
         Crea líneas de mercancía desde items extraídos de facturas.
@@ -846,45 +941,38 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
                 _logger.info("Saltando item con precio en cero: %s", display_name)
                 continue
 
-            # ── LÓGICA DE PALETIZACIÓN ──────────────────────────────────────────
-            # La IA devuelve is_palletized=True cuando el proveedor agrupa unidades
-            # en bultos (BULTOS/BALES). En ese caso:
-            #   - quantity = número de bultos (bales_count)
-            #   - unit_price_fob = total_fob / bales_count  (FOB por bulto)
-            # Cuando is_palletized=False, se usan los valores directos de la factura.
+            # ── LÓGICA DE VALORES Y PRECIOS (MATEMÁTICA EN PYTHON) ──────────────
+            # La IA solo extrae los valores impresos sin calcular.
+            # Delegamos el cálculo del precio unitario FOB al sistema Odoo
+            # para asegurar máxima precisión y consistencia.
             is_palletized = item.get('is_palletized', False)
             bales_count = item.get('bales_count') or 0
+            raw_quantity = item.get('quantity') or 0
 
-            if is_palletized and bales_count > 0:
-                # CASO B: productos agrupados en bultos
-                final_quantity = bales_count
-                final_unit_fob = round(total_price / bales_count, 6) if total_price else 0
-                final_packages = bales_count
+            # 1. Determinar Cantidad Aduanera
+            # Si está paletizado, la cantidad es el nº de bultos.
+            final_quantity = bales_count if (is_palletized and bales_count > 0) else raw_quantity
+
+            # 2. Calcular FOB Unitario (Total / Cantidad)
+            # Siempre calculamos desde el Total para evitar errores de redondeo del proveedor
+            if final_quantity > 0 and total_price > 0:
+                final_unit_fob = round(total_price / final_quantity, 6)
+            else:
+                final_unit_fob = item.get('unit_price_fob') or 0
+
+            # 3. Paquetes
+            final_packages = bales_count if (is_palletized and bales_count > 0) else final_quantity
+
+            if is_palletized:
                 _logger.info(
-                    "Item PALETIZADO '%s': %d bultos, FOB/bulto=%.2f (total=%.2f)",
-                    display_name, bales_count, final_unit_fob, total_price
+                    "Item PALETIZADO '%s': %d bultos. Calculado unit_fob: %.2f / %d = %.4f",
+                    display_name, bales_count, total_price, final_quantity, final_unit_fob
                 )
             else:
-                # CASO A: unidades individuales — usar valores directos de la IA
-                final_quantity = item.get('quantity') or 0
-                final_unit_fob = item.get('unit_price_fob') or 0
-                final_packages = item.get('packages_count') or 0
-
-                # Heurística de seguridad: si la IA no marcó is_palletized pero los
-                # números no cuadran (unit_price × qty ≠ total con margen > 5%),
-                # recalculamos unit_price desde el total para evitar inconsistencias.
-                if final_quantity > 0 and total_price > 0:
-                    calculated_total = round(final_unit_fob * final_quantity, 2)
-                    variance = abs(calculated_total - total_price) / total_price
-                    if variance > 0.05:
-                        original_fob = final_unit_fob
-                        final_unit_fob = round(total_price / final_quantity, 6)
-                        _logger.warning(
-                            "Item '%s': precio unitario inconsistente (%.2f × %s = %.2f ≠ total %.2f). "
-                            "Recalculando unit_fob=%.4f desde total.",
-                            display_name, original_fob, final_quantity,
-                            calculated_total, total_price, final_unit_fob
-                        )
+                _logger.info(
+                    "Item NORMAL '%s': %s unidades. Calculado unit_fob: %.2f / %s = %.4f",
+                    display_name, final_quantity, total_price, final_quantity, final_unit_fob
+                )
 
             line_vals = {
                 parent_field: self.id,

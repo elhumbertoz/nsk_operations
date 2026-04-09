@@ -229,20 +229,24 @@ class EkBoatsInformation(models.Model):
 
 
     def open_items_container(self):
-            return {
-                'name': 'Search Items',
-                'type': 'ir.actions.act_window',
-                'res_model': 'ek.product.packagens.goods',
-                'view_mode': 'tree',
-                'view_id': self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items').id,
-                'target': 'new',
-                'domain': [('id', 'in', self.ek_produc_packages_goods_ids.ids)],
-                "context": {
-                    "create": False,
-                    "edit": True,
-                    "delete": True,
-                    },
-            }
+        self.ensure_one()
+        return {
+            'name': _('Gestión de Items: %s') % (self.name or self.ref_container or ''),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ek.product.packagens.goods',
+            'view_mode': 'tree,form',
+            'views': [
+                (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items').id, 'tree'),
+                (False, 'form'),
+            ],
+            'target': 'current',
+            'domain': [('ek_boats_information_id', '=', self.id)],
+            'context': {
+                'default_ek_boats_information_id': self.id,
+                'default_ek_ship_registration_id': self.ship_name_id.id,
+                'search_default_ek_boats_information_id': self.id,
+            },
+        }
 
 
 

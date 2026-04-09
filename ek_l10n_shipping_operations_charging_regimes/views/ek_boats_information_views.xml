@@ -96,9 +96,10 @@
 
           <notebook>
             <page string="Items en Contenedor">
-              <button name="open_items_container" type="object" string="Actualizar Vista" class="btn btn-link p-0" icon="fa-refresh"/>
+              <button name="open_items_container" type="object" string="Configuración Avanzada de Items" class="btn btn-primary mb-2" icon="fa-arrows-alt"/>
               <field name="ek_produc_packages_goods_ids">
                 <tree editable="bottom" decoration-info="match_confidence &gt;= 80" decoration-warning="match_confidence &lt; 80 and match_confidence &gt; 0">
+                  <field name="sequence" widget="handle"/>
                   <field name="creation_indicator" string=" " readonly="1"/>
                   <field name="product_id"
                          domain="[('categ_id', '=', %(ek_l10n_shipping_operations_charging_regimes.product_category_regime_70)d)]"
@@ -239,13 +240,87 @@
     <field name="model">ek.product.packagens.goods</field>
     <field name="arch" type="xml">
       <search>
-        <field name="ek_requerid_burden_inter_nac_id"/>
+        <field name="product_id"/>
+        <field name="extracted_name"/>
         <field name="tariff_item"/>
         <field name="invoice_number"/>
         <field name="supplier"/>
         <field name="id_bl"/>
+        <field name="ek_boats_information_id"/>
+        <field name="ship_id"/>
 
+        <filter string="No Despachados" name="not_dispatched" domain="[('is_not_dispatched', '=', True)]"/>
+        <filter string="Nuevos Productos" name="new_products" domain="[('is_new_product', '=', True)]"/>
+        <separator/>
+        <filter string="Confianza Alta (&gt;80%)" name="high_confidence" domain="[('match_confidence', '&gt;=', 80)]"/>
+        <filter string="Confianza Baja (&lt;80%)" name="low_confidence" domain="[('match_confidence', '&lt;', 80), ('match_confidence', '&gt;', 0)]"/>
+
+        <group expand="0" string="Agrupar Por">
+          <filter string="Producto" name="group_by_product" context="{'group_by': 'product_id'}"/>
+          <filter string="Factura" name="group_by_invoice" context="{'group_by': 'invoice_number'}"/>
+          <filter string="Proveedor" name="group_by_supplier" context="{'group_by': 'supplier'}"/>
+          <filter string="Contenedor" name="group_by_container" context="{'group_by': 'ek_boats_information_id'}"/>
+          <filter string="Buque Destino" name="group_by_ship" context="{'group_by': 'ship_id'}"/>
+        </group>
       </search>
+    </field>
+  </record>
+
+  <record id="ek_product_packagens_goods_form" model="ir.ui.view">
+    <field name="name">ek.product.packagens.goods.form</field>
+    <field name="model">ek.product.packagens.goods</field>
+    <field name="arch" type="xml">
+      <form string="Item de Contenedor">
+        <sheet>
+          <div class="oe_title">
+            <label for="product_id" string="Producto"/>
+            <h1><field name="product_id" options="{'no_create': True}"/></h1>
+            <field name="creation_indicator" readonly="1" class="oe_inline"/>
+            <span invisible="not is_new_product" class="text-muted"> (Creado automáticamente)</span>
+          </div>
+          <group>
+            <group string="Información del Documento">
+                <field name="extracted_name" string="Desc. Proveedor"/>
+                <field name="invoice_number"/>
+                <field name="supplier"/>
+                <field name="id_bl"/>
+            </group>
+            <group string="Matching e IA">
+                <field name="match_confidence" widget="progressbar" string="Confianza IA"/>
+                <field name="is_new_product" readonly="1"/>
+                <field name="tariff_item"/>
+                <field name="id_hs_copmt_cd"/>
+            </group>
+          </group>
+          <group>
+            <group string="Cantidades y Logística">
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="gross_weight"/>
+                <field name="packages_count"/>
+                <field name="commercial_unit"/>
+            </group>
+            <group string="Valores (FOB)">
+                <field name="fob"/>
+                <field name="total_fob" decoration-bf="1"/>
+                <field name="is_not_dispatched"/>
+                <field name="ship_id"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Observaciones">
+                <field name="observation" placeholder="Notas adicionales..."/>
+            </page>
+            <page string="Referencias de Sistema">
+                <group>
+                    <field name="ek_boats_information_id" readonly="1"/>
+                    <field name="ek_ship_registration_id" readonly="1"/>
+                    <field name="date_request" readonly="1"/>
+                </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
     </field>
   </record>
 
@@ -255,8 +330,9 @@
     <field name="arch" type="xml">
       <tree editable="bottom" decoration-info="match_confidence &gt;= 80" decoration-warning="match_confidence &lt; 80 and match_confidence &gt; 0">
         <header>
-          <button name="delete_table_70" type="object" string="Vaciar Tabla" class="btn-link mb-1 px-0" icon="fa-trash" />
+          <button name="delete_table_70" type="object" string="Vaciar Tabla" class="btn-danger" icon="fa-trash" />
         </header>
+        <field name="sequence" widget="handle"/>
         <field name="creation_indicator" string=" " readonly="1"/>
         <field name="product_id" options="{'no_create': True}" width="400px"/>
         <field name="extracted_name" string="Descripción Proveedor" class="text-muted italic"/>

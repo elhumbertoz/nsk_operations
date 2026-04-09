@@ -1350,6 +1350,26 @@ class EkOperationRequest(models.Model):
       catalog_lines.append(f"{p.id} | {code} | {p.name}")
 
     return "\n".join(catalog_lines)
+  def action_open_goods_management(self):
+    self.ensure_one()
+    return {
+      'name': _('Gestión de Mercancías: %s') % (self.name or ''),
+      'type': 'ir.actions.act_window',
+      'res_model': 'ek.product.packagens.goods',
+      'view_mode': 'tree,form',
+      'views': [
+        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_tree_items').id, 'tree'),
+        (self.env.ref('ek_l10n_shipping_operations_charging_regimes.ek_product_packagens_goods_form').id, 'form'),
+      ],
+      'target': 'current',
+      'domain': [('ek_operation_request_id', '=', self.id)],
+      'context': {
+        'default_ek_operation_request_id': self.id,
+        'default_ek_ship_registration_id': self.ek_ship_registration_id.id,
+        'search_default_ek_operation_request_id': self.id,
+      },
+    }
+
 
 
 class bl_import_export(models.Model):

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from difflib import SequenceMatcher
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -8,6 +7,9 @@ _logger = logging.getLogger(__name__)
 
 class ek_product_packagens_goods(models.Model):
   _inherit = 'ek.product.packagens.goods'
+  _order = 'sequence, id'
+
+  sequence = fields.Integer('Sequence', default=10)
 
   # NUEVO: Vinculación a producto real del catálogo
   product_id = fields.Many2one(
@@ -164,22 +166,14 @@ class ek_product_packagens_goods(models.Model):
   @api.model
   def _find_or_create_product(self, vals):
     """
-    Buscar producto existente o crear automáticamente.
-    TODOS los pasos de búsqueda están restringidos a la categoría
-    'product_category_regime_70' para garantizar que el product_id
-    devuelto cumpla el domain del campo en la vista XML.
-
-    Búsqueda en este orden:
-    1. Búsqueda exacta por nombre (dentro de Régimen 70)
-    2. Búsqueda por código arancelario REG70-{hs_code} (dentro de Régimen 70)
-    3. Búsqueda por similitud fuzzy > 85% (dentro de Régimen 70)
-    4. Si no existe → Crear automáticamente con categ_id = Régimen 70
+    Capa de búsqueda eliminada por solicitud del usuario para evitar inconsistencias.
+    Si la IA no vinculó el producto, se procede directamente a la creación automática.
 
     Args:
         vals: Dict con 'name', 'tariff_item', 'fob', 'quantity'
 
     Returns:
-        int: ID del producto encontrado/creado o False
+        int: ID del producto creado o False
     """
     description = vals.get('name', '').strip()
     hs_code = vals.get('tariff_item', '') or vals.get('id_hs_copmt_cd', '')
@@ -190,79 +184,7 @@ class ek_product_packagens_goods(models.Model):
     if not description:
       return False
 
-    # Obtener categoría Régimen 70 (base para todos los filtros)
-    category = self.env.ref(
-      'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
-      raise_if_not_found=False
-    )
-    regime_domain = [('categ_id', '=', category.id)] if category else []
-
-    # 1. Búsqueda exacta por nombre — SOLO dentro de Régimen 70
-    product = self.env['product.product'].search(
-      regime_domain + [('name', '=ilike', description)],
-      limit=1
-    )
-    if product:
-      return product.id
-
-    # 2. Búsqueda por código arancelario REG70-{hs_code} — SOLO dentro de Régimen 70
-    if hs_code:
-      candidates = self.env['product.product'].search(
-        regime_domain + [('default_code', '=like', f'REG70-{hs_code}%')],
-        limit=50
-      )
-
-      best_hs_match = None
-      best_hs_score = 0
-      for prod in candidates:
-        similarity = SequenceMatcher(
-          None, prod.name.upper(), description.upper()
-        ).ratio()
-        if similarity > best_hs_score:
-          best_hs_score = similarity
-          best_hs_match = prod
-
-      # Umbral permisivo: mismo HS + nombre medianamente parecido
-      if best_hs_match and best_hs_score > 0.60:
-        return best_hs_match.id
-
-    # 3. Búsqueda por similitud fuzzy — SOLO dentro de Régimen 70
-    products = self.env['product.product'].search(regime_domain, limit=200)
-
-    best_match = None
-    best_score = 0
-
-    # Obtener umbral de similitud desde configuración
-    ICP = self.env['ir.config_parameter'].sudo()
-    similarity_threshold = float(ICP.get_param(
-      'ek_l10n_shipping_operations_charging_regimes.regime_70_similarity_threshold',
-      85.0
-    )) / 100.0  # Convertir porcentaje a decimal
-
-    for prod in products:
-      similarity = SequenceMatcher(
-        None,
-        prod.name.upper(),
-        description.upper()
-      ).ratio()
-
-      if similarity > best_score:
-        best_score = similarity
-        best_match = prod
-
-    # Si similitud supera el umbral configurado, usar ese producto
-    if best_score > similarity_threshold:
-      return best_match.id
-
-    # Zona gris: advertir posible duplicado pero crear nuevo
-    if 0.70 < best_score <= similarity_threshold and best_match:
-      _logger.warning(
-        "Producto '%s' tiene similitud %.0f%% con '%s' (id=%s). "
-        "Se crea nuevo producto. Revisar si es duplicado.",
-        description, best_score * 100, best_match.name, best_match.id
-      )
-
-    # 4. NO ENCONTRADO → Crear automáticamente con categ_id = Régimen 70
+    # Proceder directamente a la creación automática
     return self._create_product_auto(description, hs_code, fob_unit, vals)
 
   @api.model
