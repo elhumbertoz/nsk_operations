@@ -8,12 +8,16 @@
                 <field name="processing_status" invisible="1"/>
                 <field name="has_pending_changes" invisible="1"/>
                 <field name="has_deletions" invisible="1"/>
+                <field name="chat_history_html" invisible="1"/>
                 
                 <!-- FASE 1: INPUT -->
                 <div invisible="processing_status != 'idle'">
                     <group>
                         <field name="operation_request_id" readonly="1" force_save="1"/>
-                        <field name="user_text" placeholder="Ej: 'Actualiza el peso de la línea 42 a 15kg' o 'Sincroniza los precios con la factura adjunta'"/>
+                    </group>
+                    <field name="chat_history_html" invisible="not chat_history_html" class="mb-3"/>
+                    <group string="Instrucción para la IA">
+                        <field name="user_text" placeholder="Ej: 'Actualiza el peso de la línea 42 a 15kg' o 'Sincroniza los precios con la factura adjunta'" nolabel="1" colspan="2" class="w-100"/>
                     </group>
                     <group string="Material de Referencia">
                         <field name="attachment_ids" widget="many2many_binary" string="Adjuntos (PDF/Imágenes)"/>
@@ -23,18 +27,22 @@
                     </div>
                 </div>
 
-                <!-- FASE 2a: RESPUESTA INFORMATIVA -->
+                <!-- FASE 2a: RESPUESTA INFORMATIVA (CHAT) -->
                 <div invisible="processing_status != 'response'">
-                    <div class="mb-3">
-                        <field name="ai_response_text" readonly="1"/>
-                    </div>
+                    <field name="chat_history_html" class="mb-3"/>
+                    
+                    <group string="Continuar Conversación">
+                        <field name="user_text" placeholder="Escriba su respuesta aquí..." nolabel="1" colspan="2" class="w-100"/>
+                    </group>
+                    
                     <div class="alert alert-secondary py-2" role="alert">
-                        <i class="fa fa-info-circle mr-1"/> La IA ha respondido con información pero no ha propuesto cambios técnicos en la tabla.
+                        <i class="fa fa-info-circle mr-1"/> La IA ha respondido. Puede continuar preguntando o volver para adjuntar más documentos.
                     </div>
                 </div>
 
                 <!-- FASE 2b: PREVIEW DE CAMBIOS -->
                 <div invisible="processing_status != 'changes_ready'">
+                    <field name="chat_history_html" class="mb-3"/>
                     <div class="mb-3">
                         <field name="ai_response_preview" readonly="1"/>
                     </div>
@@ -52,19 +60,22 @@
                 </div>
 
                 <footer>
-                    <!-- Botones Fase 1 -->
-                    <button name="action_process" string="⚡ Procesar con IA" type="object" class="btn-primary" invisible="processing_status != 'idle'"/>
+                    <!-- Botones Procesamiento -->
+                    <button name="action_process" string="⚡ Procesar / Responder" type="object" class="btn-primary" 
+                            invisible="processing_status not in ['idle', 'response']"/>
                     
-                    <!-- Botones Fase 2a (Informativa) -->
-                    <button name="action_back_to_input" string="← Volver a editar" type="object" class="btn-secondary" invisible="processing_status != 'response'"/>
+                    <!-- Botones Fase 2a (Chat) -->
+                    <button name="action_back_to_input" string="← Ajustar Adjuntos" type="object" class="btn-secondary" 
+                            invisible="processing_status != 'response'"/>
                     
                     <!-- Botones Fase 2b (Cambios) -->
                     <button name="action_apply_pending_changes" string="✅ Aplicar Cambios" type="object" class="btn-primary" 
                             invisible="processing_status != 'changes_ready'"
                             readonly="has_deletions and not deletion_confirmed"/>
-                    <button name="action_back_to_input" string="← Volver / Refinar" type="object" class="btn-secondary" invisible="processing_status != 'changes_ready'"/>
+                    <button name="action_back_to_input" string="← Volver / Refinar" type="object" class="btn-secondary" 
+                            invisible="processing_status != 'changes_ready'"/>
                     
-                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>

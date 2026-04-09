@@ -67,6 +67,13 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
         ('applied', 'Aplicado')
     ], string='Estado', default='idle')
 
+    history_json = fields.Text(string='Historial de Conversación', default='[]')
+    
+    chat_history_html = fields.Html(
+        string='Muro de Conversación',
+        readonly=True
+    )
+
     @api.depends('pending_changes_json')
     def _compute_has_pending_changes(self):
         for wizard in self:
@@ -179,6 +186,9 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
         if not text:
             return ""
         
+        # Limpieza básica de etiquetas HTML previas si las hay
+        text = str(text).replace('<', '&lt;').replace('>', '&gt;')
+        
         # 1. Bold: **text** -> <strong>text</strong>
         text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
         
@@ -194,7 +204,7 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
             clean_line = line.strip()
             if clean_line.startswith(('* ', '- ')):
                 if not in_list:
-                    processed_lines.append('<ul>')
+                    processed_lines.append('<ul class="pl-3">')
                     in_list = True
                 content = clean_line[2:]
                 processed_lines.append(f'<li>{content}</li>')
@@ -211,7 +221,34 @@ class EkAIGoodsUpdateWizard(models.TransientModel):
         # 4. Saltos de línea
         res = res.replace('\n', '<br/>')
         
-        return Markup(res)
+        return res
+
+    def _update_chat_history_html(self, history):
+        """Genera el HTML del hilo de conversación para el usuario"""
+        html = ["<div class='ai_chat_thread' style='max-height: 400px; overflow-y: auto;'>"]
+        
+        for msg in history:
+            role = msg.get('role')
+            content = msg.get('content') or ""
+            
+            if role == 'system':
+                continue
+            
+            # Estilo burbuja
+            bg_color = "#f8f9fa" if role == 'user' else "#e7f3ff"
+            align = "margin-right: 40px;" if role == 'user' else "margin-left: 40px;"
+            label = "Tú" if role == 'user' else "IA"
+            label_color = "#6c757d" if role == 'user' else "#007bff"
+            
+            html.append(f"""
+                <div style='background: {bg_color}; padding: 10px; border-radius: 8px; margin-bottom: 10px; {align} border-left: 4px solid {label_color};'>
+                    <small style='color: {label_color}; font-weight: bold;'>{label}</small><br/>
+                    {self._markdown_to_html(content)}
+                </div>
+            """)
+            
+        html.append("</div>")
+        self.chat_history_html = Markup("".join(html))
 
     def action_process(self):
         """Llama al LLM y procesa la respuesta"""
@@ -268,10 +305,20 @@ Responde siempre en español."""
 
         # 2. Llamada a LLM
         llm = self.env['nsk.llm.provider']
+        
+        # Cargar historial previo
+        history = json.loads(self.history_json or '[]')
+        
+        # Añadir mensaje actual al historial (solo si hay texto o el historial está vacío)
+        if self.user_text or not history:
+            history.append({
+                "role": "user", 
+                "content": self.user_text or "Procesar archivos adjuntos para actualizar la tabla."
+            })
+
         messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": self.user_text or "Procesar archivos adjuntos para actualizar la tabla."}
-        ]
+            {"role": "system", "content": system_prompt}
+        ] + history
         
         try:
             response = llm.generate_completion(
@@ -282,6 +329,15 @@ Responde siempre en español."""
 
             # 3. Procesar Respuesta
             msg = response.choices[0].message
+            
+            # Guardar respuesta en el historial
+            history.append({
+                "role": "assistant",
+                "content": msg.content or "(Acción técnica propuesta)"
+            })
+            self.history_json = json.dumps(history)
+            self._update_chat_history_html(history)
+
             if msg.tool_calls:
                 tool_call = msg.tool_calls[0]
                 changes_data = json.loads(tool_call.function.arguments)
@@ -295,6 +351,7 @@ Responde siempre en español."""
             else:
                 self.ai_response_text = self._markdown_to_html(msg.content)
                 self.processing_status = 'response'
+                self.user_text = False # Limpiar para permitir chat
 
         except Exception as e:
             _logger.error("Error en AI Goods Wizard: %s", str(e))
@@ -375,6 +432,13 @@ Responde siempre en español."""
         if self.has_deletions and not self.deletion_confirmed:
             raise UserError(_("Debe confirmar que desea eliminar las líneas marcadas en rojo."))
 
+        # Lista de campos válidos en el modelo destino para evitar errores de 'Invalid field'
+        VALID_FIELDS = [
+            'name', 'quantity', 'fob', 'gross_weight', 'tariff_item', 
+            'id_hs_copmt_cd', 'id_hs_spmt_cd', 'invoice_number', 
+            'supplier', 'packages_count', 'observation', 'ship_id'
+        ]
+
         try:
             data = json.loads(self.pending_changes_json)
             items = data.get('items', [])
@@ -401,11 +465,22 @@ Responde siempre en español."""
                 
                 elif action == 'update' and line_id:
                     line = goods_model.browse(line_id)
-                    line.write(item.get('changes', {}))
-                    applied_summary.append(f"<li>Actualizado: {line.name} (ID {line_id})</li>")
+                    changes = item.get('changes', {})
+                    
+                    # Limpiar cambios de campos inexistentes (como 'reason')
+                    # Si viene 'reason' dentro de changes, lo movemos a 'observation' si este está vacío
+                    if 'reason' in changes and 'observation' not in changes:
+                        changes['observation'] = changes.pop('reason')
+                    
+                    filtered_changes = {k: v for k, v in changes.items() if k in VALID_FIELDS}
+                    
+                    if filtered_changes:
+                        line.write(filtered_changes)
+                        applied_summary.append(f"<li>Actualizado: {line.name} (ID {line_id})</li>")
                 
                 elif action == 'add':
-                    vals = {
+                    # Preparar valores filtrando solo los válidos
+                    raw_vals = {
                         'ek_operation_request_id': self.operation_request_id.id,
                         'name': item.get('name'),
                         'quantity': item.get('quantity', 0),
@@ -417,9 +492,11 @@ Responde siempre en español."""
                         'invoice_number': item.get('invoice_number'),
                         'supplier': item.get('supplier'),
                         'packages_count': item.get('packages_count'),
-                        'observation': item.get('observation'),
+                        'observation': item.get('observation') or item.get('reason'),
                     }
-                    new_line = goods_model.create(vals)
+                    filtered_vals = {k: v for k, v in raw_vals.items() if k in VALID_FIELDS or k == 'ek_operation_request_id'}
+                    
+                    new_line = goods_model.create(filtered_vals)
                     applied_summary.append(f"<li>Agregado: {new_line.name}</li>")
 
             # Log en Chatter
