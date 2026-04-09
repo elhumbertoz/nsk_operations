@@ -189,15 +189,6 @@
 
             </xpath>
 
-            <!-- Corregir y completar el árbol de productos en Solicitudes (ek.operation.request) -->
-            <xpath expr="//field[@name='ek_produc_packages_goods_ids']" position="before">
-                <button name="action_open_goods_management"
-                        type="object"
-                        string="Gestionar Mercancías (Vista Completa)"
-                        class="btn btn-primary mb-2"
-                        icon="fa-arrows-alt"
-                        invisible="not regime in ['70']"/>
-            </xpath>
 
             <xpath expr="//field[@name='ek_produc_packages_goods_ids']//tree" position="attributes">
                 <attribute name="editable">bottom</attribute>
