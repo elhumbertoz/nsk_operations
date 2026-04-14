@@ -26,6 +26,7 @@
 
     'wizard/ek_ship_assignment_wizard_view.xml',
     'wizard/ek_ai_goods_update_wizard_view.xml',
+    'wizard/ek_ai_extraction_progress_wizard_view.xml',
     # 4. Vistas de modelos principales
     'views/ek_ship_registration_views.xml',
     'views/ek_boats_information_views.xml',
@@ -43,6 +44,7 @@
   'assets': {
     'web.assets_backend': [
       'ek_l10n_shipping_operations_charging_regimes/static/src/js/ai_progress_bus.js',
+      'ek_l10n_shipping_operations_charging_regimes/static/src/js/ai_extraction_progress_form.js',
     ],
   },
   'depends': [

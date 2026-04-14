@@ -44,3 +44,10 @@ class EkOperationRequestMixinComposition(models.Model):
         if self.container_id:
             return self.container_id.action_extract_po_and_compare()
         raise UserError(_("Debe vincular un contenedor primero para realizar la validación."))
+
+    def action_view_extraction_progress(self):
+        """Redirige visualización de progreso al contenedor vinculado"""
+        self.ensure_one()
+        if self.container_id:
+            return self.container_id.action_view_extraction_progress()
+        raise UserError(_("Debe vincular un contenedor primero para ver el progreso."))
