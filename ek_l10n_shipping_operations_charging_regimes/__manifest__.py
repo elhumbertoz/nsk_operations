@@ -35,6 +35,7 @@
     'views/views_regime_70_fields.xml',
     'views/res_config_settings_views.xml',
     'views/mail_template_views.xml',
+    'views/kardex_inventory_views.xml',
     # 5. Reportes (al final porque pueden depender de otros elementos)
     'report/kardex_container.xml',
     'report/regime_70_reports.xml',

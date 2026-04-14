@@ -15,10 +15,16 @@ class EkWizardRegime70Report(models.TransientModel):
         ('insurance', 'Pólizas de Transporte'),
     ], string='Tipo de Reporte', required=True, default='regime_70')
 
+    def _default_ship_id(self):
+        return self.env['ek.ship.registration'].search(
+            [('assigned_regimen_70', '=', True)], limit=1
+        ).id or False
+
     ship_id = fields.Many2one(
         'ek.ship.registration',
         string='Buque / Regimen',
-        domain="[('assigned_regimen_70', '=', True)]"
+        domain="[('assigned_regimen_70', '=', True)]",
+        default=_default_ship_id,
     )
     container_ids = fields.Many2many(
         'ek.boats.information',

@@ -7,8 +7,8 @@
             <form string="Generar Reporte">
                 <group>
                     <field name="report_type" invisible="1"/>
+                    <field name="ship_id" invisible="1"/>
                     <group string="Filtros">
-                        <field name="ship_id" options="{'no_create': True}"/>
                         <field name="container_ids" widget="many2many_tags" options="{'no_create': True}"/>
                         <field name="date_from"/>
                         <field name="date_to"/>

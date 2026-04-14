@@ -10,6 +10,18 @@ _logger = logging.getLogger(__name__)
 class EkShipRegistration(models.Model):
     _inherit = 'ek.ship.registration'
 
+    kardex_color = fields.Char(
+        string='Color Kárdex',
+        default='#FFFFFF',
+        help="Color de fondo (hex, ej. #FFC7CE) con el que aparece este buque "
+             "en los reportes del Kárdex Régimen 70/60. Déjalo en blanco para "
+             "no aplicar color."
+    )
+    kardex_color_name = fields.Char(
+        string='Color (nombre)',
+        help="Nombre opcional del color para referencia humana (ej: ROJO, AZUL, VIOLETA)."
+    )
+
     def action_open_documents_container(self):
         self.ensure_one()
         return {

@@ -166,6 +166,164 @@ class ek_product_packagens_goods(models.Model):
     for rec in self:
       rec.quantity_hand = rec.quantity - rec.delivery_product
 
+  # ─────────────────────────────────────────────────────────────────
+  # KARDEX 70/60 – Cálculo de entregas, saldo y estado
+  # ─────────────────────────────────────────────────────────────────
+  # ─── Campos de display con fallback al trámite padre ───────────────
+  # Cuando el ítem no tiene contenedor/buque/BL directo (ej: CARGA SUELTA)
+  # estos campos leen los datos del ek.operation.request padre.
+  kardex_container_display = fields.Many2one(
+    'ek.boats.information',
+    string='Contenedor (Kárdex)',
+    compute='_compute_kardex_display',
+    store=True,
+  )
+  kardex_ship_display = fields.Many2one(
+    'ek.ship.registration',
+    string='Buque (Kárdex)',
+    compute='_compute_kardex_display',
+    store=True,
+  )
+  kardex_bl_display = fields.Char(
+    string='BL (Kárdex)',
+    compute='_compute_kardex_display',
+    store=True,
+  )
+  # Related/computed fields del trámite padre para Kárdex INVENTARIO 2026
+  # Los nombres de campo son los mismos que usa el XLSX wizard para
+  # garantizar consistencia entre la vista tree y el reporte formal.
+  kardex_solicitud_previa = fields.Char(
+    string='Solicitud Previa',
+    related='ek_operation_request_id.ek_assignment_number_rp',
+    store=True,
+    help='Número M-XXXX de solicitud previa (del trámite padre)',
+  )
+  kardex_matricula = fields.Char(
+    string='Matrícula',
+    related='ek_operation_request_id.boat_registration',
+    store=True,
+    help='Matrícula del barco / registro aduanero',
+  )
+  kardex_fecha_ingreso = fields.Date(
+    string='Fecha Ingreso Kárdex',
+    related='ek_operation_request_id.date_start',
+    store=True,
+    help='Fecha de inicio del trámite Reg.70 (fecha de ingreso al depósito)',
+  )
+  kardex_tipo_carga = fields.Char(
+    string='Tipo',
+    compute='_compute_kardex_tipo_carga',
+    store=True,
+    help='Tipo de contenedor (20/40/REEFER) o SUELTA si no hay contenedor',
+  )
+  kardex_referencia = fields.Char(
+    string='Referencia',
+    related='ek_operation_request_id.type_id.name',
+    store=True,
+    help='Tipo de solicitud padre (ej: RÉGIMEN 70, RÉGIMEN 70 (CARGA SUELTA))',
+  )
+
+  @api.depends(
+    'ek_boats_information_id.type_container_id',
+    'ek_operation_request_id.container_id.type_container_id',
+  )
+  def _compute_kardex_tipo_carga(self):
+    for rec in self:
+      container = rec.ek_boats_information_id or (
+        rec.ek_operation_request_id.container_id if rec.ek_operation_request_id else False
+      )
+      type_container = getattr(container, 'type_container_id', False) if container else False
+      rec.kardex_tipo_carga = (type_container.name if type_container else '') or 'SUELTA'
+
+  @api.depends(
+    'ek_boats_information_id', 'ship_id', 'id_bl',
+    'ek_operation_request_id.container_id',
+    'ek_operation_request_id.ek_ship_registration_id',
+    'ek_operation_request_id.number_bl',
+  )
+  def _compute_kardex_display(self):
+    for rec in self:
+      req = rec.ek_operation_request_id
+      rec.kardex_container_display = rec.ek_boats_information_id or (req.container_id if req else False)
+      rec.kardex_ship_display = rec.ship_id or (req.ek_ship_registration_id if req else False)
+      bl = (rec.id_bl.name if rec.id_bl else '') or (req.number_bl if req else '')
+      rec.kardex_bl_display = bl or ''
+
+  total_delivered_reg60 = fields.Float(
+    string='Total Entregado Reg. 60',
+    compute='_compute_kardex_balance',
+    store=True,
+    digits=(16, 4),
+    help="Suma de todas las salidas (table.regimen.60) vinculadas a este ítem de importación."
+  )
+  balance_kardex = fields.Float(
+    string='Saldo Kárdex',
+    compute='_compute_kardex_balance',
+    store=True,
+    digits=(16, 4),
+    help="Cantidad importada menos el total reexportado (Reg. 60)."
+  )
+  state_kardex = fields.Selection(
+    [
+      ('stock', 'En Stock'),
+      ('partial', 'Parcial'),
+      ('delivered', 'Reexportado'),
+      ('expired', 'Vencido'),
+    ],
+    string='Estado Kárdex',
+    compute='_compute_kardex_balance',
+    store=True,
+    help="Estado del ítem en el kárdex Régimen 70/60."
+  )
+  days_to_expiry = fields.Integer(
+    string='Días al Vencimiento',
+    compute='_compute_kardex_balance',
+    store=False,
+    help="Días restantes hasta la fecha máxima de régimen (Reg. 70 = 1 año)."
+  )
+
+  @api.depends(
+    'quantity',
+    'max_regime_date',
+    'ek_operation_request_id',
+  )
+  def _compute_kardex_balance(self):
+    """Calcula saldo del kárdex = cantidad importada (Reg.70) − Σ salidas (Reg.60).
+
+    Las salidas viven en `table.regimen.60` y apuntan a este ítem a través
+    del campo `ek_product_packagens_goods_id`.
+    """
+    today = fields.Date.context_today(self)
+    Reg60 = self.env['table.regimen.60']
+    for rec in self:
+      delivered = 0.0
+      if rec.id:
+        exits = Reg60.search([
+          ('ek_product_packagens_goods_id', '=', rec.id),
+          ('ek_operation_request_id.canceled_stage', '!=', True),
+        ])
+        delivered = sum(abs(x.quantity or 0.0) for x in exits)
+      rec.total_delivered_reg60 = delivered
+      qty = abs(rec.quantity or 0.0)
+      rec.balance_kardex = qty - delivered
+
+      # Días al vencimiento
+      if rec.max_regime_date:
+        exp = rec.max_regime_date.date() if hasattr(rec.max_regime_date, 'date') else rec.max_regime_date
+        rec.days_to_expiry = (exp - today).days
+      else:
+        rec.days_to_expiry = 0
+
+      # Estado del kárdex
+      if rec.balance_kardex <= 0.0001:
+        rec.state_kardex = 'delivered'
+      elif rec.max_regime_date and rec.days_to_expiry is not None and rec.days_to_expiry < 0:
+        rec.state_kardex = 'expired'
+      elif delivered > 0:
+        rec.state_kardex = 'partial'
+      else:
+        rec.state_kardex = 'stock'
+
   @api.onchange('product_id')
   def _onchange_product_id(self):
     """Auto-llenar campos desde producto"""

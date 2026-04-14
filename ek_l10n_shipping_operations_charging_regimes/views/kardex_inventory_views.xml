@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- KÁRDEX INVENTARIO RÉGIMEN 70/60                                 -->
+    <!-- Vista lista permanente sobre ek.product.packagens.goods         -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_kardex_inventory_tree" model="ir.ui.view">
+        <field name="name">ek.product.packagens.goods.kardex.tree</field>
+        <field name="model">ek.product.packagens.goods</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree string="Kárdex Inventario 70/60"
+                  create="false" delete="false" edit="false"
+                  decoration-success="state_kardex == 'delivered'"
+                  decoration-warning="state_kardex == 'partial'"
+                  decoration-info="state_kardex == 'stock'"
+                  decoration-danger="state_kardex == 'expired'"
+                  default_order="ek_operation_request_id desc, id">
+                <field name="ek_operation_request_id" string="Cargas Reg. 70" optional="show"/>
+                <field name="kardex_referencia" string="Referencia" optional="show"/>
+                <field name="kardex_bl_display" string="BL" optional="show"/>
+                <field name="kardex_container_display" string="Serie Cont./Suelta" optional="show"/>
+                <field name="kardex_tipo_carga" string="Tipo" optional="show"/>
+                <field name="kardex_solicitud_previa" string="Solicitud Previa" optional="show"/>
+                <field name="number_dai" string="DAI" optional="show"/>
+                <field name="kardex_ship_display" string="Buque" optional="show"/>
+                <field name="packages_count" string="Bultos" optional="show"/>
+                <field name="sequence" string="Item Precedente" optional="show"/>
+                <field name="name" string="Detalle de Items"/>
+                <field name="quantity" string="Cantidad" sum="Total Ingresado"/>
+                <field name="kardex_fecha_ingreso" string="Fecha Ingreso" widget="date" optional="show"/>
+                <field name="date_request" string="Fecha Request" widget="date" optional="hide"/>
+                <field name="max_regime_date" string="Fecha Vencimiento" optional="show"/>
+                <field name="kardex_matricula" string="Matrícula" optional="show"/>
+                <field name="total_delivered_reg60" string="Cant. Entregada" sum="Total Entregado"/>
+                <field name="balance_kardex" string="Saldo" sum="Saldo Total"/>
+                <field name="days_to_expiry" string="Días Vto." optional="show"/>
+                <field name="id_bl" string="BL (directo)" optional="hide"/>
+                <field name="ek_boats_information_id" string="Contenedor (directo)" optional="hide"/>
+                <field name="ship_id" string="Buque (directo)" optional="hide"/>
+                <field name="tariff_item" string="Subpartida" optional="hide"/>
+                <field name="uom_id" string="UoM" optional="hide"/>
+                <field name="fob" string="FOB Unit." optional="hide"/>
+                <field name="total_fob" string="Total FOB" optional="hide" sum="Total FOB"/>
+                <field name="state_kardex" string="Estado" widget="badge"
+                       decoration-success="state_kardex == 'delivered'"
+                       decoration-warning="state_kardex == 'partial'"
+                       decoration-info="state_kardex == 'stock'"
+                       decoration-danger="state_kardex == 'expired'"/>
+                <field name="observation" string="Observaciones" optional="hide"/>
+                <field name="supplier" optional="hide"/>
+                <field name="invoice_number" optional="hide"/>
+                <field name="gross_weight" optional="hide" sum="Peso Total"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Búsqueda con filtros y agrupaciones -->
+    <record id="view_kardex_inventory_search" model="ir.ui.view">
+        <field name="name">ek.product.packagens.goods.kardex.search</field>
+        <field name="model">ek.product.packagens.goods</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Kárdex">
+                <field name="name" string="Detalle"/>
+                <field name="tariff_item"/>
+                <field name="number_dai"/>
+                <field name="kardex_bl_display" string="BL"/>
+                <field name="kardex_container_display" string="Contenedor"/>
+                <field name="kardex_ship_display" string="Buque"/>
+                <field name="ek_operation_request_id"/>
+                <field name="supplier"/>
+                <field name="date_request" string="Fecha Ingreso"/>
+                <field name="max_regime_date" string="Fecha Vencimiento"/>
+                <separator/>
+                <!-- Filtros rápidos por año y período -->
+                <filter name="filter_this_year" string="Año Actual"
+                        domain="[
+                            ('date_request', '&gt;=', (context_today().strftime('%%Y') + '-01-01')),
+                            ('date_request', '&lt;=', (context_today().strftime('%%Y') + '-12-31'))
+                        ]"/>
+                <filter name="filter_last_year" string="Año Anterior"
+                        domain="[
+                            ('date_request', '&gt;=', ((context_today() - relativedelta(years=1)).strftime('%%Y') + '-01-01')),
+                            ('date_request', '&lt;=', ((context_today() - relativedelta(years=1)).strftime('%%Y') + '-12-31'))
+                        ]"/>
+                <filter name="filter_this_month" string="Mes Actual"
+                        domain="[
+                            ('date_request', '&gt;=', context_today().strftime('%%Y-%%m-01')),
+                            ('date_request', '&lt;', ((context_today().replace(day=1) + relativedelta(months=1))).strftime('%%Y-%%m-%%d'))
+                        ]"/>
+                <filter name="filter_last_30_days" string="Últimos 30 días"
+                        domain="[('date_request', '&gt;=', (context_today() - relativedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter name="filter_last_90_days" string="Últimos 90 días"
+                        domain="[('date_request', '&gt;=', (context_today() - relativedelta(days=90)).strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
+                <filter name="filter_stock" string="En Stock"
+                        domain="[('state_kardex', '=', 'stock')]"/>
+                <filter name="filter_partial" string="Parcial"
+                        domain="[('state_kardex', '=', 'partial')]"/>
+                <filter name="filter_delivered" string="Reexportado"
+                        domain="[('state_kardex', '=', 'delivered')]"/>
+                <filter name="filter_expired" string="Vencido"
+                        domain="[('state_kardex', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_pending" string="Pendientes (saldo &gt; 0)"
+                        domain="[('balance_kardex', '&gt;', 0)]"/>
+                <filter name="filter_not_dispatched" string="No despachados"
+                        domain="[('is_not_dispatched', '=', True)]"/>
+                <separator/>
+                <filter name="filter_expiring_60" string="Vence en 60 días"
+                        domain="[('max_regime_date', '&lt;=', (context_today() + relativedelta(days=60)).strftime('%Y-%m-%d')), ('max_regime_date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('balance_kardex', '&gt;', 0)]"/>
+                <filter name="filter_expiring_30" string="Vence en 30 días"
+                        domain="[('max_regime_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('max_regime_date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('balance_kardex', '&gt;', 0)]"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_ship" string="Buque Destino"
+                            context="{'group_by': 'kardex_ship_display'}"/>
+                    <filter name="group_container" string="Contenedor"
+                            context="{'group_by': 'kardex_container_display'}"/>
+                    <filter name="group_bl" string="BL"
+                            context="{'group_by': 'kardex_bl_display'}"/>
+                    <filter name="group_request" string="Trámite Reg. 70"
+                            context="{'group_by': 'ek_operation_request_id'}"/>
+                    <filter name="group_state" string="Estado"
+                            context="{'group_by': 'state_kardex'}"/>
+                    <filter name="group_supplier" string="Proveedor"
+                            context="{'group_by': 'supplier'}"/>
+                    <filter name="group_date_year" string="Año de Ingreso"
+                            context="{'group_by': 'date_request:year'}"/>
+                    <filter name="group_date_month" string="Mes de Ingreso"
+                            context="{'group_by': 'date_request:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de ventana -->
+    <record id="action_kardex_inventory" model="ir.actions.act_window">
+        <field name="name">Kárdex Inventario 70/60</field>
+        <field name="res_model">ek.product.packagens.goods</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="view_id" ref="view_kardex_inventory_tree"/>
+        <field name="search_view_id" ref="view_kardex_inventory_search"/>
+        <field name="context">{
+            'create': False, 'edit': False, 'delete': False,
+            'search_default_group_bl': 0,
+            'search_default_group_request': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Kárdex de Inventario Régimen 70 / 60
+            </p>
+            <p>
+                Muestra todos los ítems importados bajo Régimen 70 con su saldo
+                calculado en tiempo real según las salidas de Régimen 60.
+                <br/>
+                Puedes exportar a Excel usando el botón
+                <b>Acción → Exportar todo</b>.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú dentro de Reports -->
+    <menuitem id="menu_kardex_inventory"
+              name="Kárdex Inventario 70/60"
+              parent="ek_l10n_shipping_operations.menu_setting_request_reports"
+              action="action_kardex_inventory"
+              sequence="5"/>
+
+</odoo>

@@ -23,6 +23,28 @@
         </button>
       </xpath>
 
+      <!-- Configuración de color para Kárdex 70/60 -->
+      <xpath expr="//sheet" position="inside">
+        <group string="Kárdex Régimen 70/60" invisible="not assigned_regimen_70">
+          <group>
+            <field name="kardex_color"
+                   placeholder="#FFC7CE"
+                   help="Código hex del color (ej: #FFC7CE para rojo suave)"/>
+            <field name="kardex_color_name"
+                   placeholder="ROJO"/>
+          </group>
+          <group>
+            <div>
+              <p class="text-muted">
+                El color se aplicará automáticamente al nombre de este buque
+                en el reporte XLSX del Kárdex Inventario 70/60, facilitando
+                la identificación visual por cargas.
+              </p>
+            </div>
+          </group>
+        </group>
+      </xpath>
+
     </field>
   </record>
 </odoo>
