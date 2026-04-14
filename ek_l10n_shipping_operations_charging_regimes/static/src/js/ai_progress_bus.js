@@ -27,27 +27,54 @@ export class AIProgressBusListener {
     }
 
     handleUpdate(payload) {
-        // Si estamos en una vista que muestra este registro, refrescarla
-        // Nota: Odoo 17 no refresca automáticamente, forzamos un reload de la acción actual
-        // si el ID coincide y es una vista de formulario/lista relevante.
+        const actionService = this.env.services.action;
+        let controller = actionService.currentController;
         
-        const controller = this.env.services.action.currentController;
-        if (controller && controller.props.resModel === payload.model && controller.props.resId === payload.id) {
-            // Solo recargar si el estado cambió a completado o error para habilitar botones,
-            // o periódicamente para ver la barra de progreso.
-            // Para la barra de progreso, lo ideal sería actualizar el estado local,
-            // pero un reload() es lo más sencillo y robusto en V17 sin parchar OWL profundamente.
+        if (!controller) {
+            console.log("No active controller found for AI update");
+            return;
+        }
+
+        console.log("Processing AI update for", payload.model, payload.id, "Current Controller:", controller.props.resModel);
+
+        // Notify background records (standard Odoo reload signal)
+        this.env.bus.trigger("RPC_NOTIFICATION", {
+            type: "reload",
+            model: payload.model,
+            id: payload.id
+        });
+
+        // Identify if the controller is our wizard or the main record
+        const isMainRecord = controller.props.resModel === payload.model && controller.props.resId === payload.id;
+        let isProgressWizard = false;
+
+        if (controller.props.resModel === 'ek.ai.extraction.progress.wizard') {
+            // In a wizard, we check its internal data to match the source record
+            const data = controller.component?.model?.root?.data;
+            if (data && data.res_model === payload.model && data.res_id === payload.id) {
+                isProgressWizard = true;
+            }
+        }
+
+        if (isMainRecord || isProgressWizard) {
+            console.log("AI Target matched. Reloading component...");
             
-            console.log("AI Update received, reloading record:", payload.id);
-            this.env.bus.trigger("RPC_NOTIFICATION", {
-                type: "reload",
-                model: payload.model,
-                id: payload.id
-            });
-            
-            // Forzar recarga de la vista actual
             if (controller.component && controller.component.model) {
-                controller.component.model.load();
+                controller.component.model.load().then(() => {
+                    console.log("Component reloaded successfully");
+                    
+                    // Auto-close logic
+                    if (isProgressWizard && payload.status === 'completed') {
+                        console.log("Extraction COMPLETED. Closing modal in 1.5s...");
+                        setTimeout(() => {
+                            // Verify we are still in the wizard before closing
+                            const current = actionService.currentController;
+                            if (current && current.props.resModel === 'ek.ai.extraction.progress.wizard') {
+                                actionService.restore();
+                            }
+                        }, 1500);
+                    }
+                });
             }
         }
     }

@@ -497,17 +497,7 @@ El documento PDF está adjunto."""
             
             self.ai_extraction_log = html_log
 
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Extracción Completada'),
-                    'message': _('Se extrajeron los datos logísticos del BL'),
-                    'type': 'success',
-                    'sticky': False,
-                    'next': {'type': 'ir.actions.client', 'tag': 'reload'},
-                }
-            }
+            return self._open_progress_wizard(status_field='ai_extraction_status_bl')
 
         except Exception as e:
             self.ai_extraction_status_bl = 'error'
@@ -676,17 +666,7 @@ El documento PDF está adjunto."""
         )
         threaded_extraction.start()
 
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Extracción Iniciada'),
-                'message': _('El proceso de extracción de facturas se ha iniciado en segundo plano. Puede seguir trabajando.'),
-                'type': 'info',
-                'sticky': False,
-                'next': {'type': 'ir.actions.client', 'tag': 'reload'},
-            }
-        }
+        return self._open_progress_wizard(status_field='ai_extraction_status_fc')
 
     def _notify_ui_update(self):
         """
@@ -750,10 +730,10 @@ El documento PDF está adjunto."""
                     'ai_extraction_progress': progress_val,
                     'ai_extraction_message': _('Procesando factura %d de %d: %s') % (i + 1, total_attachments, attachment.name)
                 })
+                # Notificar vía bus ANTES del commit para que viaje en la misma transacción
+                self._notify_ui_update()
                 # Commit parcial para que la UI vea el progreso
                 self.env.cr.commit()
-                # Notificar vía bus
-                self._notify_ui_update()
 
                 _logger.info("Procesando factura %d/%d: %s", i + 1, total_attachments, attachment.name)
 
@@ -825,7 +805,9 @@ El documento PDF está adjunto."""
                 'ai_extraction_message': _('Extracción completada con éxito.'),
                 'ai_extraction_log': html_log
             })
+            # Notificar éxito final
             self._notify_ui_update()
+            self.env.cr.commit()
             
             # Mensaje en chatter
             self.message_post(
@@ -835,7 +817,6 @@ El documento PDF está adjunto."""
                     'Items totales: %s<br/>'
                 )) % (invoices_processed, len(all_items))
             )
-            self.env.cr.commit()
 
         except Exception as e:
             error_msg = str(e)
@@ -873,6 +854,7 @@ Tu trabajo tiene dos partes:
 ## REGLAS DE VINCULACIÓN
 - Utiliza el nombre del producto, el contexto y el código HS en conjunto para encontrar la mejor coincidencia en el catálogo.
 - Solo asigna `product_id` cuando la confianza supere el 70% — nunca fuerces una vinculación.
+- MANDATORIO: Si asignas un `product_id`, DEBES asignar obligatoriamente un valor a `match_confidence`.
 - Asigna `match_confidence` entre 0.0 y 1.0 (ej: 0.95 = casi exacto, 0.75 = razonable).
 - `description`: copia el texto original de la línea exactamente como está impreso en la factura (para auditoría).
 - `product_name`: nombre comercial del producto, respetando fielmente el nombre de la factura pero eliminando ruido innecesario (direcciones, avisos legales, etc.).
@@ -880,7 +862,7 @@ Tu trabajo tiene dos partes:
 - REGLA DE ORO: Si el producto tiene una marca (Brand) o modelo (Model) específico en la factura, debe aparecer obligatoriamente en `product_name`.
 - Máximo ~80 caracteres para `product_name`.
 - No inventes códigos si no están en el catálogo.
-- Si el producto NO está en el catálogo, `product_name` se usará para crear el nuevo producto en el sistema, por lo que debe ser descriptivo y fiel al documento original.
+- Si el producto NO está en el catálogo, `product_name` se usará para crear el nuevo producto en el sistema, por lo que debe ser descriptivo y fiel al documento original. En este caso deja `product_id` como null.
 
 ## REGLA DE ORO DE VINCULACIÓN — "EL NÚMERO MANDA"
 Los identificadores numéricos, sufijos de modelo y calibres son IDENTIFICADORES ÚNICOS Y NO NEGOCIABLES. 
@@ -1099,6 +1081,38 @@ Llama siempre a `extract_invoice_data` para devolver los resultados estructurado
         """
         # Ya no es necesario sincronizar, los productos están en las líneas
         pass
+
+    def _open_progress_wizard(self, status_field='ai_extraction_status_fc'):
+        """
+        Retorna la acción para abrir el modal de progreso.
+
+        IMPORTANTE: creamos el registro del wizard ANTES de retornar la acción
+        y pasamos su res_id. Esto es fundamental para que el polling JS funcione:
+        cuando el formulario abre con res_id, model.load() usa webRead() (lectura
+        real al servidor) y obtiene los valores frescos de los campos computados.
+        Sin res_id el form abre en modo "create" y load() usa onchange(), que no
+        refleja los cambios que el hilo asíncrono va guardando en el registro fuente.
+        """
+        self.ensure_one()
+        wizard = self.env['ek.ai.extraction.progress.wizard'].create({
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+        return {
+            'name': _('Procesando con IA'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ek.ai.extraction.progress.wizard',
+            'view_mode': 'form',
+            'res_id': wizard.id,
+            'target': 'new',
+        }
+
+    def action_view_extraction_progress(self):
+        """
+        Action para abrir el modal de progreso desde la vista (usando contexto)
+        """
+        field = self.env.context.get('status_field', 'ai_extraction_status_fc')
+        return self._open_progress_wizard(status_field=field)
 
 
     def action_extract_po_and_compare(self):

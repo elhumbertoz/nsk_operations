@@ -291,32 +291,36 @@ class ek_product_packagens_goods(models.Model):
   @api.model
   def create(self, vals):
     """Override create para búsqueda/creación automática de producto.
-
-    Garantiza que el product_id final pertenezca a la categoría
-    'product_category_regime_70', tal como lo exige el domain del campo
-    en la vista XML.
+    
+    Garantiza que el product_id final pertenezca a la categoría 'Régimen 70'.
     """
+    # Guardamos si venía un ID desde la IA para evitar creación doble
+    ai_product_id = vals.get('product_id')
+
     # Obtener categoría Régimen 70 para validación
     regime_category = self.env.ref(
       'ek_l10n_shipping_operations_charging_regimes.product_category_regime_70',
       raise_if_not_found=False
     )
 
-    # Si la IA ya sugirió un product_id, validar que sea de la categoría correcta
-    ai_product_id = vals.get('product_id')
-    if ai_product_id and regime_category:
+    # 1. Si la IA ya sugirió un product_id, lo validamos estrictamente contra Régimen 70
+    if ai_product_id:
       product = self.env['product.product'].browse(ai_product_id)
-      if not product.exists() or product.categ_id.id != regime_category.id:
+      # Si el producto no existe o no es de la categoría correcta, lo quitamos
+      if not product.exists() or (regime_category and product.categ_id.id != regime_category.id):
         _logger.warning(
-          "product_id=%s sugerido por IA no pertenece a Régimen 70 "
-          "(categ_id=%s). Se descarta y se buscará/creará en el catálogo.",
-          ai_product_id,
-          product.categ_id.name if product.exists() else 'N/A'
+          "El product_id '%s' no es válido para Régimen 70. Se descarta.",
+          ai_product_id
         )
-        vals.pop('product_id')
+        vals.pop('product_id', None)
+        # IMPORTANTE: No marcamos ai_product_id como False aquí porque queremos recordar
+        # que el sistema SI envió un ID, y por tanto quizá no deberíamos crear uno nuevo
+        # si el usuario prefiere validación manual. 
+        # Pero según el flujo, si se descarta, el sistema debe intentar buscar/crear uno válido.
 
-    # Si finalmente no hay product_id pero sí descripción, buscar/crear en Régimen 70
-    if not vals.get('product_id') and vals.get('name'):
+    # 2. Solo buscamos/creamos automáticamente si REALMENTE no venía nada desde la IA
+    # o si el ID enviado era inválido y necesitamos uno para la operación.
+    if not vals.get('product_id') and not ai_product_id and vals.get('name'):
       product_id = self._find_or_create_product(vals)
       if product_id:
         vals['product_id'] = product_id

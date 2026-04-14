@@ -144,18 +144,21 @@
                           class="btn-success"
                           icon="fa-file-pdf-o"
                           invisible="not invoice_attachment_ids or ai_extraction_status_fc == 'processing'"/>
+                  <button name="action_view_extraction_progress"
+                          string="Ver Progreso Extracción"
+                          type="object"
+                          class="btn-info"
+                          context="{'status_field': 'ai_extraction_status_fc'}"
+                          invisible="ai_extraction_status_fc != 'processing'"/>
                 </group>
-                <group string="Estado">
+                <group string="Estado Última Extracción">
                    <field name="ai_extraction_status_fc" widget="badge"
-                          string="Estado Facturas"
+                          string="Estado"
+                          invisible="ai_extraction_status_fc == 'processing'"
                           decoration-success="ai_extraction_status_fc=='completed'"
-                          decoration-warning="ai_extraction_status_fc=='processing'"
                           decoration-danger="ai_extraction_status_fc=='error'"/>
-                   <field name="ai_extraction_progress" widget="progressbar" 
-                          invisible="ai_extraction_status_fc != 'processing'"
-                          label="Progreso"/>
                    <field name="ai_extraction_message" 
-                          invisible="not ai_extraction_message"
+                          invisible="not ai_extraction_message or ai_extraction_status_fc == 'processing'"
                           style="font-size: 0.85rem;" class="text-muted"/>
                 </group>
               </group>
@@ -178,9 +181,15 @@
                     <group string="Estado BL">
                         <field name="ai_extraction_status_bl" widget="badge"
                                string="Estado BL"
+                               invisible="ai_extraction_status_bl == 'processing'"
                                decoration-success="ai_extraction_status_bl=='completed'"
-                               decoration-warning="ai_extraction_status_bl=='processing'"
                                decoration-danger="ai_extraction_status_bl=='error'"/>
+                        <button name="action_view_extraction_progress"
+                                string="Ver Progreso BL"
+                                type="object"
+                                class="btn-info"
+                                context="{'status_field': 'ai_extraction_status_bl'}"
+                                invisible="ai_extraction_status_bl != 'processing'"/>
                     </group>
                 </group>
             </page>

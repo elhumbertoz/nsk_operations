@@ -1,0 +1,47 @@
+<odoo>
+    <record id="view_ek_ai_extraction_progress_wizard_form" model="ir.ui.view">
+        <field name="name">ek.ai.extraction.progress.wizard.form</field>
+        <field name="model">ek.ai.extraction.progress.wizard</field>
+        <field name="arch" type="xml">
+            <form js_class="ek_ai_extraction_progress" string="Extracción con IA en Proceso">
+                <sheet>
+                    <div class="text-center mb-4">
+                        <i class="fa fa-cog fa-spin fa-3x text-primary" invisible="status not in ['processing', 'pending']"/>
+                        <i class="fa fa-check-circle fa-3x text-success" invisible="status != 'completed'"/>
+                        <i class="fa fa-exclamation-triangle fa-3x text-danger" invisible="status != 'error'"/>
+                    </div>
+                    
+                    <h3 class="text-center">
+                        <field name="message" nolabel="1"/>
+                    </h3>
+                    
+                    <div class="mt-4 w-100">
+                        <field name="progress" widget="progressbar" nolabel="1" class="w-100" />
+                    </div>
+
+                    <div class="alert alert-info mt-4" invisible="status != 'processing'">
+                        <strong>Nota:</strong> Este proceso puede tardar unos minutos dependiendo de la cantidad de facturas. 
+                        Los resultados aparecerán automáticamente en la pestaña de ítems al finalizar.
+                    </div>
+
+                    <div class="alert alert-success mt-4" invisible="status != 'completed'">
+                        <strong>¡Éxito!</strong> La extracción de datos se ha completado correctamente. 
+                        Puede cerrar esta ventana para ver los resultados.
+                    </div>
+
+                    <div class="alert alert-danger mt-4" invisible="status != 'error'">
+                        <strong>Error:</strong> Ocurrió un problema durante el procesamiento. 
+                        Por favor revise el log de extracción para más detalles.
+                    </div>
+
+                    <field name="status" invisible="1"/>
+                    <field name="res_model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button string="Cerrar" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

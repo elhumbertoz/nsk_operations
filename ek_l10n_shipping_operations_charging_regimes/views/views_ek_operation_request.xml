@@ -105,16 +105,26 @@
             <group class="oe_inline flex-grow-1 mb-0 col-6">
               <field name="id_bl" readonly="has_confirmed_type" />
             </group>
-            <button name="action_open_wizard_export" type="object" class="btn btn-primary oe_inline justify-self-end" icon="fa-upload" invisible="ek_produc_packages_goods_ids" height="33px" />
+            <button name="action_open_wizard_export" type="object" class="btn btn-primary oe_inline justify-self-end" icon="fa-upload" title="Importar desde Excel" invisible="ek_produc_packages_goods_ids" height="33px" />
             <button name="action_open_goods_management" type="object" string="Vista extendida" class="btn btn-primary oe_inline justify-self-end" icon="fa-arrows-alt" invisible="not ek_produc_packages_goods_ids" height="33px" />
-            <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
+            <button name="action_clear_packages_goods" type="object" class="btn btn-warning oe_inline justify-self-end" icon="fa-trash" title="Limpiar todo" invisible="not ek_produc_packages_goods_ids or fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
             <button name="action_open_ai_goods_update_wizard" type="object" class="btn btn-secondary oe_inline justify-self-end" icon="fa-magic" title="Actualizar Paquetes y Mercancía con IA" invisible="fold or confirm_stage or canceled_stage or readonly_mass" height="33px" />
           </div>
           <field name="ai_extraction_status_fc" invisible="1"/>
           <field name="ai_extraction_status_bl" invisible="1"/>
-          <group invisible="ai_extraction_status_fc != 'processing'">
-            <field name="ai_extraction_progress" widget="progressbar" label="Progreso Extracción IA"/>
-            <field name="ai_extraction_message" nolabel="1" class="text-muted italic"/>
+          <group invisible="ai_extraction_status_fc != 'processing' and ai_extraction_status_bl != 'processing'">
+            <button name="action_view_extraction_progress"
+                    string="Ver Progreso Extracción IA"
+                    type="object"
+                    class="btn-info"
+                    context="{'status_field': 'ai_extraction_status_fc'}"
+                    invisible="ai_extraction_status_fc != 'processing'"/>
+             <button name="action_view_extraction_progress"
+                    string="Ver Progreso BL"
+                    type="object"
+                    class="btn-info"
+                    context="{'status_field': 'ai_extraction_status_bl'}"
+                    invisible="ai_extraction_status_bl != 'processing'"/>
           </group>
           <!-- estadísticos de los paquetes y mercancías -->
           <group col="1" class="d-flex" invisible="not ek_produc_packages_goods_ids">
